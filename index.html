@@ -3,22 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>萬華長照資源 QR Code 產生器</title>
+    <title>萬華長照資源分享中心</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <!-- Chosen Palette: Zen Garden (Soft Grays, Earthy Greens, Creamy Whites) -->
-    <!-- Application Structure Plan: 
-        1. 頂部導覽：明確標示工具用途。
-        2. 核心區塊：左側為 QR Code 顯示與控制面板，右側為網址資訊與分享指引。
-        3. 下方區塊：關於萬華長照專案的簡介，提供情境脈絡。
-        此結構旨在讓使用者一進入頁面就能立即看到 QR Code，並能快速進行下載或分享操作。
-    -->
-    <!-- Visualization & Content Choices: 
-        - QR Code 生成：使用 QRCode.js 庫實現動態生成。
-        - 互動元素：滑桿調整大小、下載按鈕。
-        - 內容展示：使用 Tailwind Card 樣式包裝網址資訊。
-        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
-    -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
         body {
@@ -26,18 +13,15 @@
             background-color: #f9fbf9;
             color: #2d3436;
         }
-        .canvas-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .info-card {
             background: white;
-            padding: 2rem;
-            border-radius: 1rem;
+            border-radius: 1.5rem;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        #qrcode img {
-            margin: 0 auto;
+        .info-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -46,124 +30,119 @@
     <nav class="bg-white border-b border-gray-100 py-4 px-6 sticky top-0 z-50">
         <div class="max-w-5xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center text-white font-bold">W</div>
-                <span class="text-xl font-bold tracking-tight text-gray-800">萬華資源分享工具</span>
+                <div class="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center text-white font-bold">W</div>
+                <span class="text-xl font-bold tracking-tight text-gray-800">萬華資源分享中心</span>
             </div>
-            <a href="https://shenpaul1.github.io/Wanhua-Neighborhood/" target="_blank" class="text-sm font-medium text-green-700 hover:text-green-800 transition">前往原站 &#8594;</a>
+            <a href="https://shenpaul1.github.io/Wanhua-Neighborhood/" target="_blank" class="text-sm font-medium text-emerald-700 hover:text-emerald-800 transition font-bold">開啟官方網站 &#8594;</a>
         </div>
     </nav>
 
     <main class="max-w-5xl mx-auto px-6 py-12">
         <!-- Section Introduction -->
-        <div class="mb-12 text-center">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">即時產生分享 QR Code</h1>
-            <p class="text-gray-600 max-w-2xl mx-auto">
-                這是一個專為「萬華在地安老」網頁設計的分享工具。您可以透過此 QR Code 讓社區長輩或家屬透過手機掃描，快速連結至長照資源手冊。
+        <div class="mb-16 text-center">
+            <span class="px-4 py-1.5 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full uppercase tracking-widest">社區共好．在地老化</span>
+            <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mt-6 mb-4 leading-tight">萬華區在地安老資源</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+                整合萬華區所有的長照據點、醫療資源與社交空間。點擊下方按鈕即可快速存取完整手冊或分享給需要的朋友。
             </p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
             
-            <!-- Left: QR Code Display -->
-            <div class="space-y-6">
-                <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/50">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-lg font-bold text-gray-800">QR Code 預覽</h2>
-                        <span class="px-3 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-full uppercase tracking-wider">自動更新</span>
-                    </div>
-                    
-                    <div class="canvas-container mb-8" id="qrcode-container">
-                        <div id="qrcode"></div>
-                    </div>
-
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">QR Code 尺寸: <span id="size-val">256</span>px</label>
-                            <input type="range" id="size-slider" min="128" max="400" value="256" step="16" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-green-600">
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-4 pt-4">
-                            <button onclick="downloadQR()" class="flex items-center justify-center px-6 py-3 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition shadow-lg shadow-green-200">
-                                &#128229; 下載圖片
-                            </button>
-                            <button onclick="copyLink()" class="flex items-center justify-center px-6 py-3 bg-gray-800 text-white font-bold rounded-xl hover:bg-gray-900 transition">
-                                &#128101; 複製網址
-                            </button>
-                        </div>
-                    </div>
+            <!-- Left: Direct Action Card -->
+            <div class="info-card p-10 flex flex-col justify-center border border-gray-100">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">快速存取手冊</h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        我們已經為您整理好了詳細的資源地圖，包含國光市場、萬華醫院、及各大據點的地址與服務特色。
+                    </p>
+                </div>
+                
+                <div class="space-y-4">
+                    <a href="https://shenpaul1.github.io/Wanhua-Neighborhood/" target="_blank" class="flex items-center justify-center w-full px-6 py-4 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transition shadow-xl shadow-emerald-200 text-lg">
+                        進入長照資源網頁
+                    </a>
+                    <button onclick="copyLink()" class="flex items-center justify-center w-full px-6 py-4 bg-gray-100 text-gray-700 font-bold rounded-2xl hover:bg-gray-200 transition">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                        複製分享連結
+                    </button>
                 </div>
             </div>
 
-            <!-- Right: Link Info & Sharing Guide -->
-            <div class="space-y-6">
-                <div class="bg-emerald-900 text-white p-8 rounded-3xl shadow-lg">
-                    <h2 class="text-xl font-bold mb-4">推廣萬華在地安老</h2>
-                    <p class="text-emerald-100 mb-6 leading-relaxed">
-                        「萬華區在地安老」網頁整理了大量的社區資源、醫療據點與生活資訊。將此 QR Code 印製於社區報、里辦公室佈告欄，能有效幫助長輩跨越數位落差。
-                    </p>
-                    <div class="bg-emerald-800/50 p-4 rounded-xl border border-emerald-700">
-                        <div class="text-xs uppercase tracking-widest text-emerald-300 font-bold mb-1">分享網址</div>
-                        <div class="text-sm break-all font-mono">https://shenpaul1.github.io/Wanhua-Neighborhood/</div>
+            <!-- Right: Feature List -->
+            <div class="bg-emerald-900 text-white p-10 rounded-[2rem] shadow-2xl relative overflow-hidden">
+                <div class="relative z-10">
+                    <h2 class="text-2xl font-bold mb-6">為什麼需要這份資源？</h2>
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="bg-emerald-800 p-2 rounded-lg mr-4 mt-1">
+                                <svg class="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">在地化推薦</h4>
+                                <p class="text-emerald-100/70 text-sm">從張先生的生活出發，貼近萬華人的真實日常。</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-emerald-800 p-2 rounded-lg mr-4 mt-1">
+                                <svg class="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">1966 整合資訊</h4>
+                                <p class="text-emerald-100/70 text-sm">將複雜的補助申請程序，轉化為易懂的 Q&A 指南。</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-emerald-800 p-2 rounded-lg mr-4 mt-1">
+                                <svg class="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">食醫育樂全涵蓋</h4>
+                                <p class="text-emerald-100/70 text-sm">不只是看病，更包含採買、休閒與社交地圖。</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <!-- Abstract decorative element -->
+                <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-emerald-800 rounded-full blur-3xl opacity-50"></div>
+            </div>
+        </div>
 
-                <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
-                    <h3 class="font-bold text-gray-800 mb-4">使用說明</h3>
-                    <ul class="space-y-4">
-                        <li class="flex items-start">
-                            <span class="bg-green-100 text-green-700 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">1</span>
-                            <p class="text-sm text-gray-600">調整滑桿選擇適合列印的大小。</p>
-                        </li>
-                        <li class="flex items-start">
-                            <span class="bg-green-100 text-green-700 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">2</span>
-                            <p class="text-sm text-gray-600">點擊「下載圖片」將 QR Code 儲存為 PNG 檔。</p>
-                        </li>
-                        <li class="flex items-start">
-                            <span class="bg-green-100 text-green-700 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">3</span>
-                            <p class="text-sm text-gray-600">建議印製於彩色紙張或海報上增加識別度。</p>
-                        </li>
-                    </ul>
+        <!-- Directory Section Preview -->
+        <div class="mt-20">
+            <h3 class="text-xl font-bold text-gray-800 mb-8 border-l-4 border-emerald-600 pl-4">手冊章節預覽</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl border border-gray-100 hover:border-emerald-200 transition group">
+                    <div class="text-3xl mb-4 opacity-80 group-hover:scale-110 transition duration-300">🏥</div>
+                    <h4 class="font-bold text-gray-800 mb-2">醫療藥事</h4>
+                    <p class="text-sm text-gray-500">萬華醫院、在地藥局及慢病管理建議。</p>
                 </div>
-                
-                <div id="toast" class="hidden fixed bottom-8 right-8 bg-gray-900 text-white px-6 py-3 rounded-2xl shadow-2xl items-center space-x-3 transition-opacity duration-300">
-                    <span id="toast-msg"></span>
+                <div class="bg-white p-6 rounded-2xl border border-gray-100 hover:border-emerald-200 transition group">
+                    <div class="text-3xl mb-4 opacity-80 group-hover:scale-110 transition duration-300">🍱</div>
+                    <h4 class="font-bold text-gray-800 mb-2">健康飲食</h4>
+                    <p class="text-sm text-gray-500">國光市場、舒肥底家及銀髮送餐服務。</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-gray-100 hover:border-emerald-200 transition group">
+                    <div class="text-3xl mb-4 opacity-80 group-hover:scale-110 transition duration-300">🌳</div>
+                    <h4 class="font-bold text-gray-800 mb-2">社交休閒</h4>
+                    <p class="text-sm text-gray-500">青年公園、樂齡學堂及巷弄長照站。</p>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="mt-20 py-10 border-t border-gray-100 text-center">
-        <p class="text-gray-400 text-sm italic">本工具由 AI 輔助產生，旨在協助推廣萬華區長照資源。</p>
+    <footer class="mt-20 py-12 border-t border-gray-100 bg-gray-50 text-center">
+        <p class="text-gray-500 text-sm mb-2">萬華區在地安老：社區長照資源手冊工具</p>
+        <p class="text-gray-400 text-xs">致力於縮短長輩與資源之間的距離</p>
     </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-8 py-4 rounded-full shadow-2xl items-center space-x-3 transition-opacity duration-300 z-[100]">
+        <span id="toast-msg"></span>
+    </div>
 
     <script>
         const targetUrl = "https://shenpaul1.github.io/Wanhua-Neighborhood/";
-        let qrcode = null;
-
-        function generateQR(size = 256) {
-            const container = document.getElementById("qrcode");
-            container.innerHTML = ""; // Clear existing
-            
-            qrcode = new QRCode(container, {
-                text: targetUrl,
-                width: size,
-                height: size,
-                colorDark: "#064e3b",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-        }
-
-        function downloadQR() {
-            const img = document.querySelector("#qrcode img");
-            if (!img) return;
-            
-            const link = document.createElement("a");
-            link.download = "wanhua-neighborhood-qr.png";
-            link.href = img.src;
-            link.click();
-            showToast("圖片下載中...");
-        }
 
         function copyLink() {
             const tempInput = document.createElement("input");
@@ -172,7 +151,7 @@
             tempInput.select();
             document.execCommand("copy");
             document.body.removeChild(tempInput);
-            showToast("網址已複製到剪貼簿");
+            showToast("網址已複製到剪貼簿，可以分享給朋友囉！");
         }
 
         function showToast(msg) {
@@ -187,18 +166,6 @@
                 setTimeout(() => toast.classList.add("hidden"), 300);
             }, 3000);
         }
-
-        // Event Listeners
-        document.getElementById("size-slider").addEventListener("input", (e) => {
-            const val = e.target.value;
-            document.getElementById("size-val").innerText = val;
-            generateQR(parseInt(val));
-        });
-
-        // Initialize on load
-        window.onload = () => {
-            generateQR(256);
-        };
     </script>
 </body>
 </html>
