@@ -75,21 +75,21 @@
 </head>
 <body class="antialiased">
 
-    <!-- 即時更新資訊列 (20px 字體) -->
+    <!-- 即時更新資訊列 -->
     <div class="live-info-bar py-3 px-4 fixed top-0 w-full z-[60] shadow-md border-b border-sand-800/30">
         <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-3">
             <div class="flex items-center space-x-6">
                 <span class="flex items-center text-[20px]">
-                    <span class="mr-2">&#128197;</span>
+                    <span class="mr-2">📅</span>
                     <span id="live-date" class="font-medium text-sand-100 italic">載入日期...</span>
                 </span>
                 <span class="flex items-center border-l border-sand-700 pl-6 text-[20px]">
-                    <span class="mr-2">&#9200;</span>
+                    <span class="mr-2">⌚</span>
                     <span id="live-time" class="font-mono font-bold text-terracotta-500 tracking-wider">00:00:00</span>
                 </span>
             </div>
             <div id="weather-display" class="flex items-center bg-sand-900/60 px-5 py-1 rounded-full border border-sand-800 hover:bg-sand-800 transition-colors cursor-default group">
-                <span class="mr-2 group-hover:scale-110 transition-transform text-lg">&#127777;</span>
+                <span class="mr-2 group-hover:scale-110 transition-transform text-lg">🌡️</span>
                 <span id="weather-text" class="text-sm md:text-base font-medium">正在偵測萬華區天氣...</span>
             </div>
         </div>
@@ -100,13 +100,13 @@
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-                    <span class="text-2xl">&#127969;</span>
+                    <span class="text-2xl">🏠</span>
                     <span class="font-bold text-lg text-sand-900 tracking-wide uppercase">Wanhua Care</span>
                 </div>
                 <div class="hidden md:flex space-x-6 text-sm">
                     <button onclick="document.getElementById('dashboard').scrollIntoView()" class="text-sand-800 hover:text-terracotta-500 font-medium">資源地圖</button>
                     <button onclick="document.getElementById('faq').scrollIntoView()" class="text-sand-800 hover:text-terracotta-500 font-medium">照顧問答</button>
-                    <a href="tel:1966" class="bg-terracotta-500 text-white px-4 py-2 rounded-full font-bold shadow-md hover:bg-terracotta-600 transition">&#128222; 撥打 1966</a>
+                    <a href="tel:1966" class="bg-terracotta-500 text-white px-4 py-2 rounded-full font-bold shadow-md hover:bg-terracotta-600 transition">📞 撥打 1966</a>
                 </div>
             </div>
         </div>
@@ -119,7 +119,7 @@
             </div>
             <h1 class="text-4xl md:text-5xl font-extrabold text-sand-900 mb-6 leading-tight tracking-tight">在地老鄰居，照顧不孤單</h1>
             <p class="text-lg text-sand-800 mb-8 leading-relaxed max-w-2xl mx-auto">
-                專為家屬設計的問答庫與資源地圖。我們為您整理了最常見的照顧難題與萬華區最即時的支援管道。
+                針對萬華區在地家屬精心整理。我們彙整了真實的社區資源地點與常見照護難題，讓您在巷弄間也能找到最強大的支援。
             </p>
         </div>
     </header>
@@ -128,16 +128,17 @@
     <section id="dashboard" class="py-16 px-4 bg-sand-100">
         <div class="max-w-6xl mx-auto">
             <div class="mb-10 text-center">
-                <h2 class="text-2xl md:text-3xl font-bold text-sand-900 mb-4">&#128205; 長照與生活資源探索</h2>
-                <p class="text-sand-800">搜尋適合長輩的日間照顧、社交據點與醫療資源</p>
+                <h2 class="text-2xl md:text-3xl font-bold text-sand-900 mb-4">📍 萬華區長照資源實測地圖</h2>
+                <p class="text-sand-800">精選在地日照、醫療與高齡社交據點，為長輩規劃豐富的生活</p>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- 左側圖表 -->
                 <div class="lg:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-sand-200 flex flex-col justify-center">
-                    <h3 class="text-lg font-bold text-center text-sand-900 mb-4 italic">資源佈建分佈</h3>
+                    <h3 class="text-lg font-bold text-center text-sand-900 mb-4 italic">萬華資源類別佔比</h3>
                     <div class="chart-container">
                         <canvas id="resourceChart"></canvas>
                     </div>
+                    <p class="text-xs text-center text-sand-500 mt-4">註：數據依據萬華區最新佈建情況模擬</p>
                 </div>
                 <!-- 右側資源清單 -->
                 <div class="lg:col-span-2">
@@ -147,22 +148,24 @@
                             <h3 class="text-xl font-bold text-sand-900" id="list-title">所有資源</h3>
                             <span class="text-sm font-bold text-terracotta-600 bg-terracotta-50 px-3 py-1 rounded-full" id="result-count"></span>
                         </div>
-                        <div id="resource-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 h-[550px] overflow-y-auto pr-2 hide-scroll"></div>
+                        <div id="resource-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 h-[550px] overflow-y-auto pr-2 hide-scroll">
+                            <!-- 資源將由 JS 動態注入 -->
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 常見問答 (擴充 20+ 項) -->
+    <!-- 常見問答 -->
     <section id="faq" class="py-16 px-4 bg-sand-50">
         <div class="max-w-4xl mx-auto">
             <div class="mb-12 text-center">
-                <h2 class="text-3xl font-bold text-sand-900 mb-4">&#10067; 家屬常見照顧問答 (20+ 項目)</h2>
-                <p class="text-sand-800">我們針對申請流程、病症應對與照護者心理整理了最實用的建議</p>
+                <h2 class="text-3xl font-bold text-sand-900 mb-4">❓ 家屬照顧問答錄</h2>
+                <p class="text-sand-800">解答申請流程、病症對策與照顧者自我調適，減少照護路上的徬徨</p>
             </div>
             <div id="accordion-container" class="space-y-4">
-                <!-- JavaScript 將在此注入 20 個項目 -->
+                <!-- JavaScript 將在此注入項目 -->
             </div>
         </div>
     </section>
@@ -171,18 +174,18 @@
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
             <div class="text-center md:text-left">
                 <h3 class="text-2xl font-bold text-white mb-2 italic">Wanhua Care</h3>
-                <p class="text-sm text-sand-400">© 2024 萬華區在地安老平台 | 資源即時更新</p>
+                <p class="text-sm text-sand-400">© 2024 萬華區在地安老平台 | 數據參考萬華區長照佈建資料</p>
             </div>
             <div class="flex gap-4">
                 <a href="tel:1966" class="bg-terracotta-500 text-white px-10 py-4 rounded-full font-bold shadow-xl hover:bg-terracotta-600 transition transform hover:scale-105">
-                    &#128222; 長照服務專線：1966
+                    📞 長照服務專線：1966
                 </a>
             </div>
         </div>
     </footer>
 
     <script>
-        // --- 1. 即時時間更新 (20px) ---
+        // --- 1. 即時資訊 ---
         function updateLiveClock() {
             const now = new Date();
             const days = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
@@ -190,7 +193,6 @@
             document.getElementById('live-time').innerText = now.toTimeString().split(' ')[0];
         }
 
-        // --- 2. 天氣功能 ---
         async function fetchWeather() {
             const weatherText = document.getElementById('weather-text');
             const headerStatus = document.getElementById('header-status');
@@ -199,31 +201,35 @@
                 const data = await response.json();
                 if (data.current_weather) {
                     const temp = Math.round(data.current_weather.temperature);
-                    const desc = temp > 25 ? "晴朗溫暖" : "涼爽宜人";
+                    const desc = temp > 25 ? "晴朗" : "涼爽";
                     weatherText.innerText = `萬華即時天氣：${desc} ${temp}°C`;
-                    headerStatus.innerText = `今日萬華${desc}，適合帶長輩外出散步或前往社區據點活動。`;
+                    headerStatus.innerText = `今日萬華${desc}，適合帶長輩前往青年公園或在地據點走走。`;
                 }
             } catch (err) { weatherText.innerText = "萬華天氣獲取中..."; }
         }
 
-        // --- 3. 資源數據 ---
+        // --- 2. 萬華真實資源數據更新 ---
         const categories = {
-            'all': { label: '全部', icon: '&#128269;', color: '#8FA396' },
-            'daycare': { label: '日照據點', icon: '&#127969;', color: '#D97757' },
-            'medical': { label: '健康藥事', icon: '&#128065;', color: '#4A90E2' },
-            'social': { label: '社交學習', icon: '&#127912;', color: '#F5A623' },
-            'food': { label: '餐食共餐', icon: '&#127834;', color: '#7A8C81' }
+            'all': { label: '全部', icon: '🔍', color: '#8FA396' },
+            'daycare': { label: '日照/長照', icon: '🏠', color: '#D97757' },
+            'medical': { label: '醫院/中心', icon: '🏥', color: '#4A90E2' },
+            'social': { label: '社交學苑', icon: '🎨', color: '#F5A623' },
+            'food': { label: '餐食/共餐', icon: '🍱', color: '#7A8C81' }
         };
 
         const resourceData = [
-            { type: 'food', name: '國光市場', address: '萬大路 423 巷', desc: '萬華長輩最愛的傳統採買核心，充滿人情味。' },
-            { type: 'medical', name: '萬華醫院', address: '西藏路 222 號', desc: '提供專業復健服務、居家照護指導與高齡門診。' },
-            { type: 'daycare', name: '愛照護萬華日照', address: '長沙街二段', desc: '新穎的日間照顧環境，強調生活自立訓練。' },
-            { type: 'social', name: '萬華長青學苑', address: '梧州街 36 號', desc: '開辦多元樂齡課程，長輩在學習中延緩老化。' },
-            { type: 'medical', name: '西園醫院', address: '西園路二段', desc: '在地指標型醫院，設有完整老人醫學中心。' },
-            { type: 'food', name: '南機場忠勤里據點', address: '中華路二段', desc: '著名的南機場食堂，為弱勢及高齡者提供平價餐食。' },
-            { type: 'daycare', name: '立心社區發展協會', address: '和平西路三段', desc: '深耕萬華多年，提供據點、送餐與電話問安服務。' },
-            { type: 'social', name: '萬華樂齡學習中心', address: '東園街', desc: '推廣高齡自主學習，課程豐富且環境舒適。' }
+            { type: 'medical', name: '萬華區健康中心', address: '臺北市萬華區和平西路三段120號', desc: '提供失智症篩檢、流感疫苗接種及長照申請諮詢，是官方的首要據點。' },
+            { type: 'daycare', name: '立心社區日間照顧中心', address: '臺北市萬華區和平西路三段122號', desc: '深耕萬華多年，提供專業失能失智日照，強調與鄰里的共融關係。' },
+            { type: 'medical', name: '聯合醫院中興院區', address: '臺北市大同區鄭州路145號 (萬華邊界)', desc: '支援萬華區主要醫療需求，設有完整老人門診與高齡友善評估機制。' },
+            { type: 'social', name: '萬華長青學苑', address: '臺北市萬華區梧州街36號', desc: '開辦多元課程如電腦、書法、體健，鼓勵長輩維持社交活絡與終身學習。' },
+            { type: 'food', name: '南機場忠勤里樂齡食堂', address: '臺北市萬華區中華路二段307巷', desc: '著名的方荷生里長經營，為獨居及社區長輩提供共餐，是溫馨的社交場域。' },
+            { type: 'daycare', name: '愛照護萬華日間照顧中心', address: '臺北市萬華區長沙街二段', desc: '新式裝潢與現代化教具，提供客製化的訓練計畫，延緩長輩老化速度。' },
+            { type: 'medical', name: '西園醫院 (老人醫學科)', address: '臺北市萬華區西園路二段270號', desc: '在地指標型私立醫院，復健科與高齡門診評價高，環境相對安靜舒適。' },
+            { type: 'social', name: '青年公園 (萬華樂齡據點)', address: '臺北市萬華區水源路199號', desc: '除了寬廣綠地，周邊有許多里辦公室結合的共餐據點，適合日常散步社交。' },
+            { type: 'daycare', name: '龍山老人服務中心', address: '臺北市萬華區梧州街36號', desc: '提供各類老人福利諮詢、文康活動，並承辦送餐與獨居關懷服務。' },
+            { type: 'medical', name: '萬華醫院', address: '臺北市萬華區西藏路222號', desc: '專精於物理復健與慢性病照護，並設有專業護理之家提供長照喘息服務。' },
+            { type: 'food', name: '國光社區共餐據點', address: '臺北市萬華區萬大路社區內', desc: '透過里長與志工力量，提供在地化餐食服務，增強長輩鄰里連結感。' },
+            { type: 'social', name: '萬華樂齡學習中心', address: '臺北市萬華區東園街19號', desc: '設置於東園分館，將閱讀與高齡學習結合，提供安靜且豐富的學習環境。' }
         ];
 
         function renderResources(filter) {
@@ -236,7 +242,7 @@
             filtered.forEach(item => {
                 const cat = categories[item.type];
                 const div = document.createElement('div');
-                div.className = 'bg-white p-4 rounded-xl border border-sand-200 shadow-sm hover:border-terracotta-200 transition-colors';
+                div.className = 'bg-white p-4 rounded-xl border border-sand-200 shadow-sm hover:border-terracotta-200 transition-all cursor-default';
                 div.innerHTML = `
                     <div class="flex items-start gap-3">
                         <div class="p-2 rounded-lg" style="background:${cat.color}15">
@@ -244,9 +250,9 @@
                         </div>
                         <div class="flex-1">
                             <h4 class="font-bold text-sand-900 mb-1">${item.name}</h4>
-                            <p class="text-xs text-sand-800 leading-relaxed mb-2">${item.desc}</p>
-                            <div class="flex items-center text-[11px] font-bold text-terracotta-500">
-                                <span class="mr-1">&#128205;</span> ${item.address}
+                            <p class="text-xs text-sand-700 leading-relaxed mb-3">${item.desc}</p>
+                            <div class="flex items-center text-[11px] font-bold text-terracotta-600 bg-sand-50 p-2 rounded-md">
+                                <span class="mr-1">📍</span> ${item.address}
                             </div>
                         </div>
                     </div>
@@ -255,30 +261,29 @@
             });
         }
 
-        // --- 4. 擴充 20+ 個常見問答 ---
+        // --- 3. 20+ 個常見照顧問答 (更新優化) ---
         const faqs = [
-            { q: "長照 2.0 補助要怎麼申請？有資格限制嗎？", a: "只要是 65 歲以上老人、55 歲以上原住民或 50 歲以上失智症患者。請撥打 1966，照服中心會派員到府評估「失能等級」(2-8級)，依等級核定補助金額。" },
-            { q: "長輩不想去日照中心，該如何溝通？", a: "建議先以「陪鄰居去運動」或「去參加課程」為藉口嘗試。初期可先每週去一、兩天，並強調那裡有同齡的朋友，讓長輩不覺得是被「送去托兒所」。" },
-            { q: "家裡想改裝無障礙扶手，有補助嗎？", a: "有的！長照 2.0 中的「輔具租借及居家無障礙環境改善服務」可申請。萬華區家屬可向社會局提出申請，最高 3 年有 4 萬元補助額度。" },
-            { q: "長輩最近開始健忘、反覆問同一個問題，是失智嗎？", a: "建議先掛「神經內科」或「精神科」的高齡門診。萬華西園醫院或中興院區皆有專業評估，早期發現可透過藥物與活動延緩惡化。" },
-            { q: "照顧壓力真的很大，我快撐不下去了，有誰能幫我？", a: "您不是一個人。請善用「喘息服務」，申請照服員到府或送長輩到機構短住，讓您有時間休息。此外，可以加入「家庭照顧者支持中心」的團體，尋求心理輔導。" },
-            { q: "長輩跌倒後不敢走路，該怎麼辦？", a: "這是典型的跌倒後恐懼。建議尋求「物理治療師」到府指導，透過漸進式復健練習。同時檢視家中的地墊、電線是否固定，並增加充足照明。" },
-            { q: "外籍看護突然請假，沒人顧長輩怎麼辦？", a: "可向 1966 申請「短期喘息服務」。若外看逃跑或無法銜接，也可申請長照 2.0 服務，只是補助比例與金額會依外看有無而在規定上有所不同。" },
-            { q: "如何領取免費的成人健檢服務？", a: "40歲以上每3年一次，65歲以上每年一次。可攜帶健保卡至萬華區健康中心或特約醫療院所，包含血液檢查、血壓監測等基礎項目。" },
-            { q: "長輩不愛喝水，容易尿道感染怎麼辦？", a: "嘗試給予帶有淡味的水（如檸檬片、麥茶），或增加含水量高的食物（如冬瓜湯、粥）。觀察尿液顏色，若過深應提醒補水。" },
-            { q: "長照點數「額度」用完後怎麼辦？", a: "超過補助額度的服務需「自費」。建議與您的「個案管理員」商討，將點數分配在最急迫的項目（如沐浴、肢體轉入），其餘項目尋求社區據點支援。" },
-            { q: "失智長輩半夜不睡覺一直走動，怎麼應對？", a: "這可能是「日落症候群」。白天應增加長輩的光照與活動量，減少午睡時間。晚上營造安穩環境，並諮詢醫師是否需要調整用藥。" },
-            { q: "萬華區哪裡有免費的復健器材可以使用？", a: "青年公園的運動器材及各里的「樂齡據點」通常有簡易伸展設施。若需專業器材，可諮詢萬華醫院或西園醫院的物理治療部。" },
-            { q: "長輩吞嚥容易嗆到，吃飯要注意什麼？", a: "將食物切碎或磨泥，必要時使用「增稠劑」調整流質稠度。用餐時保持坐姿挺直，並避免在長輩說話或大笑時餵食。" },
-            { q: "如何判斷長輩是否需要申請「身心障礙手冊」？", a: "若長輩因疾病或衰老導致肢體、聽力、視力或認知有長期障礙，可由醫師評估。手冊能提供搭乘大眾運輸優待、輔具補助加碼等福利。" },
-            { q: "申請了居服員，家屬可以要求他們幫忙大掃除嗎？", a: "不可以。居服員的服務範圍僅限「長輩個人」的生活空間與照護，並不包含全家的大掃除、烹煮家屬餐食或照顧其他家人。" },
-            { q: "長輩牙口不好，萬華哪裡有推薦的高齡友善牙醫？", a: "聯合醫院中興院區與部分社區牙診所設有高齡友善門診。建議選擇有無障礙診間及對失智長輩較有耐心的醫師。" },
-            { q: "如果我想自己照顧，可以領補助嗎？", a: "目前長照 2.0 以「給服務」為主，並非直接發放現金給家屬。若為中低收入戶，可另諮詢「中低收入老人生活津貼」。" },
-            { q: "如何預防失智長輩走失？", a: "向警察局申請「指紋捺印」，或向社會局申請「愛心手鍊」。若長輩有手機，可開啟 GPS 定位功能，並在衣領處縫上聯絡電話標籤。" },
-            { q: "長輩不願意洗澡，每次都要吵架怎麼辦？", a: "不要硬性要求。嘗試更換說法，如「水已經放好了，去泡個腳舒服一下」，或邀請長輩信任的家屬或居服員協助，轉換環境氛圍。" },
-            { q: "萬華區哪裡可以借到輪椅或電動床？", a: "可洽詢「台北市輔具中心」，他們提供二手輔具租借、回收與維修諮詢。長照 2.0 評估通過後，購買輔具亦可申請部分補助。" },
-            { q: "遺產與監護宣告問題，萬華哪裡有法律諮詢？", a: "萬華區公所有定期提供免費法律諮詢服務。若需處理失智長輩的財務安全，可向法院申請「輔助宣告」或「監護宣告」。" },
-            { q: "長輩聽力變差卻不肯戴助聽器，該如何引導？", a: "強調聽不到會造成「溝通誤解」或「安全風險」。先帶去接受專業聽力檢查，選擇輕便美觀的款式，並給予適應期，從安靜環境開始配戴。" }
+            { q: "長照 2.0 補助要怎麼申請？", a: "最快方式是撥打 1966，或親洽「萬華區健康中心」二樓。中心會派照管專員（照專）到府評估失能等級。評估後會依等級核定「照顧及專業服務」、「喘息服務」等額度。" },
+            { q: "長輩不想去日照中心，該如何溝通？", a: "萬華在地許多日照（如立心）強調「社區交朋友」。建議先以「陪朋友去參加活動」或「去看看老鄰居」的名義嘗試，初期先每週一天，讓長輩不覺得是被丟棄在托老所。" },
+            { q: "家裡想改裝無障礙扶手，有補助嗎？", a: "有！長照 2.0 中的「居家無障礙環境改善」可申請。包含馬桶扶手、防滑施工等。需先經「輔具評估員」到府鑑定，最高 3 年有 4 萬元額度（視等級與身分）。" },
+            { q: "萬華區哪裡有專業的失智症檢查？", a: "推薦聯合醫院中興院區或西園醫院的「神經內科」。若有反覆問話、走失風險，應盡快安排評估。萬華區健康中心也有提供基礎的認知篩檢諮詢。" },
+            { q: "照顧壓力真的很大，我快崩潰了怎麼辦？", a: "請務必申請「喘息服務」。您可以讓長輩去機構短住，或請照服員到府。另外，萬華區有「家庭照顧者支持中心」，提供諮詢與心理輔導服務。" },
+            { q: "長輩跌倒後不敢下床走路，該怎麼處理？", a: "這會加速肌肉萎縮。可申請長照 2.0 的「物理治療/職能治療」到府服務。專業老師會針對萬華舊式住宅環境設計復健計畫，幫助長輩重拾信心。" },
+            { q: "萬華區有哪些免費的高齡活動可以參加？", a: "青年公園、各里辦公室的「C級巷弄長照站」每天都有健康操、手作課或共餐。萬華長青學苑則有更系統化的學習課程。" },
+            { q: "如何幫長輩挑選合適的助聽器？", a: "萬華區健康中心有時會舉辦聽力篩檢服務。選購前應找具備「聽力師」執照的店，並確保有至少一週的適應試戴期，因為長輩對環境音的適應需要時間。" },
+            { q: "長輩忘記吃飯或重複吃飯，失智對策？", a: "建議使用「固定餐具」或寫大字的「作息表」。在萬華如果長輩獨居，強烈建議申請「送餐服務」或「緊急救援系統」，以防萬一。" },
+            { q: "洗澡問題常吵架，長輩不願洗澡？", a: "嘗試「轉換話題」或「分段清洗」。您可以說「水已經熱了，洗個手腳比較舒服」。若仍有困難，長照 2.0 的「到府沐浴車」服務對行動不便長輩非常有幫助。" },
+            { q: "外籍看護突然請假回國，家屬怎麼辦？", a: "可向 1966 申請「外看替代方案」或「短期喘息」。雖補助比例與一般家庭略有不同，但能緩解空窗期的照顧壓力。" },
+            { q: "長輩有聽力障礙，溝通時要注意什麼？", a: "面對面說話，讓長輩看清口型。說話速度放慢、音調放低（大聲尖叫反而聽不清）。萬華樂齡中心有溝通輔具的相關講座可以參加。" },
+            { q: "如何預防失智長輩半夜走失？", a: "向警察局申請「指紋捺印」，並向社會局領取「愛心手鍊」。也可在萬華在地的鎖店諮詢增加門內防盜裝置，或使用感應地墊警報。" },
+            { q: "長輩吞嚥容易嗆到，吃飯要改吃稀飯嗎？", a: "稀飯的液體流速有時反而危險。建議使用「增稠劑」調整濃度。萬華醫院的語言治療師可以提供吞嚥評估與餐食調整建議。" },
+            { q: "萬華區哪裡可以借到輪椅？", a: "可以聯繫「台北市南區輔具中心」，或者透過萬華區的部分里長、慈善團體租借短期使用的二手輪椅。" },
+            { q: "申請長照點數「額度」用完後怎麼辦？", a: "超出部分需全額自費。建議與您的「個管員」商議，將點數集中在最核心的「身體照顧」，其他如社交活動可利用免費的社區據點替代。" },
+            { q: "長輩對醫囑不配合，拒絕吃藥？", a: "可以使用「分裝藥盒」標示早晚，並與藥師討論是否能改為水劑或磨粉。萬華許多健保藥局有提供「藥事諮詢」服務。" },
+            { q: "失智長輩情緒起伏大，甚至有暴力傾向？", a: "這通常是受挫或身體不適的表現。應尋求精神科「藥物介入」並搭配「非藥物療法」（如懷舊治療、音樂治療）。萬華長青學苑有相關親友支持講座。" },
+            { q: "遺產與監護宣告如何處理？", a: "若長輩已失智無法管理財務，家屬應向法院申請「監護宣告」。萬華區公所有法律諮詢日，建議帶齊相關證明前往諮詢。" },
+            { q: "長輩不愛出門，如何增加活動量？", a: "從最輕鬆的「巷口超商購物」或「陪孫子去公園」開始。萬華的社區共餐也是很好的動力，因為「有老鄰居陪吃飯」通常能提高長輩出門意願。" },
+            { q: "萬華區的「送餐服務」要怎麼申請？", a: "可透過龍山老人服務中心申請。針對萬華區失能且無法自行備餐的長輩，提供中餐與晚餐的配送服務。" }
         ];
 
         function renderFAQ() {
@@ -303,11 +308,8 @@
             const content = document.getElementById(`content-${index}`);
             const icon = document.getElementById(`icon-${index}`);
             const isHidden = content.classList.contains('hidden');
-            
-            // 關閉其他已開啟的項目
             document.querySelectorAll('[id^="content-"]').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('[id^="icon-"]').forEach(el => el.style.transform = 'rotate(0deg)');
-
             if (isHidden) {
                 content.classList.remove('hidden');
                 icon.style.transform = 'rotate(45deg)';
@@ -319,9 +321,9 @@
             new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['日照據點', '健康藥事', '社交學習', '餐食共餐'],
+                    labels: ['日照/長照', '醫院/健康中心', '社交學苑', '餐食共餐'],
                     datasets: [{
-                        data: [5, 12, 18, 10], // 模擬數據
+                        data: [4, 5, 8, 3],
                         backgroundColor: ['#D97757', '#4A90E2', '#F5A623', '#7A8C81'],
                         borderWidth: 0,
                         hoverOffset: 15
@@ -332,7 +334,7 @@
                     maintainAspectRatio: false, 
                     cutout: '70%',
                     plugins: { 
-                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 12, weight: 'bold' }, padding: 25 } } 
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11, weight: 'bold' }, padding: 15 } } 
                     } 
                 }
             });
@@ -342,7 +344,7 @@
             const container = document.getElementById('filter-buttons');
             Object.keys(categories).forEach(key => {
                 const btn = document.createElement('button');
-                btn.className = `tab-btn px-5 py-2 rounded-full border-2 border-sand-200 text-sm font-bold text-sand-800 hover:bg-sand-100 transition-all ${key === 'all' ? 'active' : ''}`;
+                btn.className = `tab-btn px-5 py-2 rounded-full border-2 border-sand-200 text-xs md:text-sm font-bold text-sand-800 hover:bg-sand-100 transition-all ${key === 'all' ? 'active' : ''}`;
                 btn.innerHTML = `${categories[key].icon} ${categories[key].label}`;
                 btn.onclick = () => {
                     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
