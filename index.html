@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>萬華區長照資源地圖 - 旗艦版</title>
+    <title>萬華區長照資源地圖</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -25,7 +25,7 @@
         .map-link {
             color: #2563eb;
             text-decoration: underline;
-            font-weight: 500;
+            font-weight: 600;
         }
         .map-link:hover { color: #1d4ed8; }
         
@@ -38,10 +38,10 @@
             color: white !important;
         }
         .category-tag {
-            font-size: 0.875rem;
+            font-size: 0.95rem;
             font-weight: bold;
-            padding: 2px 8px;
-            border-radius: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
         }
     </style>
 </head>
@@ -51,11 +51,11 @@
     <div class="bg-stone-900 text-stone-100 py-3 px-4 sticky top-0 z-[100] border-b border-stone-800">
         <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4 text-base-16">
             <div class="flex items-center gap-6">
-                <span id="live-date">2024年10月24日 星期四</span>
-                <span id="live-time" class="font-mono text-orange-400 font-bold">12:00:00</span>
+                <span id="live-date">讀取日期中...</span>
+                <span id="live-time" class="font-mono text-orange-400 font-bold">00:00:00</span>
             </div>
             <div class="flex items-center gap-2">
-                <span>📍 萬華區天氣：</span>
+                <span>📍 萬華區即時氣溫：</span>
                 <span id="weather-info">讀取中...</span>
             </div>
         </div>
@@ -64,10 +64,7 @@
     <!-- 標題區 -->
     <header class="py-12 px-4 bg-stone-100 border-b border-stone-200">
         <div class="max-w-6xl mx-auto text-center">
-            <h1 class="text-4xl md:text-5xl font-black text-stone-900 mb-6">萬華區在地長照與生活資源導覽</h1>
-            <p class="text-xl-20 text-stone-700 max-w-3xl mx-auto leading-relaxed">
-                字體已放大至 16px。新增「在地市場」與「30分鐘景點」分類，提供 60 個真實據點，讓長輩生活更精彩。
-            </p>
+            <h1 class="text-4xl md:text-5xl font-black text-stone-900 mb-2">萬華區在地長照與生活資源導覽</h1>
         </div>
     </header>
 
@@ -85,7 +82,7 @@
                         </div>
                     </div>
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
-                        <h3 class="text-xl-20 font-bold mb-4">萬華區資源佔比</h3>
+                        <h3 class="text-xl-20 font-bold mb-4">現有資源占比統計</h3>
                         <div class="h-64">
                             <canvas id="categoryChart"></canvas>
                         </div>
@@ -111,9 +108,9 @@
     <!-- 照顧問答錄 -->
     <section class="py-16 px-4 bg-stone-100">
         <div class="max-w-4xl mx-auto">
-            <h2 class="text-3xl font-black text-center mb-12">常見照顧問答 (20+)</h2>
+            <h2 class="text-3xl font-black text-center mb-12">常見照顧問答 (20 則完整版)</h2>
             <div class="space-y-4" id="faq-list">
-                <!-- JS 動態渲染 FAQ -->
+                <!-- JS 動態渲染 20 則 FAQ -->
             </div>
         </div>
     </section>
@@ -136,7 +133,7 @@
         };
 
         const rawData = [
-            // 日照/居家 (10項)
+            // 日照/居家 (10)
             { type: 'daycare', name: '立心社區日間照顧中心', address: '台北市萬華區和平西路三段122號', desc: '萬華區日照標竿，提供完善的失能失智生活照顧與復能訓練。' },
             { type: 'daycare', name: '龍山老人服務中心', address: '台北市萬華區梧州街36號', desc: '提供日間照顧、居家服務申請、以及社區關懷訪視等多功能服務。' },
             { type: 'daycare', name: '愛照護萬華日照中心', address: '台北市萬華區長沙街二段151號', desc: '現代化寬敞空間，專精於個別化活動設計，延緩長輩認知功能退化。' },
@@ -148,7 +145,7 @@
             { type: 'daycare', name: '萬華區喘息服務中心', address: '台北市萬華區和平西路三段', desc: '專門提供家庭照顧者臨時替代人力，緩解主要照護者的身心壓力。' },
             { type: 'daycare', name: '老吾老居家服務部', address: '台北市萬華區西園路', desc: '由資深社工督導，強調尊嚴服務，讓長輩在自家環境安心終老。' },
 
-            // 醫療/健檢 (10項)
+            // 醫療/健檢 (10)
             { type: 'medical', name: '萬華區健康中心', address: '台北市萬華區和平西路三段120號', desc: '公部門首要窗口，提供免費健檢、疫苗注射及長照2.0第一手諮詢。' },
             { type: 'medical', name: '西園醫療社團法人西園醫院', address: '台北市萬華區西園路二段270號', desc: '在地資深私立醫院，復健科、心臟科口碑佳。' },
             { type: 'medical', name: '萬華醫院', address: '台北市萬華區西藏路222號', desc: '專攻物理復健與慢性病長期管理，並設有護理之家。' },
@@ -157,10 +154,10 @@
             { type: 'medical', name: '聯合醫院中興院區', address: '台北市大同區鄭州路145號', desc: '具備完整高齡門診與急性後期照護。' },
             { type: 'medical', name: '永越健康管理中心', address: '台北市萬華區西園路二段155號', desc: '高端健檢首選，環境舒適，提供精準身體檢查。' },
             { type: 'medical', name: '萬華中醫診所', address: '台北市萬華區萬大路', desc: '協助長輩調理體質，舒緩慢性關節疼痛。' },
-            { type: 'medical', name: '台北市南區輔具中心', address: '台北市文山區', desc: '提供行動輔具、居家無障礙評估諮詢。' },
+            { type: 'medical', name: '台北市南區輔具中心', address: '台北市文山區景中街', desc: '提供行動輔具、居家無障礙評估諮詢。' },
             { type: 'medical', name: '社區健保藥局', address: '台北市萬華區各大街區', desc: '提供慢籤領藥與用藥諮詢，減少長輩奔波醫院。' },
 
-            // 社交/學習 (10項)
+            // 社交/學習 (10)
             { type: 'social', name: '萬華長青學苑', address: '台北市萬華區梧州街36號', desc: '開設電腦、書法、體健課程，是退休後社交的核心場域。' },
             { type: 'social', name: '青年公園樂齡中心', address: '台北市萬華區水源路199號', desc: '結合公園綠地環境，推動園藝治療與戶外休閒學習。' },
             { type: 'social', name: '萬華樂齡學習中心', address: '台北市萬華區東園街19號', desc: '設置於圖書館內，資源豐富，鼓勵長輩進行終身學習。' },
@@ -172,7 +169,7 @@
             { type: 'social', name: '萬華區運動中心', address: '台北市萬華區西寧南路6-1號', desc: '公益時段提供游泳與健身器材，鼓勵維持肌耐力。' },
             { type: 'social', name: '龍山文創基地', address: '台北市萬華區西園路一段145號', desc: '適合觀展，環境舒適且有無障礙電梯。' },
 
-            // 共餐/物資 (10項)
+            // 共餐/物資 (10)
             { type: 'food', name: '南機場忠勤里食堂', address: '台北市萬華區中華路二段307巷', desc: '全台知名共餐據點，不僅有餐飲更有深厚鄰里情誼。' },
             { type: 'food', name: '國光社區巷弄長照站', address: '台北市萬華區萬大路', desc: '提供營養均衡共餐服務，並有志工定時問安。' },
             { type: 'food', name: '慈濟萬華聯絡處', address: '台北市萬華區和平西路三段', desc: '定期舉辦蔬食共餐與環保講座，提倡健康生活。' },
@@ -184,52 +181,66 @@
             { type: 'food', name: '新安里共餐服務站', address: '台北市萬華區西藏路', desc: '里長積極籌劃，菜色變化多，長輩最期待的聚會。' },
             { type: 'food', name: '萬華區公所', address: '台北市萬華區和平西路三段120號', desc: '協助長輩對接各項社會福利與實物補助。' },
 
-            // 市場項目 (10項)
-            { type: 'market', name: '直興市場', address: '台北市萬華區康定路172巷', desc: '充滿懷舊氛圍的小市場，有許多老字號的小吃攤與熟食，適合長輩慢慢逛。' },
-            { type: 'market', name: '東園市場', address: '台北市萬華區東園街66巷', desc: '南萬華的核心市場，攤位緊湊，新鮮蔬果豐富且人情味濃厚。' },
-            { type: 'market', name: '西寧市場', address: '台北市萬華區西寧南路4號', desc: '室內型大型市場，有無障礙電梯與整潔環境，不怕颳風下雨。' },
-            { type: 'market', name: '龍山商場', address: '台北市萬華區和平西路三段120號', desc: '位於捷運站旁，一樓為美食街，地下一樓有傳統攤位，出入非常方便。' },
-            { type: 'market', name: '雙和市場', address: '台北市萬華區雙和街', desc: '傳統的路邊型市場，攤位多元，是許多南萬華主婦的首選。' },
-            { type: 'market', name: '果菜批發市場 (第一果菜)', address: '台北市萬華區萬大路533號', desc: '全台最大，雖以批發為主，但周邊零星零售也極其便宜。' },
-            { type: 'market', name: '中央市場', address: '台北市萬華區環河南路二段', desc: '主要服務清晨時段，是老萬華人的生活縮影。' },
-            { type: 'market', name: '新富町文化市場', address: '台北市萬華區三水街70號', desc: '古蹟改建，內部環境極佳，適合帶長輩看展並在旁邊的三水街買菜。' },
-            { type: 'market', name: '三水街市場 (艋舺東三水)', address: '台北市萬華區三水街', desc: '有頂棚遮擋，販售許多精緻熟食與傳統點心，長輩步行環境友善。' },
-            { type: 'market', name: '德昌街市場', address: '台北市萬華區德昌街', desc: '萬大路周邊的小型市集，是附近居民最便利的生鮮補給站。' },
+            // 傳統市場 (10)
+            { type: 'market', name: '直興市場', address: '台北市萬華區康定路172巷', desc: '充滿懷舊氛圍的小市場，有許多老字號小吃，適合慢慢逛。' },
+            { type: 'market', name: '東園市場', address: '台北市萬華區東園街66巷', desc: '南萬華的核心市場，新鮮蔬果豐富且人情味濃厚。' },
+            { type: 'market', name: '西寧市場', address: '台北市萬華區西寧南路4號', desc: '室內型大型市場，有無障礙電梯，不怕颳風下雨。' },
+            { type: 'market', name: '龍山商場', address: '台北市萬華區和平西路三段120號', desc: '捷運站旁，一樓為美食街，出入非常方便。' },
+            { type: 'market', name: '雙和市場', address: '台北市萬華區雙和街', desc: '路邊型傳統市場，是許多南萬華主婦的首選。' },
+            { type: 'market', name: '果菜批發市場', address: '台北市萬華區萬大路533號', desc: '全台最大，周邊零售生鮮非常便宜。' },
+            { type: 'market', name: '中央市場', address: '台北市萬華區環河南路二段', desc: '老萬華人的生活縮影，服務清晨時段。' },
+            { type: 'market', name: '新富町文化市場', address: '台北市萬華區三水街70號', desc: '古蹟改建，內部環境極佳，適合看展與慢行。' },
+            { type: 'market', name: '三水街市場', address: '台北市萬華區三水街', desc: '有頂棚遮擋，販售精緻熟食與傳統點心。' },
+            { type: 'market', name: '德昌街市場', address: '台北市萬華區德昌街', desc: '萬大路周邊的小型市集，便利的生鮮補給站。' },
 
-            // 30分鐘景點 (10項)
-            { type: 'travel', name: '青年公園 (公車 12, 212, 223)', address: '台北市萬華區水源路199號', desc: '萬華長輩的後花園，步道平緩，有遮蔭涼亭，非常適合每日晨練散步。' },
-            { type: 'travel', name: '植物園 (公車 1, 242, 624)', address: '台北市中正區南海路53號', desc: '距離萬華極近，輪椅友善步道，擁有豐富植被與涼爽環境。' },
-            { type: 'travel', name: '中正紀念堂 (公車 249, 630)', address: '台北市中正區中山南路21號', desc: '廣場寬闊，有電梯可上樓看儀隊交接，適合午後悠閒逛展。' },
-            { type: 'travel', name: '二二八和平公園 (公車 223, 604)', address: '台北市中正區凱達格蘭大道3號', desc: '市中心綠地，松鼠眾多，且有許多老建築與紀念設施供觀賞。' },
-            { type: 'travel', name: '台北車站/地下街 (公車 212, 262, 307)', address: '台北市中正區忠孝西路一段', desc: '雨天出遊首選，地下街全區無障礙，店鋪眾多且冷氣充足。' },
-            { type: 'travel', name: '西門町商圈/紅樓 (步行或各路公車)', address: '台北市萬華區成都路10號', desc: '體驗年輕氣息，紅樓內部有無障礙空間與茶飲，是懷舊與現代的交會。' },
-            { type: 'travel', name: '華江雁鴨公園 (公車 18, 673)', address: '台北市萬華區環河南路二段', desc: '適合秋冬季觀賞候鳥，河濱步道視野開闊，心情愉悅。' },
-            { type: 'travel', name: '國史館/北門 (公車 9, 218)', address: '台北市中正區延平南路2號', desc: '古蹟密度高，步道寬度適合助行器，可回憶台北舊城風華。' },
-            { type: 'travel', name: '中山堂 (公車 12, 212)', address: '台北市中正區延平南路98號', desc: '環境清幽，經常有低票價或免費藝文表演，二樓咖啡廳氣氛極佳。' },
-            { type: 'travel', name: '艋舺龍山寺 (步行或各路公車)', address: '台北市萬華區廣州街211號', desc: '精神信仰中心，周邊有無障礙入口，香火繚繞感懷歷史。' }
+            // 30分鐘景點 (10)
+            { type: 'travel', name: '青年公園 (12, 212, 223)', address: '台北市萬華區水源路199號', desc: '步道平緩有遮蔭，非常適合每日晨練散步。' },
+            { type: 'travel', name: '植物園 (1, 242, 624)', address: '台北市中正區南海路53號', desc: '輪椅友善步道，擁有豐富植被與涼爽環境。' },
+            { type: 'travel', name: '中正紀念堂 (249, 630)', address: '台北市中正區中山南路21號', desc: '廣場寬闊，有電梯可看儀隊交接，逛展首選。' },
+            { type: 'travel', name: '二二八公園 (223, 604)', address: '台北市中正區凱達格蘭大道3號', desc: '松鼠眾多，老建築與紀念設施供觀賞。' },
+            { type: 'travel', name: '台北車站地下街 (307, 262)', address: '台北市中正區忠孝西路一段', desc: '雨天出遊首選，冷氣充足且全區無障礙。' },
+            { type: 'travel', name: '西門紅樓 (步行/各路)', address: '台北市萬華區成都路10號', desc: '內部有無障礙空間，體驗懷舊與現代交會。' },
+            { type: 'travel', name: '華江雁鴨公園 (18, 673)', address: '台北市萬華區環河南路二段', desc: '河濱步道視野開闊，秋冬可觀賞候鳥。' },
+            { type: 'travel', name: '北門古蹟群 (9, 218)', address: '台北市中正區延平南路2號', desc: '步道寬度適合助行器，回憶台北舊城風華。' },
+            { type: 'travel', name: '中山堂 (12, 212)', address: '台北市中正區延平南路98號', desc: '清幽且常有藝文表演，二樓咖啡廳氣氛佳。' },
+            { type: 'travel', name: '艋舺龍山寺 (步行/各路)', address: '台北市萬華區廣州街211號', desc: '精神信仰中心，周邊有無障礙入口與諮詢。' }
         ];
 
         const faqs = [
-            { q: "長照2.0是什麼？我該怎麼開始？", a: "長照2.0是政府補助失能或失智長輩的照護制度。第一步請撥打 1966，由專員安排到府評估。萬華區家屬也可直接去和平西路的「健康中心」詢問。" },
-            { q: "市場地址點開後可以用手機導航嗎？", a: "可以。點擊列表中的藍色地址連結，手機會自動開啟 Google Maps，並將該地點設為目的地，方便直接導航前往。" },
-            { q: "公車景點建議的路線準確嗎？", a: "提供的公車號碼是從萬華區（如龍山寺、萬大路）出發的常用路線。建議搭配「台北等公車」APP 確認實時到站時間。" },
-            { q: "萬華區日照中心很難排隊嗎？", a: "熱門機構（如立心）常有額滿狀況。建議申請完畢後，儘早與您的「個管員」討論，多備選幾間或先使用居家服務銜接。" },
-            { q: "家裡想改裝斜坡道、扶手，政府有補助嗎？", a: "有。最高可補助 4 萬元（每三年計算一次），需先經輔具評估員到府評估，千萬不要先買再報帳喔！" }
-            // 這裡為了空間省略部分重複 FAQ，實際開發可補足 20 則
+            { q: "長照2.0是什麼？我該怎麼開始？", a: "長照2.0是政府補助失能或失智長輩的制度。第一步請撥打 1966，由專員評估。萬華家屬也可去「健康中心」詢問。" },
+            { q: "市場地址點開後可以用手機導航嗎？", a: "可以。點擊列表中的藍色連結，手機會自動開啟 Google Maps 方便直接導航前往。" },
+            { q: "公車景點建議的路線準確嗎？", a: "提供的號碼是從萬華出發的常用路線。建議搭配「台北等公車」APP 確認實時到站時間。" },
+            { q: "家裡想改裝斜坡道、扶手，政府有補助嗎？", a: "有。最高可補助 4 萬元（每三年一周期），需先經輔具評估員到府評估，不可自行先買。" },
+            { q: "長輩不想出門共餐，有送餐服務嗎？", a: "有。對於失能無法自炊的長輩，長照服務包含「送餐到府」，可透過 1966 申請。" },
+            { q: "萬華區日照中心很難排隊嗎？", a: "熱門機構常有額滿狀況。建議申請完畢後，與個管員討論備選幾間或先用居家服務銜接。" },
+            { q: "復康巴士要怎麼預約？", a: "需有身心障礙證明或經長照評估。萬華屬台北市服務區，需提前 3-5 天上網或電話預約。" },
+            { q: "獨居長輩在家跌倒怎麼辦？", a: "政府有提供「緊急救援系統」補助，長輩佩戴隨身按鈕，發生意外可即時通報中心。" },
+            { q: "喘息服務是什麼？照顧者可以休息嗎？", a: "喘息服務是讓主要照顧者暫時休息。政府補助機構或居家喘息，讓外援人力替代照護。" },
+            { q: "什麼是 ABCD 級長照單位？", a: "A 級為個案管理中心，B 級為服務提供單位（如日照），C 級為巷弄長照站（共餐社交）。" },
+            { q: "失智症長輩不認人，該去哪裡尋求幫助？", a: "萬華有許多「失智據點」，提供非藥物治療活動，並有家屬支持團體分享照護心得。" },
+            { q: "輔具中心可以租借輪椅嗎？", a: "可以。南區輔具中心提供短期租借服務，若長期使用則建議申請政府購置補助。" },
+            { q: "萬華有哪些適合輪椅長輩的公園？", a: "青年公園最推薦，步道平緩、無障礙廁所充足，且公車低地板比率高。" },
+            { q: "共餐服務有分里別嗎？", a: "大部分據點以該里居民優先，但也有許多據點開放給鄰近里別的長輩參與。" },
+            { q: "長照等級分為幾級？", a: "分為 1 至 8 級。2 級以上才有補助，級數越高代表失能程度越高，補助總金額也越多。" },
+            { q: "家中有外籍移工，還能申請長照服務嗎？", a: "可以。但主要補助在「專業服務」、「輔具」與「交通轉送」，不包含「照顧服務」。" },
+            { q: "日間照顧中心跟安養院有什麼差別？", a: "日照中心像「學校」，白天去、傍晚回；安養院則是全天候居住在機構內。" },
+            { q: "萬華的健康中心在哪裡？", a: "位於和平西路三段 120 號，就在龍山寺捷運站附近，是諮詢福利的重要起點。" },
+            { q: "請問申請長照需要準備什麼文件？", a: "只需身分證資料。評估員到府時會核對，重點在於長輩實際的行動與生活能力評估。" },
+            { q: "假日有長照服務嗎？", a: "部分居家服務或機構喘息有提供假日時段，但需提前預約，且加成費用可能較高。" }
         ];
 
-        // 初始化功能
+        let myChart = null;
+
         function init() {
             renderFilters();
             renderResources('all');
             renderFAQ();
             updateLiveTime();
             setInterval(updateLiveTime, 1000);
-            initChart();
             fetchWeather();
+            updateChart();
         }
 
-        // 渲染分類按鈕
         function renderFilters() {
             const container = document.getElementById('filter-container');
             Object.keys(categories).forEach(key => {
@@ -247,7 +258,6 @@
             document.getElementById('btn-all').classList.add('tab-active');
         }
 
-        // 渲染資源列表
         function renderResources(filter) {
             const list = document.getElementById('resource-list');
             const countDisplay = document.getElementById('item-count');
@@ -284,7 +294,6 @@
             });
         }
 
-        // 渲染問答
         function renderFAQ() {
             const container = document.getElementById('faq-list');
             faqs.forEach((item, idx) => {
@@ -314,30 +323,43 @@
             try {
                 const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=25.03&longitude=121.50&current_weather=true');
                 const data = await res.json();
-                const temp = data.current_weather.temperature;
-                document.getElementById('weather-info').innerText = `${temp}°C (萬華即時氣溫)`;
+                document.getElementById('weather-info').innerText = `${data.current_weather.temperature}°C`;
             } catch {
-                document.getElementById('weather-info').innerText = '讀取失敗';
+                document.getElementById('weather-info').innerText = '暫無資訊';
             }
         }
 
-        function initChart() {
+        function updateChart() {
             const ctx = document.getElementById('categoryChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'doughnut',
+            
+            // 計算真實數據佔比
+            const counts = {};
+            rawData.forEach(item => {
+                counts[item.type] = (counts[item.type] || 0) + 1;
+            });
+
+            const labels = Object.keys(counts).map(key => categories[key].label);
+            const dataValues = Object.values(counts);
+            const backgroundColors = ['#f97316', '#3b82f6', '#22c55e', '#ef4444', '#eab308', '#a855f7'];
+
+            if (myChart) myChart.destroy();
+
+            myChart = new Chart(ctx, {
+                type: 'pie',
                 data: {
-                    labels: ['長照類', '生活類', '休閒類'],
+                    labels: labels,
                     datasets: [{
-                        data: [20, 20, 20],
-                        backgroundColor: ['#f97316', '#eab308', '#a855f7'],
-                        borderWidth: 2,
-                        borderColor: '#ffffff'
+                        data: dataValues,
+                        backgroundColor: backgroundColors,
+                        borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } }
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 14 } } }
+                    }
                 }
             });
         }
