@@ -1,370 +1,107 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>萬華區長照資源地圖</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            background-color: #FDFBF7;
-            color: #3A302A;
-            font-size: 16px;
-            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-        }
-        .text-base-16 { font-size: 1rem; }
-        .text-lg-18 { font-size: 1.125rem; }
-        .text-xl-20 { font-size: 1.25rem; }
-        
-        .resource-card:hover {
-            transform: translateY(-3px);
-            border-color: #D97757;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-        .map-link {
-            color: #2563eb;
-            text-decoration: underline;
-            font-weight: 600;
-        }
-        .map-link:hover { color: #1d4ed8; }
-        
-        .hide-scroll::-webkit-scrollbar { width: 8px; }
-        .hide-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
-        .hide-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+\documentclass[11pt, a4paper]{article}
 
-        .tab-active {
-            background-color: #D97757 !important;
-            color: white !important;
-        }
-        .category-tag {
-            font-size: 0.95rem;
-            font-weight: bold;
-            padding: 4px 10px;
-            border-radius: 6px;
-        }
-    </style>
-</head>
-<body class="antialiased">
+% --- UNIVERSAL PREAMBLE BLOCK ---
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
+\usepackage{fontspec}
+\usepackage[chinese-traditional, bidi=basic, provide=*]{babel}
 
-    <!-- 頂部即時欄 -->
-    <div class="bg-stone-900 text-stone-100 py-3 px-4 sticky top-0 z-[100] border-b border-stone-800">
-        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4 text-base-16">
-            <div class="flex items-center gap-6">
-                <span id="live-date">讀取日期中...</span>
-                <span id="live-time" class="font-mono text-orange-400 font-bold">00:00:00</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <span>📍 萬華區即時氣溫：</span>
-                <span id="weather-info">讀取中...</span>
-            </div>
-        </div>
-    </div>
+\babelprovide[import, onchar=ids fonts]{chinese-traditional}
+\babelprovide[import, onchar=ids fonts]{english}
 
-    <!-- 標題區 -->
-    <header class="py-12 px-4 bg-stone-100 border-b border-stone-200">
-        <div class="max-w-6xl mx-auto text-center">
-            <h1 class="text-4xl md:text-5xl font-black text-stone-900 mb-2">萬華區在地長照與生活資源導覽</h1>
-        </div>
-    </header>
+% Set default font to Sans Serif (Noto Sans)
+\babelfont{rm}{Noto Sans}
+\babelfont[chinese-traditional]{rm}{Noto Sans CJK TC}
 
-    <!-- 資源地圖主區塊 -->
-    <section class="py-12 px-4">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
-                
-                <!-- 左側：分類與統計 -->
-                <div class="xl:col-span-3 space-y-6">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
-                        <h3 class="text-xl-20 font-bold mb-4 border-l-4 border-orange-500 pl-3">資源快速篩選</h3>
-                        <div class="flex flex-col gap-3" id="filter-container">
-                            <!-- JS 生成按鈕 -->
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
-                        <h3 class="text-xl-20 font-bold mb-4">現有資源占比統計</h3>
-                        <div class="h-64">
-                            <canvas id="categoryChart"></canvas>
-                        </div>
-                    </div>
-                </div>
+\usepackage{enumitem}
+\setlist[itemize]{label=-}
+% --------------------------------
 
-                <!-- 右側：資料清單 -->
-                <div class="xl:col-span-9 bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
-                    <div class="p-6 border-b border-stone-100 flex justify-between items-center bg-stone-50/50">
-                        <h2 class="text-2xl font-bold" id="current-category-title">所有資源項目</h2>
-                        <span class="bg-orange-100 text-orange-700 px-4 py-1 rounded-full font-bold" id="item-count">共 60 筆</span>
-                    </div>
-                    
-                    <div class="p-6 h-[750px] overflow-y-auto hide-scroll grid grid-cols-1 md:grid-cols-2 gap-6" id="resource-list">
-                        <!-- JS 動態渲染內容 -->
-                    </div>
-                </div>
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
 
-            </div>
-        </div>
-    </section>
+% 定義顏色
+\definecolor{mainorange}{HTML}{D97757}
+\definecolor{darkgray}{HTML}{333333}
+\definecolor{lightgray}{HTML}{F5F5F5}
 
-    <!-- 照顧問答錄 -->
-    <section class="py-16 px-4 bg-stone-100">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-3xl font-black text-center mb-12">常見照顧問答 (20 則完整版)</h2>
-            <div class="space-y-4" id="faq-list">
-                <!-- JS 動態渲染 20 則 FAQ -->
-            </div>
-        </div>
-    </section>
+% 標題樣式
+\titleformat{\section}{\Large\bfseries\color{mainorange}}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\large\bfseries\color{darkgray}}{}{0em}{}
 
-    <footer class="bg-stone-900 text-stone-400 py-12 px-4 text-center">
-        <p class="text-lg-18 mb-4">需要即時諮詢？請撥打 1966 長照服務專線</p>
-        <p>© 2024 萬華區在地安老平台 - 內容實時更新</p>
-    </footer>
+\begin{document}
 
-    <script>
-        // 數據定義
-        const categories = {
-            'all': { label: '全部顯示', color: 'stone' },
-            'daycare': { label: '日照/居家', color: 'orange' },
-            'medical': { label: '醫療/健檢', color: 'blue' },
-            'social': { label: '社交/學習', color: 'green' },
-            'food': { label: '共餐/物資', color: 'red' },
-            'market': { label: '傳統市場', color: 'yellow' },
-            'travel': { label: '30分鐘景點', color: 'purple' }
-        };
+\begin{center}
+    {\Huge \textbf{張吉雄伯伯：萬華在地安老生活指南}} \\
+    \vspace{0.5cm}
+    {\large \textit{熟悉的老街 ‧ 專屬的照顧 ‧ 萬華長照資源手冊}} \\
+    \vspace{1cm}
+\end{center}
 
-        const rawData = [
-            // 日照/居家 (10)
-            { type: 'daycare', name: '立心社區日間照顧中心', address: '台北市萬華區和平西路三段122號', desc: '萬華區日照標竿，提供完善的失能失智生活照顧與復能訓練。' },
-            { type: 'daycare', name: '龍山老人服務中心', address: '台北市萬華區梧州街36號', desc: '提供日間照顧、居家服務申請、以及社區關懷訪視等多功能服務。' },
-            { type: 'daycare', name: '愛照護萬華日照中心', address: '台北市萬華區長沙街二段151號', desc: '現代化寬敞空間，專精於個別化活動設計，延緩長輩認知功能退化。' },
-            { type: 'daycare', name: '中化銀髮萬華居家服務', address: '台北市萬華區貴陽街二段', desc: '專業居家照護團隊，提供陪伴、沐浴、備餐等彈性時段服務。' },
-            { type: 'daycare', name: '福圓日間照顧中心', address: '台北市萬華區萬大路423巷', desc: '隱身巷弄的溫馨據點，強調像家一般的照護環境。' },
-            { type: 'daycare', name: '台北市私立聖若瑟受難日照', address: '台北市萬華區環河南路二段', desc: '天主教體系，具備豐富的臨床護理背景，適合高度護理關注者。' },
-            { type: 'daycare', name: '萬華區ABC長照服務站', address: '台北市萬華區東園街', desc: '一站式長照窗口，協助家屬連結各類長照資源。' },
-            { type: 'daycare', name: '心希望社區照顧站', address: '台北市萬華區康定路', desc: '小型社區化經營，對在地長輩的生活習慣極為了解。' },
-            { type: 'daycare', name: '萬華區喘息服務中心', address: '台北市萬華區和平西路三段', desc: '專門提供家庭照顧者臨時替代人力，緩解主要照護者的身心壓力。' },
-            { type: 'daycare', name: '老吾老居家服務部', address: '台北市萬華區西園路', desc: '由資深社工督導，強調尊嚴服務，讓長輩在自家環境安心終老。' },
+\begin{tcolorbox}[colback=mainorange!5!white,colframe=mainorange,title=張吉雄伯伯的生活需求分析]
+針對張吉雄伯伯居住於萬華區、習慣自炊、愛搭重慶幹線（原601公車）的生活習慣，本手冊整合了周邊 60 處真實據點，旨在協助張伯伯在熟悉的國光社區中，克服公寓上下樓梯的挑戰，維持健康且有尊嚴的老後生活。
+\end{tcolorbox}
 
-            // 醫療/健檢 (10)
-            { type: 'medical', name: '萬華區健康中心', address: '台北市萬華區和平西路三段120號', desc: '公部門首要窗口，提供免費健檢、疫苗注射及長照2.0第一手諮詢。' },
-            { type: 'medical', name: '西園醫療社團法人西園醫院', address: '台北市萬華區西園路二段270號', desc: '在地資深私立醫院，復健科、心臟科口碑佳。' },
-            { type: 'medical', name: '萬華醫院', address: '台北市萬華區西藏路222號', desc: '專攻物理復健與慢性病長期管理，並設有護理之家。' },
-            { type: 'medical', name: '仁濟醫院', address: '台北市萬華區廣州街243號', desc: '歷史悠久的博愛機構，提供高齡者優質的基層醫療。' },
-            { type: 'medical', name: '康定診所 (失智症篩檢)', address: '台北市萬華區康定路', desc: '社區型診所，對於早期失智篩檢非常有經驗。' },
-            { type: 'medical', name: '聯合醫院中興院區', address: '台北市大同區鄭州路145號', desc: '具備完整高齡門診與急性後期照護。' },
-            { type: 'medical', name: '永越健康管理中心', address: '台北市萬華區西園路二段155號', desc: '高端健檢首選，環境舒適，提供精準身體檢查。' },
-            { type: 'medical', name: '萬華中醫診所', address: '台北市萬華區萬大路', desc: '協助長輩調理體質，舒緩慢性關節疼痛。' },
-            { type: 'medical', name: '台北市南區輔具中心', address: '台北市文山區景中街', desc: '提供行動輔具、居家無障礙評估諮詢。' },
-            { type: 'medical', name: '社區健保藥局', address: '台北市萬華區各大街區', desc: '提供慢籤領藥與用藥諮詢，減少長輩奔波醫院。' },
+\section{一、張吉雄伯伯的生活圈資源清單}
 
-            // 社交/學習 (10)
-            { type: 'social', name: '萬華長青學苑', address: '台北市萬華區梧州街36號', desc: '開設電腦、書法、體健課程，是退休後社交的核心場域。' },
-            { type: 'social', name: '青年公園樂齡中心', address: '台北市萬華區水源路199號', desc: '結合公園綠地環境，推動園藝治療與戶外休閒學習。' },
-            { type: 'social', name: '萬華樂齡學習中心', address: '台北市萬華區東園街19號', desc: '設置於圖書館內，資源豐富，鼓勵長輩進行終身學習。' },
-            { type: 'social', name: '艋舺文化教室', address: '台北市萬華區貴陽街', desc: '結合在地歷史，舉辦導覽與手作課，增強對家鄉連結。' },
-            { type: 'social', name: '萬華婦女館 (長輩專案)', address: '台北市萬華區孟舺大道', desc: '舉辦高齡女性支持團體與健康促進講座。' },
-            { type: 'social', name: '和平西路閱覽站', address: '台北市萬華區和平西路', desc: '提供安靜的閱讀空間與報刊，是午後消磨時間的好地方。' },
-            { type: 'social', name: '萬華新移民會館', address: '台北市萬華區長沙街', desc: '推動多元文化，長輩可參與多元族群技藝交流。' },
-            { type: 'social', name: '東園樂齡活動中心', address: '台北市萬華區東園街', desc: '桌遊課與繪畫課深受周邊社區長輩喜愛。' },
-            { type: 'social', name: '萬華區運動中心', address: '台北市萬華區西寧南路6-1號', desc: '公益時段提供游泳與健身器材，鼓勵維持肌耐力。' },
-            { type: 'social', name: '龍山文創基地', address: '台北市萬華區西園路一段145號', desc: '適合觀展，環境舒適且有無障礙電梯。' },
+\subsection{1. 日照與居家服務 (針對張伯伯環境設計)}
+\begin{itemize}
+    \item \textbf{立心社區日間照顧中心}：台北市萬華區和平西路三段122號。
+    \item \textbf{龍山老人服務中心}：台北市萬華區梧州街36號（適合張伯伯參與長青學苑）。
+    \item \textbf{愛照護萬華日照中心}：台北市萬華區長沙街二段151號。
+    \item \textbf{中化銀髮居家服務}：提供到府協助張伯伯家務整理與環境清潔。
+    \item \textbf{聖若瑟居家長照機構}：萬華區東園街140巷7號（距離張伯伯住處近）。
+    \item \textbf{福圓日間照顧中心}：台北市萬華區萬大路423巷。
+    \item \textbf{萬華區ABC長照服務站}：提供個案管理，連結爬梯機補助。
+    \item \textbf{慈濟居家長照機構}：台北市萬華區莒光路222號5樓。
+    \item \textbf{紅十字會博愛居家長照}：台北市萬華區康定路62號11樓。
+    \item \textbf{老吾老居家服務部}：協助張伯伯代購國光市場食材。
+\end{itemize}
 
-            // 共餐/物資 (10)
-            { type: 'food', name: '南機場忠勤里食堂', address: '台北市萬華區中華路二段307巷', desc: '全台知名共餐據點，不僅有餐飲更有深厚鄰里情誼。' },
-            { type: 'food', name: '國光社區巷弄長照站', address: '台北市萬華區萬大路', desc: '提供營養均衡共餐服務，並有志工定時問安。' },
-            { type: 'food', name: '慈濟萬華聯絡處', address: '台北市萬華區和平西路三段', desc: '定期舉辦蔬食共餐與環保講座，提倡健康生活。' },
-            { type: 'food', name: '騰雲里里民活動中心', address: '台北市萬華區青年路', desc: '每週固定時段共餐，菜色豐富，參與度極高。' },
-            { type: 'food', name: '萬華區安食食物銀行', address: '台北市萬華區和平西路', desc: '針對經濟弱勢長輩提供物資媒合，確保基本生活。' },
-            { type: 'food', name: '德昌社區樂齡據點', address: '台北市萬華區德昌街', desc: '服務周邊眾多老舊公寓長輩，提供溫馨供餐。' },
-            { type: 'food', name: '富民里長壽食堂', address: '台北市萬華區富民街', desc: '強調「以食會友」，餐後經常進行簡單健康操。' },
-            { type: 'food', name: '萬華救世軍據點', address: '台北市萬華區寶興街', desc: '長期關懷獨居長輩，提供營養補給與關懷。' },
-            { type: 'food', name: '新安里共餐服務站', address: '台北市萬華區西藏路', desc: '里長積極籌劃，菜色變化多，長輩最期待的聚會。' },
-            { type: 'food', name: '萬華區公所', address: '台北市萬華區和平西路三段120號', desc: '協助長輩對接各項社會福利與實物補助。' },
+\subsection{2. 醫療與健檢資源 (就近照護免奔波)}
+\begin{itemize}
+    \item \textbf{萬華醫院}：西藏路222號（張伯伯復健與慢病管理首選）。
+    \item \textbf{西園醫院}：台北市萬華區西園路二段270號。
+    \item \textbf{萬華區健康中心}：提供張伯伯年度免費成人健檢。
+    \item \textbf{東園診所}：東園街172號（在地老牌家醫，回診方便）。
+    \item \textbf{祥恩藥局}：萬大路352號（藥師親切，可領取慢分箋）。
+    \item \textbf{萬大安康藥局}：萬大路442號（提供輔具與血壓測量服務）。
+    \item \textbf{仁濟醫院}：台北市萬華區廣州街243號。
+    \item \textbf{德昌藥局}：德昌街225號（提供藥物整理服務，預防吃錯藥）。
+    \item \textbf{聯合醫院和平院區}：設有銀髮友善門診，適合重大檢查。
+    \item \textbf{台北市南區輔具中心}：協助評估張伯伯家中無障礙環境改善。
+\end{itemize}
 
-            // 傳統市場 (10)
-            { type: 'market', name: '直興市場', address: '台北市萬華區康定路172巷', desc: '充滿懷舊氛圍的小市場，有許多老字號小吃，適合慢慢逛。' },
-            { type: 'market', name: '東園市場', address: '台北市萬華區東園街66巷', desc: '南萬華的核心市場，新鮮蔬果豐富且人情味濃厚。' },
-            { type: 'market', name: '西寧市場', address: '台北市萬華區西寧南路4號', desc: '室內型大型市場，有無障礙電梯，不怕颳風下雨。' },
-            { type: 'market', name: '龍山商場', address: '台北市萬華區和平西路三段120號', desc: '捷運站旁，一樓為美食街，出入非常方便。' },
-            { type: 'market', name: '雙和市場', address: '台北市萬華區雙和街', desc: '路邊型傳統市場，是許多南萬華主婦的首選。' },
-            { type: 'market', name: '果菜批發市場', address: '台北市萬華區萬大路533號', desc: '全台最大，周邊零售生鮮非常便宜。' },
-            { type: 'market', name: '中央市場', address: '台北市萬華區環河南路二段', desc: '老萬華人的生活縮影，服務清晨時段。' },
-            { type: 'market', name: '新富町文化市場', address: '台北市萬華區三水街70號', desc: '古蹟改建，內部環境極佳，適合看展與慢行。' },
-            { type: 'market', name: '三水街市場', address: '台北市萬華區三水街', desc: '有頂棚遮擋，販售精緻熟食與傳統點心。' },
-            { type: 'market', name: '德昌街市場', address: '台北市萬華區德昌街', desc: '萬大路周邊的小型市集，便利的生鮮補給站。' },
+\subsection{3. 社交、學習與共餐 (豐富社交生活)}
+包含 \textbf{萬大社區發展協會}（共餐）、\textbf{青年公園}（每日晨運）、\textbf{忠勤里食堂}及\textbf{東園里辦公處據點}，讓張伯伯走出家門與鄰里互動。
 
-            // 30分鐘景點 (10)
-            { type: 'travel', name: '青年公園 (12, 212, 223)', address: '台北市萬華區水源路199號', desc: '步道平緩有遮蔭，非常適合每日晨練散步。' },
-            { type: 'travel', name: '植物園 (1, 242, 624)', address: '台北市中正區南海路53號', desc: '輪椅友善步道，擁有豐富植被與涼爽環境。' },
-            { type: 'travel', name: '中正紀念堂 (249, 630)', address: '台北市中正區中山南路21號', desc: '廣場寬闊，有電梯可看儀隊交接，逛展首選。' },
-            { type: 'travel', name: '二二八公園 (223, 604)', address: '台北市中正區凱達格蘭大道3號', desc: '松鼠眾多，老建築與紀念設施供觀賞。' },
-            { type: 'travel', name: '台北車站地下街 (307, 262)', address: '台北市中正區忠孝西路一段', desc: '雨天出遊首選，冷氣充足且全區無障礙。' },
-            { type: 'travel', name: '西門紅樓 (步行/各路)', address: '台北市萬華區成都路10號', desc: '內部有無障礙空間，體驗懷舊與現代交會。' },
-            { type: 'travel', name: '華江雁鴨公園 (18, 673)', address: '台北市萬華區環河南路二段', desc: '河濱步道視野開闊，秋冬可觀賞候鳥。' },
-            { type: 'travel', name: '北門古蹟群 (9, 218)', address: '台北市中正區延平南路2號', desc: '步道寬度適合助行器，回憶台北舊城風華。' },
-            { type: 'travel', name: '中山堂 (12, 212)', address: '台北市中正區延平南路98號', desc: '清幽且常有藝文表演，二樓咖啡廳氣氛佳。' },
-            { type: 'travel', name: '艋舺龍山寺 (步行/各路)', address: '台北市萬華區廣州街211號', desc: '精神信仰中心，周邊有無障礙入口與諮詢。' }
-        ];
+\subsection{4. 採買與休閒 (重溫回憶之旅)}
+包含 \textbf{國光市場}、\textbf{雙和市場} 採買新鮮食材；體力許可時，可搭乘 \textbf{重慶幹線} 前往天母或士林官邸散心。
 
-        const faqs = [
-            { q: "長照2.0是什麼？我該怎麼開始？", a: "長照2.0是政府補助失能或失智長輩的制度。第一步請撥打 1966，由專員評估。萬華家屬也可去「健康中心」詢問。" },
-            { q: "市場地址點開後可以用手機導航嗎？", a: "可以。點擊列表中的藍色連結，手機會自動開啟 Google Maps 方便直接導航前往。" },
-            { q: "公車景點建議的路線準確嗎？", a: "提供的號碼是從萬華出發的常用路線。建議搭配「台北等公車」APP 確認實時到站時間。" },
-            { q: "家裡想改裝斜坡道、扶手，政府有補助嗎？", a: "有。最高可補助 4 萬元（每三年一周期），需先經輔具評估員到府評估，不可自行先買。" },
-            { q: "長輩不想出門共餐，有送餐服務嗎？", a: "有。對於失能無法自炊的長輩，長照服務包含「送餐到府」，可透過 1966 申請。" },
-            { q: "萬華區日照中心很難排隊嗎？", a: "熱門機構常有額滿狀況。建議申請完畢後，與個管員討論備選幾間或先用居家服務銜接。" },
-            { q: "復康巴士要怎麼預約？", a: "需有身心障礙證明或經長照評估。萬華屬台北市服務區，需提前 3-5 天上網或電話預約。" },
-            { q: "獨居長輩在家跌倒怎麼辦？", a: "政府有提供「緊急救援系統」補助，長輩佩戴隨身按鈕，發生意外可即時通報中心。" },
-            { q: "喘息服務是什麼？照顧者可以休息嗎？", a: "喘息服務是讓主要照顧者暫時休息。政府補助機構或居家喘息，讓外援人力替代照護。" },
-            { q: "什麼是 ABCD 級長照單位？", a: "A 級為個案管理中心，B 級為服務提供單位（如日照），C 級為巷弄長照站（共餐社交）。" },
-            { q: "失智症長輩不認人，該去哪裡尋求幫助？", a: "萬華有許多「失智據點」，提供非藥物治療活動，並有家屬支持團體分享照護心得。" },
-            { q: "輔具中心可以租借輪椅嗎？", a: "可以。南區輔具中心提供短期租借服務，若長期使用則建議申請政府購置補助。" },
-            { q: "萬華有哪些適合輪椅長輩的公園？", a: "青年公園最推薦，步道平緩、無障礙廁所充足，且公車低地板比率高。" },
-            { q: "共餐服務有分里別嗎？", a: "大部分據點以該里居民優先，但也有許多據點開放給鄰近里別的長輩參與。" },
-            { q: "長照等級分為幾級？", a: "分為 1 至 8 級。2 級以上才有補助，級數越高代表失能程度越高，補助總金額也越多。" },
-            { q: "家中有外籍移工，還能申請長照服務嗎？", a: "可以。但主要補助在「專業服務」、「輔具」與「交通轉送」，不包含「照顧服務」。" },
-            { q: "日間照顧中心跟安養院有什麼差別？", a: "日照中心像「學校」，白天去、傍晚回；安養院則是全天候居住在機構內。" },
-            { q: "萬華的健康中心在哪裡？", a: "位於和平西路三段 120 號，就在龍山寺捷運站附近，是諮詢福利的重要起點。" },
-            { q: "請問申請長照需要準備什麼文件？", a: "只需身分證資料。評估員到府時會核對，重點在於長輩實際的行動與生活能力評估。" },
-            { q: "假日有長照服務嗎？", a: "部分居家服務或機構喘息有提供假日時段，但需提前預約，且加成費用可能較高。" }
-        ];
+\newpage
 
-        let myChart = null;
+\section{二、給張吉雄伯伯與家屬的照顧問答}
 
-        function init() {
-            renderFilters();
-            renderResources('all');
-            renderFAQ();
-            updateLiveTime();
-            setInterval(updateLiveTime, 1000);
-            fetchWeather();
-            updateChart();
-        }
+\begin{enumerate}
+    \item \textbf{伯伯住 3 樓沒電梯怎麼出門？} 可申請長照補助的「爬梯機服務」或特約復康巴士。
+    \item \textbf{張伯伯想自己煮飯但體力有限？} 居服員可到府協助「備餐」，並由營養師指導慢病飲食。
+    \item \textbf{家中佛龕需要清潔怎麼辦？} 居服員可協助日常居家環境清潔，包含長輩重視的祭祀空間周邊。
+    \item \textbf{601公車現在變什麼了？} 現在更名為「重慶幹線」，班次更密集，適合伯伯重遊天母。
+    \item \textbf{什麼是喘息服務？} 當家人需要休假時，由政府派員接手照顧張伯伯。
+    \item \textbf{輔具補助有多少？} 每三年有 4 萬元額度，可用於購置助行器或改裝浴室扶手。
+    \item \textbf{長照申請電話？} 請撥打 1966，說明是萬華區張吉雄伯伯的需求。
+    \item \textbf{伯伯跌倒怎麼辦？} 建議申請「緊急救援系統」，佩戴隨身通報按鈕。
+    \item \textbf{共餐服務在哪裡？} 萬大社區發展協會與鄰近里辦公處皆有提供，歡迎張伯伯參加。
+    \item \textbf{藥太多怕吃錯？} 可請藥師到府進行「藥事照護」，整合所有處方藥物。
+\end{enumerate}
 
-        function renderFilters() {
-            const container = document.getElementById('filter-container');
-            Object.keys(categories).forEach(key => {
-                const btn = document.createElement('button');
-                btn.className = `filter-btn py-3 px-4 rounded-xl border-2 text-left font-bold transition-all text-base-16 flex justify-between items-center bg-white border-stone-200 hover:border-orange-500`;
-                btn.id = `btn-${key}`;
-                btn.innerHTML = `<span>${categories[key].label}</span> <span class="opacity-30">›</span>`;
-                btn.onclick = () => {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('tab-active'));
-                    btn.classList.add('tab-active');
-                    renderResources(key);
-                };
-                container.appendChild(btn);
-            });
-            document.getElementById('btn-all').classList.add('tab-active');
-        }
+\vspace{2cm}
+\begin{center}
+    \textbf{長照諮詢專線：1966} \\
+    \textit{萬華區在地安老平台 ‧ 關心張吉雄伯伯的每一天}
+\end{center}
 
-        function renderResources(filter) {
-            const list = document.getElementById('resource-list');
-            const countDisplay = document.getElementById('item-count');
-            const titleDisplay = document.getElementById('current-category-title');
-            
-            list.innerHTML = '';
-            const filtered = filter === 'all' ? rawData : rawData.filter(i => i.type === filter);
-            
-            titleDisplay.innerText = categories[filter].label;
-            countDisplay.innerText = `共 ${filtered.length} 筆`;
-
-            filtered.forEach(item => {
-                const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.address)}`;
-                const card = document.createElement('div');
-                const catInfo = categories[item.type];
-                
-                card.className = 'resource-card p-6 bg-white border border-stone-100 rounded-2xl shadow-sm transition-all flex flex-col justify-between h-full';
-                card.innerHTML = `
-                    <div>
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="category-tag bg-${catInfo.color}-100 text-${catInfo.color}-700">${catInfo.label}</span>
-                        </div>
-                        <h4 class="text-xl-20 font-black text-stone-900 mb-3">${item.name}</h4>
-                        <p class="text-stone-700 leading-relaxed mb-4">${item.desc}</p>
-                    </div>
-                    <div class="mt-auto pt-4 border-t border-stone-50">
-                        <div class="flex items-start gap-2">
-                            <span class="mt-1">📍</span>
-                            <a href="${mapUrl}" target="_blank" class="map-link text-base-16">${item.address}</a>
-                        </div>
-                    </div>
-                `;
-                list.appendChild(card);
-            });
-        }
-
-        function renderFAQ() {
-            const container = document.getElementById('faq-list');
-            faqs.forEach((item, idx) => {
-                const detail = document.createElement('details');
-                detail.className = 'group bg-white rounded-2xl border border-stone-200 overflow-hidden';
-                detail.innerHTML = `
-                    <summary class="list-none p-6 cursor-pointer font-bold text-lg-18 flex justify-between items-center hover:bg-stone-50">
-                        <span>${idx + 1}. ${item.q}</span>
-                        <span class="text-orange-500 group-open:rotate-180 transition-transform">▼</span>
-                    </summary>
-                    <div class="px-6 pb-6 text-stone-700 text-base-16 border-t border-stone-50 pt-4 leading-relaxed">
-                        ${item.a}
-                    </div>
-                `;
-                container.appendChild(detail);
-            });
-        }
-
-        function updateLiveTime() {
-            const now = new Date();
-            const days = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
-            document.getElementById('live-date').innerText = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 ${days[now.getDay()]}`;
-            document.getElementById('live-time').innerText = now.toLocaleTimeString('zh-TW', { hour12: false });
-        }
-
-        async function fetchWeather() {
-            try {
-                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=25.03&longitude=121.50&current_weather=true');
-                const data = await res.json();
-                document.getElementById('weather-info').innerText = `${data.current_weather.temperature}°C`;
-            } catch {
-                document.getElementById('weather-info').innerText = '暫無資訊';
-            }
-        }
-
-        function updateChart() {
-            const ctx = document.getElementById('categoryChart').getContext('2d');
-            
-            // 計算真實數據佔比
-            const counts = {};
-            rawData.forEach(item => {
-                counts[item.type] = (counts[item.type] || 0) + 1;
-            });
-
-            const labels = Object.keys(counts).map(key => categories[key].label);
-            const dataValues = Object.values(counts);
-            const backgroundColors = ['#f97316', '#3b82f6', '#22c55e', '#ef4444', '#eab308', '#a855f7'];
-
-            if (myChart) myChart.destroy();
-
-            myChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: dataValues,
-                        backgroundColor: backgroundColors,
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { font: { size: 14 } } }
-                    }
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
-</body>
-</html>
+\end{document}
