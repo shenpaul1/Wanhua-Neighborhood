@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>萬華區長照資源地圖</title>
+    <title>張吉雄伯伯：萬華在地安老生活指南</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -56,7 +55,7 @@
                 <span id="live-time" class="font-mono text-orange-400 font-bold">00:00:00</span>
             </div>
             <div class="flex items-center gap-2">
-                <span>📍 萬華區即時氣溫：</span>
+                <span>📍 張伯伯所在位置（萬華）氣溫：</span>
                 <span id="weather-info">讀取中...</span>
             </div>
         </div>
@@ -65,7 +64,8 @@
     <!-- 標題區 -->
     <header class="py-12 px-4 bg-stone-100 border-b border-stone-200">
         <div class="max-w-6xl mx-auto text-center">
-            <h1 class="text-4xl md:text-5xl font-black text-stone-900 mb-2">萬華區在地長照與生活資源導覽</h1>
+            <h1 class="text-4xl md:text-5xl font-black text-stone-900 mb-2">張吉雄伯伯：萬華在地安老生活指南</h1>
+            <p class="text-stone-600 text-lg">整合國光社區資源、重慶幹線資訊與 3 樓公寓生活對策</p>
         </div>
     </header>
 
@@ -77,13 +77,13 @@
                 <!-- 左側：分類與統計 -->
                 <div class="xl:col-span-3 space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
-                        <h3 class="text-xl-20 font-bold mb-4 border-l-4 border-orange-500 pl-3">資源快速篩選</h3>
+                        <h3 class="text-xl-20 font-bold mb-4 border-l-4 border-orange-500 pl-3">伯伯生活資源篩選</h3>
                         <div class="flex flex-col gap-3" id="filter-container">
                             <!-- JS 生成按鈕 -->
                         </div>
                     </div>
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
-                        <h3 class="text-xl-20 font-bold mb-4">現有資源占比統計</h3>
+                        <h3 class="text-xl-20 font-bold mb-4">萬華區資源占比統計</h3>
                         <div class="h-64">
                             <canvas id="categoryChart"></canvas>
                         </div>
@@ -109,7 +109,7 @@
     <!-- 照顧問答錄 -->
     <section class="py-16 px-4 bg-stone-100">
         <div class="max-w-4xl mx-auto">
-            <h2 class="text-3xl font-black text-center mb-12">常見照顧問答 (20 則完整版)</h2>
+            <h2 class="text-3xl font-black text-center mb-12">張伯伯與家屬常見照顧問答</h2>
             <div class="space-y-4" id="faq-list">
                 <!-- JS 動態渲染 20 則 FAQ -->
             </div>
@@ -118,7 +118,7 @@
 
     <footer class="bg-stone-900 text-stone-400 py-12 px-4 text-center">
         <p class="text-lg-18 mb-4">需要即時諮詢？請撥打 1966 長照服務專線</p>
-        <p>© 2024 萬華區在地安老平台 - 內容實時更新</p>
+        <p>© 2026 張吉雄伯伯：萬華在地安老平台 - 內容實時更新</p>
     </footer>
 
     <script>
@@ -208,12 +208,12 @@
         ];
 
         const faqs = [
-            { q: "長照2.0是什麼？我該怎麼開始？", a: "長照2.0是政府補助失能或失智長輩的制度。第一步請撥打 1966，由專員評估。萬華家屬也可去「健康中心」詢問。" },
+            { q: "張伯伯住 3 樓沒電梯，出門看病怎麼辦？", a: "您可以透過 1966 申請「爬梯機服務」。萬華區有特約單位提供爬梯機與操作人員，配合復康巴士，能解決公寓上下樓的難題。" },
+            { q: "伯伯習慣在國光市場買菜自炊，有什麼輔助嗎？", a: "若伯伯體力稍降，可申請「居家服務」，由居服員陪同去國光市場買菜，或由居服員在宅協助備餐，確保飲食營養與控糖需求。" },
+            { q: "重慶幹線 (原 601) 的低底盤班次多嗎？", a: "重慶幹線是萬華的重要骨幹路線，全線皆為低底盤公車，非常適合張伯伯搭乘前往天母或台北車站，上下車均有無障礙輔助。" },
+            { q: "家裡的佛龕張伯伯很在意，居服員可以幫忙清理嗎？", a: "基本的居家環境清潔包含在服務範圍內。您可以與居服單位溝通，在固定服務時間內協助擦拭佛龕周邊，維持長輩的精神寄託空間。" },
+            { q: "長照 2.0 補助的額度在 2026 年有調整嗎？", a: "目前的補助額度仍依照失能等級（2-8 級）計算。建議撥打 1966 預約評估員到府，他們會針對張伯伯的現況給予最新的額度建議。" },
             { q: "市場地址點開後可以用手機導航嗎？", a: "可以。點擊列表中的藍色連結，手機會自動開啟 Google Maps 方便直接導航前往。" },
-            { q: "公車景點建議的路線準確嗎？", a: "提供的號碼是從萬華出發的常用路線。建議搭配「台北等公車」APP 確認實時到站時間。" },
-            { q: "家裡想改裝斜坡道、扶手，政府有補助嗎？", a: "有。最高可補助 4 萬元（每三年一周期），需先經輔具評估員到府評估，不可自行先買。" },
-            { q: "長輩不想出門共餐，有送餐服務嗎？", a: "有。對於失能無法自炊的長輩，長照服務包含「送餐到府」，可透過 1966 申請。" },
-            { q: "萬華區日照中心很難排隊嗎？", a: "熱門機構常有額滿狀況。建議申請完畢後，與個管員討論備選幾間或先用居家服務銜接。" },
             { q: "復康巴士要怎麼預約？", a: "需有身心障礙證明或經長照評估。萬華屬台北市服務區，需提前 3-5 天上網或電話預約。" },
             { q: "獨居長輩在家跌倒怎麼辦？", a: "政府有提供「緊急救援系統」補助，長輩佩戴隨身按鈕，發生意外可即時通報中心。" },
             { q: "喘息服務是什麼？照顧者可以休息嗎？", a: "喘息服務是讓主要照顧者暫時休息。政府補助機構或居家喘息，讓外援人力替代照護。" },
@@ -322,6 +322,7 @@
 
         async function fetchWeather() {
             try {
+                // 以萬華經緯度獲取即時天氣
                 const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=25.03&longitude=121.50&current_weather=true');
                 const data = await res.json();
                 document.getElementById('weather-info').innerText = `${data.current_weather.temperature}°C`;
@@ -333,7 +334,6 @@
         function updateChart() {
             const ctx = document.getElementById('categoryChart').getContext('2d');
             
-            // 計算真實數據佔比
             const counts = {};
             rawData.forEach(item => {
                 counts[item.type] = (counts[item.type] || 0) + 1;
