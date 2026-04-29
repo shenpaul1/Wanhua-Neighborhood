@@ -1,509 +1,224 @@
 <!DOCTYPE html>
-<html lang="zh-TW" class="scroll-smooth">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>萬華區在地安老：社區長照資源儀表板</title>
+    <title>萬華長照資源分享中心 | 即時資訊版</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        sand: {
-                            50: '#FDFBF7',
-                            100: '#F7F3EB',
-                            200: '#EAE0D3',
-                            800: '#5C4E44',
-                            900: '#3A302A'
-                        },
-                        terracotta: {
-                            500: '#D97757',
-                            600: '#C05621'
-                        },
-                        sage: {
-                            500: '#8FA396'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Chosen Palette: Warm Sand & Terracotta -->
-    <!-- Application Structure Plan: The SPA is structured into logical, task-oriented sections: 1. Hero & 1966 Emergency Callout (immediate access to crucial info), 2. Persona Overview (fostering empathy and understanding needs), 3. Interactive Resource Dashboard (exploring local and official data with filters and a summary chart), and 4. FAQ Accordion. This dashboard approach transforms a static handbook into an explorable tool, prioritizing user tasks like finding specific resources or getting help, rather than just reading sequentially. -->
-    <!-- Visualization & Content Choices: Report Info: Resource Lists -> Goal: Inform & Organize -> Presentation: Filterable Grid + Doughnut Chart -> Interaction: Category Tabs & Hover Effects -> Justification: Allows users to quickly find specific types of resources (e.g., Medical) while seeing the overall abundance in the Wanhua area. Supports non-linear exploration. -> Library/Method: Vanilla JS + Chart.js (NO SVG/Mermaid). Report Info: Q&A -> Goal: Inform -> Presentation: Accordion -> Interaction: Click to expand -> Justification: Prevents text overload and keeps the interface clean. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
         body {
-            background-color: #FDFBF7;
-            color: #3A302A;
-            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f9fbf9;
+            color: #2d3436;
         }
-        .chart-container { 
-            position: relative; 
-            width: 100%; 
-            max-width: 600px; 
-            margin-left: auto; 
-            margin-right: auto; 
-            height: 35vh;
-            min-height: 300px;
-            max-height: 400px; 
+        .status-glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
-        @media (min-width: 768px) { 
-            .chart-container { 
-                height: 400px; 
-            } 
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
-        .hide-scroll::-webkit-scrollbar {
-            display: none;
-        }
-        .hide-scroll {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        .tab-btn.active {
-            background-color: #D97757;
-            color: white;
-            border-color: #D97757;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .7; }
         }
     </style>
 </head>
-<body class="antialiased">
+<body class="min-h-screen pb-12">
 
-    <nav class="fixed top-0 w-full bg-sand-50/90 backdrop-blur-md shadow-sm z-50 border-b border-sand-200">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
-                    <span class="text-2xl">&#127969;</span>
-                    <span class="font-bold text-lg text-sand-900 tracking-wide">萬華在地安老</span>
-                </div>
-                <div class="hidden md:flex space-x-6 overflow-x-auto hide-scroll">
-                    <button onclick="document.getElementById('persona').scrollIntoView()" class="text-sand-800 hover:text-terracotta-500 font-medium whitespace-nowrap">長者生活特色</button>
-                    <button onclick="document.getElementById('dashboard').scrollIntoView()" class="text-sand-800 hover:text-terracotta-500 font-medium whitespace-nowrap">資源探索地圖</button>
-                    <button onclick="document.getElementById('faq').scrollIntoView()" class="text-sand-800 hover:text-terracotta-500 font-medium whitespace-nowrap">常見問答</button>
-                    <a href="tel:1966" class="bg-terracotta-500 text-white px-4 py-2 rounded-full font-bold shadow-md hover:bg-terracotta-600 transition">&#128222; 撥打 1966</a>
-                </div>
-                <div class="md:hidden">
-                    <a href="tel:1966" class="bg-terracotta-500 text-white px-3 py-1.5 rounded-full font-bold shadow-md text-sm">&#128222; 1966</a>
-                </div>
+    <div class="bg-emerald-900 text-white py-2 px-6 text-sm sticky top-0 z-[60] shadow-md">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
+            <div class="flex items-center space-x-4">
+                <span class="flex items-center">
+                    <span class="mr-2">&#128197;</span>
+                    <span id="current-date">載入日期中...</span>
+                </span>
+                <span class="flex items-center border-l border-emerald-700 pl-4">
+                    <span class="mr-2">&#9200;</span>
+                    <span id="current-time" class="font-mono font-bold">00:00:00</span>
+                </span>
+            </div>
+            <div id="weather-widget" class="flex items-center bg-emerald-800 px-3 py-1 rounded-full text-xs">
+                <span class="animate-pulse-slow mr-2">&#127777;</span>
+                <span id="weather-info">正在獲取萬華區天氣...</span>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bg-white/90 backdrop-blur-md border-b border-gray-100 py-4 px-6 sticky top-10 md:top-10 z-50">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center text-white font-bold shadow-sm">W</div>
+                <span class="text-xl font-bold tracking-tight text-gray-800">萬華資源分享中心</span>
+            </div>
+            <div class="hidden sm:flex space-x-4">
+                <button onclick="copyLink()" class="px-4 py-2 text-sm font-bold text-emerald-700 bg-emerald-50 rounded-full hover:bg-emerald-100 transition">
+                    分享網址
+                </button>
+                <a href="https://shenpaul1.github.io/Wanhua-Neighborhood/" target="_blank" class="px-4 py-2 text-sm font-bold text-white bg-emerald-600 rounded-full hover:bg-emerald-700 shadow-md">
+                    開啟手冊 &#8594;
+                </a>
             </div>
         </div>
     </nav>
 
-    <header class="pt-28 pb-16 px-4 bg-gradient-to-b from-sand-100 to-sand-50">
-        <div class="max-w-4xl mx-auto text-center">
-            <h1 class="text-3xl md:text-5xl font-extrabold text-sand-900 mb-6 leading-tight">溫暖相伴，在地安心老</h1>
-            <p class="text-lg text-sand-800 mb-8 leading-relaxed text-justify md:text-center">
-                家，是充滿回憶的地方。隨著歲月增長，日常採買或爬樓梯可能漸漸變得吃力。本應用程式為萬華區居民專屬設計，將「長照資源手冊」轉化為互動探索平台。此區塊旨在引導您快速了解在地生活資源與政府補助，實現安心、尊嚴的在地老化。
-            </p>
-            <div class="inline-flex flex-col sm:flex-row gap-4 justify-center">
-                <button onclick="document.getElementById('dashboard').scrollIntoView()" class="px-8 py-3 bg-terracotta-500 text-white rounded-lg font-bold shadow-lg hover:bg-terracotta-600 transition text-lg">
-                    &#128269; 尋找在地資源
-                </button>
-                <div class="px-8 py-3 bg-white border-2 border-sand-200 text-sand-900 rounded-lg shadow-sm text-left">
-                    <div class="font-bold text-sm text-sage-500 mb-1">緊急聯絡 / 照管專員到府評估</div>
-                    <div class="text-xl font-black text-terracotta-600">&#128222; 長照專線：1966</div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <section id="persona" class="py-16 px-4">
-        <div class="max-w-6xl mx-auto">
-            <div class="mb-10 text-center">
-                <h2 class="text-2xl md:text-3xl font-bold text-sand-900 mb-4">&#128100; 理解長者需求 (張先生的日常)</h2>
-                <p class="text-sand-800 max-w-2xl mx-auto">本區塊透過社區典型長輩「張先生」的日常，協助家屬理解長輩在食衣住行上的真實挑戰，並對應出長照能介入的具體服務，做為申請資源的參考藍圖。</p>
-            </div>
+    <main class="max-w-6xl mx-auto px-6 py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-sand-200 hover:shadow-md transition">
-                    <div class="text-4xl mb-4">&#127834;</div>
-                    <h3 class="text-xl font-bold text-sand-900 mb-2">食 (自炊核心)</h3>
-                    <p class="text-sand-800 text-sm mb-4">習慣去國光、雙和市場買新鮮食材。堅持自炊控制血糖。</p>
-                    <div class="pt-4 border-t border-sand-100">
-                        <span class="text-xs font-bold text-terracotta-500 uppercase tracking-wider">建議服務</span>
-                        <ul class="mt-2 text-sm text-sand-900 font-medium space-y-1">
-                            <li>&#10003; 送餐服務</li>
-                            <li>&#10003; 營養指導</li>
-                            <li>&#10003; 備餐協助</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-sand-200 hover:shadow-md transition">
-                    <div class="text-4xl mb-4">&#128085;</div>
-                    <h3 class="text-xl font-bold text-sand-900 mb-2">衣 (家務清潔)</h3>
-                    <p class="text-sand-800 text-sm mb-4">衣物換洗與環境清潔開始感到體力負擔。</p>
-                    <div class="pt-4 border-t border-sand-100">
-                        <span class="text-xs font-bold text-terracotta-500 uppercase tracking-wider">建議服務</span>
-                        <ul class="mt-2 text-sm text-sand-900 font-medium space-y-1">
-                            <li>&#10003; 居家服務</li>
-                            <li>&#10003; 居服員協助家務</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-sand-200 hover:shadow-md transition">
-                    <div class="text-4xl mb-4">&#127960;</div>
-                    <h3 class="text-xl font-bold text-sand-900 mb-2">住 (環境安全)</h3>
-                    <p class="text-sand-800 text-sm mb-4">獨居於無電梯公寓 3 樓。家中設有佛龕。</p>
-                    <div class="pt-4 border-t border-sand-100">
-                        <span class="text-xs font-bold text-terracotta-500 uppercase tracking-wider">建議服務</span>
-                        <ul class="mt-2 text-sm text-sand-900 font-medium space-y-1">
-                            <li>&#10003; 無障礙改善</li>
-                            <li>&#10003; 爬梯機租借</li>
-                            <li>&#10003; 居家防跌評估</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-sand-200 hover:shadow-md transition">
-                    <div class="text-4xl mb-4">&#128652;</div>
-                    <h3 class="text-xl font-bold text-sand-900 mb-2">行 (社交散心)</h3>
-                    <p class="text-sand-800 text-sm mb-4">愛搭 601 公車散心；現因腳部無力，爬樓梯會頭暈。</p>
-                    <div class="pt-4 border-t border-sand-100">
-                        <span class="text-xs font-bold text-terracotta-500 uppercase tracking-wider">建議服務</span>
-                        <ul class="mt-2 text-sm text-sand-900 font-medium space-y-1">
-                            <li>&#10003; 助行器補助</li>
-                            <li>&#10003; 肌力訓練</li>
-                            <li>&#10003; 陪同就醫</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="dashboard" class="py-16 px-4 bg-sand-100">
-        <div class="max-w-6xl mx-auto">
-            <div class="mb-10 text-center">
-                <h2 class="text-2xl md:text-3xl font-bold text-sand-900 mb-4">&#128205; 在地長照與生活資源探索</h2>
-                <p class="text-sand-800 max-w-2xl mx-auto">本區塊整合了萬華區的在地與官方資源。您可以透過分類按鈕篩選不同類別的服務，或透過環圈圖表了解資源整體分佈狀況，協助您快速尋找適合長輩的去處與協助。</p>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="lg:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-sand-200 flex flex-col justify-center">
-                    <h3 class="text-lg font-bold text-center text-sand-900 mb-2">萬華資源分佈概況</h3>
-                    <div class="w-full flex flex-col items-center">
-                        <div class="chart-container">
-                            <canvas id="resourceChart"></canvas>
+            <div class="lg:col-span-2 space-y-8">
+                <section class="bg-white p-8 md:p-12 rounded-[2.5rem] border border-gray-100 shadow-sm relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">為萬華長輩<br><span class="text-emerald-600">提供最及時的支持</span></h1>
+                        <p class="text-gray-600 text-lg mb-8 leading-relaxed max-w-xl">
+                            這是一個動態更新的分享門戶。無論是今天的天氣是否適合外出運動，或是需要聯繫長照專員，您都可以在這裡找到資訊。
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="tel:1966" class="px-8 py-4 bg-orange-500 text-white font-bold rounded-2xl hover:bg-orange-600 transition shadow-lg shadow-orange-200">
+                                &#128222; 撥打 1966 專線
+                            </a>
+                            <a href="#resources" class="px-8 py-4 bg-gray-900 text-white font-bold rounded-2xl hover:bg-black transition">
+                                瀏覽資源類別
+                            </a>
                         </div>
                     </div>
-                    <p id="chartDesc" class="text-sm text-sand-800 text-center mt-4 bg-sand-50 p-3 rounded-lg border border-sand-100"></p>
-                </div>
+                    <div class="absolute -top-24 -right-24 w-64 h-64 bg-emerald-50 rounded-full opacity-50"></div>
+                </section>
 
-                <div class="lg:col-span-2 flex flex-col">
-                    <div class="flex flex-wrap gap-2 mb-6" id="filter-buttons"></div>
-                    
-                    <div class="bg-white rounded-2xl shadow-sm border border-sand-200 p-2 sm:p-6 flex-grow">
-                        <div class="flex justify-between items-end mb-4 px-2">
-                            <h3 class="text-xl font-bold text-sand-900" id="list-title">所有資源</h3>
-                            <span class="text-sm text-sand-800 bg-sand-100 px-2 py-1 rounded-md" id="result-count"></span>
-                        </div>
-                        <div id="resource-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 h-[600px] overflow-y-auto pr-2 hide-scroll"></div>
+                <section id="resources" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 hover:shadow-md transition group">
+                        <div class="text-3xl mb-4">🏥</div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">醫療與復健</h3>
+                        <p class="text-gray-500 text-sm">提供萬華醫院、在地診所與到府護理服務資訊。</p>
                     </div>
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 hover:shadow-md transition group">
+                        <div class="text-3xl mb-4">🥦</div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">營養與採買</h3>
+                        <p class="text-gray-500 text-sm">整理國光市場、雙和市場及長者送餐資源。</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 hover:shadow-md transition group">
+                        <div class="text-3xl mb-4">🎨</div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">社交與學習</h3>
+                        <p class="text-gray-500 text-sm">萬華長青學苑、青年公園與據點共餐活動。</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 hover:shadow-md transition group">
+                        <div class="text-3xl mb-4">🛏️</div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">輔具與居家</h3>
+                        <p class="text-gray-500 text-sm">輪椅租借、爬梯機申請及居家無障礙改善補助。</p>
+                    </div>
+                </section>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-emerald-900 text-white p-8 rounded-[2rem] shadow-xl">
+                    <h3 class="text-xl font-bold mb-6 flex items-center">
+                        <span class="mr-2">&#128204;</span> 快速分享給親友
+                    </h3>
+                    <p class="text-emerald-100 text-sm mb-6 leading-relaxed">
+                        您可以複製下方網址，透過 Line 或社群軟體傳送給需要長照資訊的朋友。這份手冊能幫助他們更了解萬華的資源。
+                    </p>
+                    <div class="bg-emerald-800 p-4 rounded-xl border border-emerald-700 mb-6 font-mono text-xs break-all opacity-80">
+                        https://shenpaul1.github.io/Wanhua-Neighborhood/
+                    </div>
+                    <button onclick="copyLink()" class="w-full py-4 bg-white text-emerald-900 font-bold rounded-xl hover:bg-emerald-50 transition shadow-lg">
+                        複製網址
+                    </button>
+                </div>
+
+                <div class="bg-white p-8 rounded-[2rem] border border-gray-100">
+                    <h4 class="font-bold text-gray-800 mb-4 italic">&#128161; 小提醒</h4>
+                    <p class="text-sm text-gray-600 leading-relaxed">
+                        根據目前的氣象資訊，若體感溫度過高或有雨，建議減少長輩的外出次數，或利用手冊中的「送餐服務」與「居家復健」資源。
+                    </p>
                 </div>
             </div>
         </div>
-    </section>
+    </main>
 
-    <section id="faq" class="py-16 px-4">
-        <div class="max-w-4xl mx-auto">
-            <div class="mb-10 text-center">
-                <h2 class="text-2xl md:text-3xl font-bold text-sand-900 mb-4">&#10067; 家屬常見照顧問答</h2>
-                <p class="text-sand-800">本區塊整理了家屬最常遇到的照顧問題。點擊問題即可展開解答，快速釐清長照申請與日常照顧的疑惑。</p>
-            </div>
-
-            <div id="accordion-container" class="space-y-4"></div>
-        </div>
-    </section>
-
-    <footer class="bg-sand-900 text-sand-100 py-10 px-4 mt-8">
-        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div>
-                <h3 class="text-xl font-bold text-white mb-2">&#127969; 萬華在地安老資訊網</h3>
-                <p class="text-sm text-sand-200 leading-relaxed mb-4">由 AI 協助整理自社區長照資源手冊。<br>搜尋關鍵字「台北市長照數位平台」查詢最新官方資訊。</p>
-            </div>
-            <div class="bg-sand-800 p-6 rounded-xl border border-sand-800/50 text-center md:text-right">
-                <div class="font-bold text-lg text-white mb-2">需要專人協助？</div>
-                <p class="text-sm text-sand-200 mb-4">準備長輩姓名、身分證、現住址與電話</p>
-                <a href="tel:1966" class="inline-block bg-terracotta-500 text-white px-6 py-3 rounded-full font-bold shadow-lg hover:bg-terracotta-600 transition">
-                    &#128222; 立即撥打 1966
-                </a>
-            </div>
-        </div>
-    </footer>
+    <div id="toast" class="hidden fixed bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-8 py-4 rounded-full shadow-2xl items-center space-x-3 transition-opacity duration-300 z-[100]">
+        <span id="toast-msg"></span>
+    </div>
 
     <script>
-        const categories = {
-            'all': { label: '全部顯示', icon: '&#128269;', color: '#8FA396' },
-            'food': { label: '採買與營養 (步行)', icon: '&#127822;', color: '#D97757' },
-            'medical': { label: '醫療與藥事', icon: '&#128065;', color: '#4A90E2' },
-            'social': { label: '學習與社交', icon: '&#127912;', color: '#F5A623' },
-            'bus': { label: '擴大社交 (公車)', icon: '&#128652;', color: '#9B51E0' },
-            'official': { label: '官方長照單位', icon: '&#127970;', color: '#5C4E44' }
-        };
-
-        const resourceData = [
-            { type: 'food', name: '國光市場', address: '萬大路 423 巷', desc: '在地生活核心，食材新鮮且充滿人情味。' },
-            { type: 'food', name: '第一果菜市場', address: '萬大路 533 號', desc: '食材多樣，適合採購高品質原型食物。' },
-            { type: 'food', name: '舒肥底家 (萬華店)', address: '東園街 49 號', desc: '營養師調配，低油鹽餐盒，適合血糖控制。' },
-            { type: 'food', name: '蛋白盒子', address: '寶興街 55 號', desc: '提供外送服務，解決爬樓梯買飯的困難。' },
-            { type: 'food', name: '全聯福利中心', address: '萬大路 442 號', desc: '環境明亮平整，適合購買日用品。' },
-            { type: 'food', name: '美廉社', address: '國興路 20 號', desc: '針對小份量包裝設計，適合獨居長輩。' },
-            { type: 'food', name: '家樂福超市', address: '南寧路 55 號', desc: '24 小時營業，提供多樣化的生鮮與熟食。' },
-            { type: 'food', name: '范姐健康廚房', address: '萬大路 486 巷', desc: '強調營養均衡，長輩不便自炊時的替代方案。' },
-            { type: 'food', name: '雙和市場', address: '雙和街', desc: '攤位密集，適合早晨散步兼買菜。' },
-            { type: 'medical', name: '萬華醫院', address: '西藏路 222 號', desc: '設有復健科、慢性病管理，在地就醫便利。' },
-            { type: 'medical', name: '東園診所', address: '東園街 172 號', desc: '老牌家醫診所，適合一般感冒與慢病回診。' },
-            { type: 'medical', name: '祥恩藥局', address: '萬大路 352 號', desc: '協助領取慢性處方箋，藥師說明親切。' },
-            { type: 'medical', name: '萬大安康藥局', address: '萬大路 442 號', desc: '提供長照輔具諮詢，減少家屬奔波。' },
-            { type: 'medical', name: '大理診所', address: '大理街 146 號', desc: '專長於慢性病控管，醫師對長輩極具耐心。' },
-            { type: 'medical', name: '德昌藥局', address: '德昌街 225 號', desc: '社區型藥局，提供藥物分類包裝與用藥指導。' },
-            { type: 'medical', name: '東園大愛藥局', address: '東園街 108 號', desc: '藥師會主動關心長輩健康狀況。' },
-            { type: 'medical', name: '康是美 (萬大藥局)', address: '萬大路 428 號', desc: '醫美與保健品選擇多，方便選購維他命。' },
-            { type: 'medical', name: '福全診所', address: '萬大路 472 號', desc: '內兒科全方位照護，鄰里間信賴的家醫據點。' },
-            { type: 'social', name: '青年公園', address: '水源路 199 號', desc: '步道平坦，是長輩運動與社交的最佳去處。' },
-            { type: 'social', name: '萬華長青學苑', address: '梧州街 36 號', desc: '豐富的語言、歌唱課，活躍大腦預防失智。' },
-            { type: 'social', name: '北市圖龍山分館', address: '桂林路 65 巷 6 號', desc: '多媒體視聽區，適合透過影音獲取資訊。' },
-            { type: 'social', name: '老松國小樂齡學堂', address: '桂林路 64 號', desc: '結合校園資源，推廣長者體適能與手工藝。' },
-            { type: 'social', name: '萬大社區發展協會', address: '萬大路 329 巷 25 號', desc: '提供共餐服務與健康促進活動，化解孤單感。' },
-            { type: 'social', name: '東園里辦公處', address: '東園街 154 巷 11 號', desc: '在地鄰里據點，提供定期血壓檢測與談心空間。' },
-            { type: 'social', name: '壽德里辦公處', address: '萬大路 329 巷 2 號', desc: '鄰近住家，鄰里長輩交換在地資訊的核心。' },
-            { type: 'social', name: '興寧街聖母聖心會', address: '興寧街 70 號', desc: 'C 級據點，提供運動律動與延緩失能課程。' },
-            { type: 'social', name: '西門國小樂齡學堂', address: '成都路 98 號', desc: '推廣數位化學習與長者桌遊，增進代際互動。' },
-            { type: 'social', name: '忠德里辦公處', address: '東園街 66 巷 24 弄', desc: '定期舉辦健康講座，加強社區長輩關懷聯繫。' },
-            { type: 'social', name: '新忠里辦公處', address: '西藏路 125 巷 7 號', desc: '提供銀髮手工藝與防詐騙宣導活動。' },
-            { type: 'social', name: '剝皮寮歷史街區', address: '康定路 173 巷', desc: '充滿懷舊氣氛，適合長輩慢步與參與文化展演。' },
-            { type: 'social', name: '萬華區公所藝文中心', address: '和平西路三段 120 號', desc: '舉辦長輩書畫展與戲曲表演，陶冶生活性情。' },
-            { type: 'bus', name: '西門紅樓', address: '重慶幹線、307、202', desc: '文化導覽與創意市集，適合家屬陪同長輩散步。' },
-            { type: 'bus', name: '台大醫院 (總院)', address: '670、601', desc: '醫學中心級門診，處理較複雜的慢性病追蹤。' },
-            { type: 'bus', name: '台北植物園', address: '242、624', desc: '環境清幽，植物種類多，是絕佳的感官刺激場所。' },
-            { type: 'bus', name: '南門市場 (新館)', address: '重慶幹線、307', desc: '購買熟食、南北貨的首選，環境現代且設有電梯。' },
-            { type: 'bus', name: '和平院區', address: '202、307', desc: '萬華區重要的區域醫院，就醫資源豐富。' },
-            { type: 'bus', name: '萬華車站', address: '62、201', desc: '適合與親友聚餐，交通樞紐且無障礙設施完善。' },
-            { type: 'bus', name: '龍山寺', address: '重慶幹線、202', desc: '信仰中心與在地小吃，適合午後祈福。' },
-            { type: 'bus', name: '國立歷史博物館', address: '601、670', desc: '定期藝術展覽，提供長輩精神上的娛樂與學習。' },
-            { type: 'bus', name: '家樂福 (桂林店)', address: '307、202', desc: '大型量販店，品項齊全且動線寬敞。' },
-            { type: 'bus', name: '二二八和平紀念公園', address: '670、601', desc: '步道寬闊，適合進行更長時間的步行訓練。' },
-            { type: 'bus', name: '西本願寺廣場', address: '307、202', desc: '日式古蹟與茶館，環境寧靜適合靜坐談心。' },
-            { type: 'bus', name: '郵政博物館', address: '624、242', desc: '室內導覽活動多，適合躲避雨天或高溫。' },
-            { type: 'bus', name: '中山堂', address: '重慶幹線', desc: '歷史建築，經常有傳統戲曲、音樂會演出。' },
-            { type: 'bus', name: '誠品生活 (西門店)', address: '307、202', desc: '多樣化的餐飲與書店空間，適合跨世代互動。' },
-            { type: 'bus', name: '中正紀念堂', address: '202、670', desc: '觀賞儀隊交接或參與廣場大型樂齡體操活動。' },
-            { type: 'official', name: '萬華老人服務中心', address: '開封街二段 39 號 3 樓', desc: '官方核心單位。聯絡電話: (02) 2361-0666' },
-            { type: 'official', name: '萬華龍山老人服務中心', address: '梧州街 36 號 2 樓', desc: '官方核心單位。聯絡電話: (02) 2336-1881' },
-            { type: 'official', name: '中正國宅聯合服務中心', address: '青年路 52 號 1 樓', desc: '官方核心單位。聯絡電話: (02) 2332-0997' },
-            { type: 'official', name: '聖若瑟居家長照', address: '東園街 140 巷 7 號', desc: '居家長照機構。聯絡電話: (02) 2309-8728' },
-            { type: 'official', name: '立心居家長照', address: '艋舺大道 120 巷 39 弄', desc: '居家長照機構。聯絡電話: (02) 2336-1555' },
-            { type: 'official', name: '台大北護附設日照', address: '內江街 87 號', desc: '日間照顧中心。聯絡電話: (02) 2371-7101' },
-            { type: 'official', name: '愛愛院長照中心', address: '大理街 175 巷 27 號', desc: '長照機構。聯絡電話: (02) 2306-0493' },
-            { type: 'official', name: '廣照居家長照', address: '貴陽街二段 139 號', desc: '居家長照機構。聯絡電話: (02) 2311-6655' },
-            { type: 'official', name: '至善居家長照', address: '康定路 342 號', desc: '居家長照機構。聯絡電話: (02) 2302-1234' },
-            { type: 'official', name: '萬華社區長照中心', address: '西藏路 222 號', desc: '社區長照中心。聯絡電話: (02) 2339-1100' }
-        ];
-
-        const faqData = [
-            { q: "長輩住在沒電梯的舊公寓，出門看病非常困難，該怎麼辦？", a: "您可以透過長照申請「爬梯機服務」或「特約長照專車接送」，由專業人員協助長輩安全上下樓並往返醫院。" },
-            { q: "我想找人幫忙長輩洗澡或清理家裡，政府有補助嗎？", a: "有的。您可以申請「居家服務」，居服員會定期到府協助身體清潔、家務整理或代購生活物資。" },
-            { q: "申請長照服務會很貴嗎？家裡負擔得起嗎？", a: "費用依失能等級而定。一般家庭僅需自付 16%，中低收入戶則有更大幅度的減免，讓負擔降到最低。" },
-            { q: "我是主要照顧者，覺得壓力很大快撐不下去了，有支援嗎？", a: "這可以申請「喘息服務」。由專業人員接手照顧幾小時或幾天，讓您可以休息或處理私事。" },
-            { q: "聽說可以補助買輪椅或改裝浴室，要怎麼申請？", a: "撥打 1966 後，管理專員會到府評估。核定後購買輔具或改善家中的扶手、防跌設施，最高可獲得數萬元補助。" },
-            { q: "長輩白天一個人在家很寂寞，萬華區有可以去社交的地方嗎？", a: "萬華區有許多「巷弄長照站 (C 據點)」與「日照中心」，提供共餐、運動及手作課程，讓長輩生活更有重心。" },
-            { q: "長輩吃的藥物種類非常多，怕會吃錯或重疊，有專人可以諮詢嗎？", a: "長照服務中有「藥事照護」，藥師可以到府指導用藥、整合藥單，您也可以利用萬大路上的社區藥局諮詢，預防交互作用。" },
-            { q: "如果長輩半夜突然跌倒或身體不適，除了 119 還有其他支援嗎？", a: "建議可安裝「緊急救援系統」（警政署或社會局補助相關專案），透過隨身按鈕即時通報中心，連動家屬與醫護。" },
-            { q: "長輩開始出現健忘、疑神疑鬼的情況，萬華有失智症資源嗎？", a: "萬華區有多個「失智社區服務據點」，提供延緩失能課程，並有失智共照中心協助診斷與後續生活規劃。" },
-            { q: "租借的輔具（如輪椅、氣墊床）壞了或需要清潔，該聯絡誰？", a: "透過長照租借的輔具，可聯絡原提供機構進行維修。台北市也有輔具中心提供免費諮詢與簡易維修教學。" },
-            { q: "家裡已經聘請外籍看護，還能申請長照服務嗎？", a: "可以。外籍看護家庭仍可申請「專業服務」（如復能、營養諮詢）、輔具補助及特定的喘息服務，補足看護專業知識的不足。" },
-            { q: "長輩心情長期低落、不愛說話，有心理輔導資源嗎？", a: "萬華老人服務中心有提供長者關懷與諮詢。若需更專業介入，可尋求社區心理衛生中心的心理諮商資源。" },
-            { q: "長輩長期臥床，傷口照護很專業，家屬學不來怎麼辦？", a: "申請「居家護理」服務，由護理師定期到府更換管路（如尿管、鼻胃管）並處理複雜傷口，同時指導家屬正確照護技巧。" },
-            { q: "如果想帶長輩去青年公園走走，但輪椅推不動斜坡怎麼辦？", a: "您可以諮詢長照「復能服務」，由物理治療師指導正確推輪椅的力學原理，或評估申請電動輪椅補助。" },
-            { q: "遺產規劃或財產信託等法律問題，有地方可以問嗎？", a: "萬華老人中心定期有法律諮詢時段，或可聯繫法律扶助基金會諮詢「成人監護宣告」與信託等權益保障問題。" },
-            { q: "政府長照服務的時數如果不夠用，可以自費加購嗎？", a: "可以。多數與政府特約的居家長照機構都有提供自費服務項目，滿足更長時數的照顧需求。" }
-        ];
-
-        let currentFilter = 'all';
-        let resourceChart = null;
-
-        function initApp() {
-            renderFilterButtons();
-            renderResources('all');
-            initChart();
-            renderFAQ();
-        }
-
-        function renderFilterButtons() {
-            const container = document.getElementById('filter-buttons');
-            Object.keys(categories).forEach(key => {
-                const btn = document.createElement('button');
-                btn.className = `tab-btn px-4 py-2 rounded-full border border-sand-200 text-sm font-bold text-sand-800 hover:bg-sand-100 transition shadow-sm ${key === currentFilter ? 'active' : ''}`;
-                btn.innerHTML = `${categories[key].icon} ${categories[key].label}`;
-                btn.onclick = () => {
-                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    renderResources(key);
-                    updateChartFocus(key);
-                };
-                container.appendChild(btn);
-            });
-        }
-
-        function renderResources(filter) {
-            currentFilter = filter;
-            const container = document.getElementById('resource-grid');
-            container.innerHTML = '';
+        // --- 1. 時間更新功能 ---
+        function updateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const date = now.getDate();
+            const days = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+            const day = days[now.getDay()];
             
-            const filteredData = filter === 'all' 
-                ? resourceData 
-                : resourceData.filter(item => item.type === filter);
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
 
-            document.getElementById('list-title').innerText = categories[filter].label;
-            document.getElementById('result-count').innerText = `共 ${filteredData.length} 筆`;
-
-            filteredData.forEach(item => {
-                const cat = categories[item.type];
-                const card = document.createElement('div');
-                card.className = 'bg-sand-50 p-4 rounded-xl border border-sand-100 shadow-sm hover:shadow-md transition cursor-default flex flex-col justify-between';
-                card.innerHTML = `
-                    <div>
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="text-xl" style="color: ${cat.color}">${cat.icon}</span>
-                            <h4 class="font-bold text-sand-900 text-lg">${item.name}</h4>
-                        </div>
-                        <p class="text-sand-800 text-sm mb-3">${item.desc}</p>
-                    </div>
-                    <div class="mt-auto pt-3 border-t border-sand-200">
-                        <span class="text-xs font-bold text-terracotta-500 bg-terracotta-500/10 px-2 py-1 rounded">
-                            &#128205; ${item.address}
-                        </span>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
+            document.getElementById('current-date').innerText = `${year}年${month}月${date}日 ${day}`;
+            document.getElementById('current-time').innerText = `${hours}:${minutes}:${seconds}`;
         }
 
-        function initChart() {
-            const ctx = document.getElementById('resourceChart').getContext('2d');
-            
-            const counts = { food: 0, medical: 0, social: 0, bus: 0, official: 0 };
-            resourceData.forEach(item => counts[item.type]++);
+        // --- 2. 天氣抓取功能 (使用 Open-Meteo) ---
+        async function fetchWeather() {
+            const lat = 25.03; // 萬華座標略估
+            const lon = 121.50;
+            const weatherInfoEl = document.getElementById('weather-info');
 
-            const labels = [categories.food.label, categories.medical.label, categories.social.label, categories.bus.label, categories.official.label];
-            const data = [counts.food, counts.medical, counts.social, counts.bus, counts.official];
-            const bgColors = [categories.food.color, categories.medical.color, categories.social.color, categories.bus.color, categories.official.color];
-
-            resourceChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: data,
-                        backgroundColor: bgColors,
-                        borderWidth: 2,
-                        borderColor: '#FFFFFF'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '65%',
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                font: { family: "'PingFang TC', 'Microsoft JhengHei', sans-serif" },
-                                color: '#5C4E44',
-                                padding: 15
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return ` ${context.label}: ${context.raw} 個資源`;
-                                }
-                            }
-                        }
-                    },
-                    onClick: (event, elements) => {
-                        if(elements.length > 0) {
-                            const index = elements[0].index;
-                            const keys = ['food', 'medical', 'social', 'bus', 'official'];
-                            const selectedKey = keys[index];
-                            document.querySelectorAll('.tab-btn').forEach(b => {
-                                if(b.innerText.includes(categories[selectedKey].label)) b.click();
-                            });
-                        }
-                    }
-                }
-            });
-            updateChartDesc('all');
-        }
-
-        function updateChartFocus(filter) {
-            if (!resourceChart) return;
-            const dataset = resourceChart.data.datasets[0];
-            const baseColors = [categories.food.color, categories.medical.color, categories.social.color, categories.bus.color, categories.official.color];
-            
-            if (filter === 'all') {
-                dataset.backgroundColor = baseColors;
-            } else {
-                const keys = ['food', 'medical', 'social', 'bus', 'official'];
-                const targetIndex = keys.indexOf(filter);
-                dataset.backgroundColor = baseColors.map((color, i) => i === targetIndex ? color : '#EAE0D3');
-            }
-            resourceChart.update();
-            updateChartDesc(filter);
-        }
-
-        function updateChartDesc(filter) {
-            const descEl = document.getElementById('chartDesc');
-            if(filter === 'all') {
-                descEl.innerHTML = `萬華區共收錄 <b>${resourceData.length}</b> 筆在地資源，點擊圖表區塊或上方按鈕可進行分類檢視。`;
-            } else {
-                const count = resourceData.filter(i => i.type === filter).length;
-                descEl.innerHTML = `顯示 <b>${categories[filter].label}</b> 相關資源，共 <b>${count}</b> 筆。`;
-            }
-        }
-
-        function renderFAQ() {
-            const container = document.getElementById('accordion-container');
-            faqData.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = 'bg-white border border-sand-200 rounded-xl overflow-hidden shadow-sm';
+            try {
+                const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=Asia%2FTaipei`);
+                const data = await response.json();
                 
-                div.innerHTML = `
-                    <button class="w-full text-left px-6 py-4 font-bold text-sand-900 hover:bg-sand-50 focus:outline-none flex justify-between items-center transition" onclick="toggleAccordion(${index})">
-                        <span class="pr-4">Q${index + 1}: ${item.q}</span>
-                        <span id="icon-${index}" class="text-terracotta-500 text-xl transition-transform transform duration-200">&#43;</span>
-                    </button>
-                    <div id="content-${index}" class="hidden px-6 py-4 bg-sand-50/50 border-t border-sand-100">
-                        <p class="text-sand-800 text-sm leading-relaxed">${item.a}</p>
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function toggleAccordion(index) {
-            const content = document.getElementById(`content-${index}`);
-            const icon = document.getElementById(`icon-${index}`);
-            const isHidden = content.classList.contains('hidden');
-            
-            faqData.forEach((_, i) => {
-                document.getElementById(`content-${i}`).classList.add('hidden');
-                document.getElementById(`icon-${i}`).innerHTML = '&#43;';
-                document.getElementById(`icon-${i}`).style.transform = 'rotate(0deg)';
-            });
-
-            if (isHidden) {
-                content.classList.remove('hidden');
-                icon.innerHTML = '&#8722;';
-                icon.style.transform = 'rotate(180deg)';
+                if (data.current_weather) {
+                    const temp = Math.round(data.current_weather.temperature);
+                    const code = data.current_weather.weathercode;
+                    const status = interpretWeatherCode(code);
+                    weatherInfoEl.innerText = `萬華區：${status} ${temp}°C`;
+                }
+            } catch (error) {
+                weatherInfoEl.innerText = "暫時無法獲取氣象資訊";
+                console.error("Weather fetch error:", error);
             }
         }
 
-        document.addEventListener('DOMContentLoaded', initApp);
+        function interpretWeatherCode(code) {
+            // 簡易氣象代碼轉換
+            const map = {
+                0: "晴朗", 1: "大致晴朗", 2: "多雲", 3: "陰天",
+                45: "霧", 48: "霧",
+                51: "毛毛雨", 53: "毛毛雨", 55: "毛毛雨",
+                61: "陣雨", 63: "雨", 65: "大雨",
+                80: "陣雨", 81: "陣雨", 82: "強降雨",
+                95: "雷雨"
+            };
+            return map[code] || "觀測中";
+        }
+
+        // --- 3. 實用功能 ---
+        function copyLink() {
+            const url = "https://shenpaul1.github.io/Wanhua-Neighborhood/";
+            navigator.clipboard.writeText(url).then(() => {
+                showToast("連結已複製！快分享給家人吧。");
+            });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            const msgEl = document.getElementById("toast-msg");
+            msgEl.innerText = msg;
+            toast.classList.remove("hidden");
+            toast.style.opacity = "1";
+            setTimeout(() => {
+                toast.style.opacity = "0";
+                setTimeout(() => toast.classList.add("hidden"), 300);
+            }, 3000);
+        }
+
+        // 初始化
+        setInterval(updateTime, 1000);
+        updateTime();
+        fetchWeather();
+        // 每 15 分鐘更新一次天氣
+        setInterval(fetchWeather, 900000);
     </script>
 </body>
 </html>
