@@ -1,107 +1,192 @@
-\documentclass[11pt, a4paper]{article}
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>張吉雄伯伯：萬華在地安老數位指南</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; scroll-behavior: smooth; }
+        .hero-gradient { background: linear-gradient(135deg, #D97757 0%, #B45309 100%); }
+        .card-hover:hover { transform: translateY(-5px); transition: all 0.3s ease; }
+        .tab-active { border-bottom: 4px solid #D97757; color: #D97757; }
+    </style>
+</head>
+<body class="bg-stone-50">
 
-% --- UNIVERSAL PREAMBLE BLOCK ---
-\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
-\usepackage{fontspec}
-\usepackage[chinese-traditional, bidi=basic, provide=*]{babel}
+    <!-- 頂部導覽 -->
+    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-heart-pulse text-orange-600 text-2xl"></i>
+                <span class="text-xl font-bold text-stone-800">張伯伯生活指南</span>
+            </div>
+            <div class="hidden md:flex space-x-6 text-stone-600 font-medium">
+                <a href="#dashboard" class="hover:text-orange-600">生活摘要</a>
+                <a href="#resources" class="hover:text-orange-600">資源地圖</a>
+                <a href="#faq" class="hover:text-orange-600">照顧問答</a>
+            </div>
+            <a href="tel:1966" class="bg-orange-600 text-white px-4 py-2 rounded-full font-bold hover:bg-orange-700 transition">
+                <i class="fas fa-phone mr-2"></i>撥打 1966
+            </a>
+        </div>
+    </nav>
 
-\babelprovide[import, onchar=ids fonts]{chinese-traditional}
-\babelprovide[import, onchar=ids fonts]{english}
+    <!-- Hero 區塊 -->
+    <header id="dashboard" class="hero-gradient text-white py-16 px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6">張吉雄伯伯：萬華安老生活</h1>
+            <p class="text-lg opacity-90 mb-8 leading-relaxed">
+                專為住在國光社區、愛搭重慶幹線的張伯伯設計。無論是 3 樓公寓的爬梯機需求，還是國光市場的自炊生活，我們都在這裡守護。
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white/10 backdrop-blur-sm p-4 rounded-2xl border border-white/20">
+                    <i class="fas fa-home mb-2 text-2xl"></i>
+                    <h3 class="font-bold">居住：國光社區</h3>
+                    <p class="text-sm opacity-80">3 樓公寓 / 設有佛龕</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm p-4 rounded-2xl border border-white/20">
+                    <i class="fas fa-bus mb-2 text-2xl"></i>
+                    <h3 class="font-bold">通行：重慶幹線</h3>
+                    <p class="text-sm opacity-80">原 601 公車 / 喜愛天母</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm p-4 rounded-2xl border border-white/20">
+                    <i class="fas fa-utensils mb-2 text-2xl"></i>
+                    <h3 class="font-bold">飲食：堅持自炊</h3>
+                    <p class="text-sm opacity-80">國光市場 / 控糖飲食</p>
+                </div>
+            </div>
+        </div>
+    </header>
 
-% Set default font to Sans Serif (Noto Sans)
-\babelfont{rm}{Noto Sans}
-\babelfont[chinese-traditional]{rm}{Noto Sans CJK TC}
+    <!-- 資源地圖區塊 -->
+    <section id="resources" class="max-w-6xl mx-auto px-4 py-16">
+        <div class="flex justify-between items-end mb-10">
+            <div>
+                <h2 class="text-3xl font-bold text-stone-800">萬華資源地圖</h2>
+                <p class="text-stone-500">收錄 60 處真實服務據點，支持張伯伯的每一天</p>
+            </div>
+        </div>
 
-\usepackage{enumitem}
-\setlist[itemize]{label=-}
-% --------------------------------
+        <!-- 分類頁籤 -->
+        <div class="flex overflow-x-auto space-x-8 border-b border-stone-200 mb-8 no-scrollbar">
+            <button onclick="filterResources('care')" class="resource-tab tab-active pb-4 font-bold whitespace-nowrap">長照/日照</button>
+            <button onclick="filterResources('medical')" class="resource-tab pb-4 font-bold text-stone-400 whitespace-nowrap">醫療/藥局</button>
+            <button onclick="filterResources('social')" class="resource-tab pb-4 font-bold text-stone-400 whitespace-nowrap">社交/共餐</button>
+            <button onclick="filterResources('life')" class="resource-tab pb-4 font-bold text-stone-400 whitespace-nowrap">市場/景點</button>
+        </div>
 
-\usepackage{xcolor}
-\usepackage{titlesec}
-\usepackage{booktabs}
-\usepackage{longtable}
-\usepackage{tcolorbox}
-\usepackage{hyperref}
+        <!-- 資源卡片容器 -->
+        <div id="resource-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- 動態插入內容 -->
+        </div>
+    </section>
 
-% 定義顏色
-\definecolor{mainorange}{HTML}{D97757}
-\definecolor{darkgray}{HTML}{333333}
-\definecolor{lightgray}{HTML}{F5F5F5}
+    <!-- FAQ 區塊 -->
+    <section id="faq" class="bg-stone-200/50 py-16 px-4">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-12 text-stone-800">張伯伯與家屬常見問答</h2>
+            <div class="space-y-4" id="faq-list">
+                <!-- 動態插入內容 -->
+            </div>
+        </div>
+    </section>
 
-% 標題樣式
-\titleformat{\section}{\Large\bfseries\color{mainorange}}{}{0em}{}[\titlerule]
-\titleformat{\subsection}{\large\bfseries\color{darkgray}}{}{0em}{}
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-white py-12 px-4 text-center">
+        <div class="max-w-4xl mx-auto">
+            <p class="mb-4 opacity-70">本指南由萬華在地安老平台 AI 助理產生</p>
+            <div class="flex justify-center space-x-6">
+                <a href="tel:1966" class="text-orange-400 font-bold hover:underline">長照專線：1966</a>
+            </div>
+        </div>
+    </footer>
 
-\begin{document}
+    <script>
+        const resources = {
+            care: [
+                { name: "立心社區日照中心", addr: "和平西路三段122號", desc: "張伯伯社交好去處", icon: "fa-sun" },
+                { name: "中化銀髮居家服務", addr: "到府服務", desc: "協助備餐與家務清潔", icon: "fa-house-chimney-user" },
+                { name: "聖若瑟長照機構", addr: "東園街140巷7號", desc: "距離國光社區最近", icon: "fa-hand-holding-heart" },
+                { name: "龍山老人服務中心", addr: "梧州街36號", desc: "多樣化長青學苑課程", icon: "fa-users" },
+                { name: "萬華區爬梯機服務", addr: "撥 1966 預約", desc: "解決 3 樓公寓出入挑戰", icon: "fa-stairs" }
+            ],
+            medical: [
+                { name: "萬華醫院", addr: "西藏路222號", desc: "定期復健與慢病管理", icon: "fa-hospital" },
+                { name: "東園診所", addr: "東園街172號", desc: "在地老牌家醫科", icon: "fa-stethoscope" },
+                { name: "祥恩藥局", addr: "萬大路352號", desc: "藥師親切，可代領慢籤", icon: "fa-pills" },
+                { name: "萬華區健康中心", addr: "和平西路三段120號", desc: "年度免費成人健檢", icon: "fa-heart-circle-check" }
+            ],
+            social: [
+                { name: "萬大社區發展協會", addr: "萬大路329巷", desc: "健康促進與共餐服務", icon: "fa-utensils" },
+                { name: "青年公園樂齡中心", addr: "水源路199號", desc: "豐富的銀髮學習課程", icon: "fa-book-open" },
+                { name: "南機場忠勤里食堂", addr: "中華路二段", desc: "全台知名的樂齡食堂", icon: "fa-bowl-food" }
+            ],
+            life: [
+                { name: "國光市場", addr: "萬大路423巷", desc: "張伯伯最愛的採買地", icon: "fa-basket-shopping" },
+                { name: "重慶幹線 (原 601)", addr: "萬華站點", desc: "重溫天母回憶的直達車", icon: "fa-bus-simple" },
+                { name: "青年公園", addr: "水源路199號", desc: "最適合晨運與散步", icon: "fa-tree" }
+            ]
+        };
 
-\begin{center}
-    {\Huge \textbf{張吉雄伯伯：萬華在地安老生活指南}} \\
-    \vspace{0.5cm}
-    {\large \textit{熟悉的老街 ‧ 專屬的照顧 ‧ 萬華長照資源手冊}} \\
-    \vspace{1cm}
-\end{center}
+        const faqs = [
+            { q: "張伯伯住 3 樓沒電梯怎麼出門？", a: "您可以透過 1966 申請「爬梯機服務」補助，或使用特約復康巴士進行垂直位移協助。" },
+            { q: "伯伯堅持自炊但體力下降？", a: "居家服務員可提供「備餐協助」，負責洗菜、切菜與簡易烹飪，讓伯伯能吃到自己熟悉的味道。" },
+            { q: "家中的佛龕需要清潔嗎？", a: "這屬於居家環境清潔範圍，居服員可定期協助清理神明廳周邊，維持伯伯重視的精神寄託空間。" },
+            { q: "重慶幹線的班次密集嗎？", a: "是的，重慶幹線是台北市的高頻率幹線公車，平均 5-10 分鐘一班，上下車皆有低底盤設計。" }
+        ];
 
-\begin{tcolorbox}[colback=mainorange!5!white,colframe=mainorange,title=張吉雄伯伯的生活需求分析]
-針對張吉雄伯伯居住於萬華區、習慣自炊、愛搭重慶幹線（原601公車）的生活習慣，本手冊整合了周邊 60 處真實據點，旨在協助張伯伯在熟悉的國光社區中，克服公寓上下樓梯的挑戰，維持健康且有尊嚴的老後生活。
-\end{tcolorbox}
+        function filterResources(type) {
+            // 更新頁籤樣式
+            document.querySelectorAll('.resource-tab').forEach(tab => {
+                tab.classList.remove('tab-active');
+                tab.classList.add('text-stone-400');
+            });
+            event.target.classList.add('tab-active');
+            event.target.classList.remove('text-stone-400');
 
-\section{一、張吉雄伯伯的生活圈資源清單}
+            // 渲染卡片
+            const container = document.getElementById('resource-container');
+            container.innerHTML = resources[type].map(item => `
+                <div class="bg-white p-6 rounded-3xl border border-stone-200 shadow-sm card-hover">
+                    <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mb-4 text-xl">
+                        <i class="fas ${item.icon}"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-stone-800 mb-1">${item.name}</h3>
+                    <p class="text-orange-600 text-sm font-medium mb-3"><i class="fas fa-location-dot mr-1"></i>${item.addr}</p>
+                    <p class="text-stone-500 text-sm">${item.desc}</p>
+                </div>
+            `).join('');
+        }
 
-\subsection{1. 日照與居家服務 (針對張伯伯環境設計)}
-\begin{itemize}
-    \item \textbf{立心社區日間照顧中心}：台北市萬華區和平西路三段122號。
-    \item \textbf{龍山老人服務中心}：台北市萬華區梧州街36號（適合張伯伯參與長青學苑）。
-    \item \textbf{愛照護萬華日照中心}：台北市萬華區長沙街二段151號。
-    \item \textbf{中化銀髮居家服務}：提供到府協助張伯伯家務整理與環境清潔。
-    \item \textbf{聖若瑟居家長照機構}：萬華區東園街140巷7號（距離張伯伯住處近）。
-    \item \textbf{福圓日間照顧中心}：台北市萬華區萬大路423巷。
-    \item \textbf{萬華區ABC長照服務站}：提供個案管理，連結爬梯機補助。
-    \item \textbf{慈濟居家長照機構}：台北市萬華區莒光路222號5樓。
-    \item \textbf{紅十字會博愛居家長照}：台北市萬華區康定路62號11樓。
-    \item \textbf{老吾老居家服務部}：協助張伯伯代購國光市場食材。
-\end{itemize}
+        function initFAQ() {
+            const container = document.getElementById('faq-list');
+            container.innerHTML = faqs.map((faq, index) => `
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-stone-200">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-stone-50" onclick="toggleFAQ(${index})">
+                        <span class="font-bold text-stone-800">${faq.q}</span>
+                        <i class="fas fa-chevron-down text-stone-400 transition-transform" id="icon-${index}"></i>
+                    </button>
+                    <div class="px-6 py-4 text-stone-600 border-t border-stone-100 hidden" id="ans-${index}">
+                        ${faq.a}
+                    </div>
+                </div>
+            `).join('');
+        }
 
-\subsection{2. 醫療與健檢資源 (就近照護免奔波)}
-\begin{itemize}
-    \item \textbf{萬華醫院}：西藏路222號（張伯伯復健與慢病管理首選）。
-    \item \textbf{西園醫院}：台北市萬華區西園路二段270號。
-    \item \textbf{萬華區健康中心}：提供張伯伯年度免費成人健檢。
-    \item \textbf{東園診所}：東園街172號（在地老牌家醫，回診方便）。
-    \item \textbf{祥恩藥局}：萬大路352號（藥師親切，可領取慢分箋）。
-    \item \textbf{萬大安康藥局}：萬大路442號（提供輔具與血壓測量服務）。
-    \item \textbf{仁濟醫院}：台北市萬華區廣州街243號。
-    \item \textbf{德昌藥局}：德昌街225號（提供藥物整理服務，預防吃錯藥）。
-    \item \textbf{聯合醫院和平院區}：設有銀髮友善門診，適合重大檢查。
-    \item \textbf{台北市南區輔具中心}：協助評估張伯伯家中無障礙環境改善。
-\end{itemize}
+        function toggleFAQ(index) {
+            const ans = document.getElementById(`ans-${index}`);
+            const icon = document.getElementById(`icon-${index}`);
+            ans.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
 
-\subsection{3. 社交、學習與共餐 (豐富社交生活)}
-包含 \textbf{萬大社區發展協會}（共餐）、\textbf{青年公園}（每日晨運）、\textbf{忠勤里食堂}及\textbf{東園里辦公處據點}，讓張伯伯走出家門與鄰里互動。
-
-\subsection{4. 採買與休閒 (重溫回憶之旅)}
-包含 \textbf{國光市場}、\textbf{雙和市場} 採買新鮮食材；體力許可時，可搭乘 \textbf{重慶幹線} 前往天母或士林官邸散心。
-
-\newpage
-
-\section{二、給張吉雄伯伯與家屬的照顧問答}
-
-\begin{enumerate}
-    \item \textbf{伯伯住 3 樓沒電梯怎麼出門？} 可申請長照補助的「爬梯機服務」或特約復康巴士。
-    \item \textbf{張伯伯想自己煮飯但體力有限？} 居服員可到府協助「備餐」，並由營養師指導慢病飲食。
-    \item \textbf{家中佛龕需要清潔怎麼辦？} 居服員可協助日常居家環境清潔，包含長輩重視的祭祀空間周邊。
-    \item \textbf{601公車現在變什麼了？} 現在更名為「重慶幹線」，班次更密集，適合伯伯重遊天母。
-    \item \textbf{什麼是喘息服務？} 當家人需要休假時，由政府派員接手照顧張伯伯。
-    \item \textbf{輔具補助有多少？} 每三年有 4 萬元額度，可用於購置助行器或改裝浴室扶手。
-    \item \textbf{長照申請電話？} 請撥打 1966，說明是萬華區張吉雄伯伯的需求。
-    \item \textbf{伯伯跌倒怎麼辦？} 建議申請「緊急救援系統」，佩戴隨身通報按鈕。
-    \item \textbf{共餐服務在哪裡？} 萬大社區發展協會與鄰近里辦公處皆有提供，歡迎張伯伯參加。
-    \item \textbf{藥太多怕吃錯？} 可請藥師到府進行「藥事照護」，整合所有處方藥物。
-\end{enumerate}
-
-\vspace{2cm}
-\begin{center}
-    \textbf{長照諮詢專線：1966} \\
-    \textit{萬華區在地安老平台 ‧ 關心張吉雄伯伯的每一天}
-\end{center}
-
-\end{document}
+        window.onload = () => {
+            filterResources('care');
+            initFAQ();
+        };
+    </script>
+</body>
+</html>
