@@ -9,318 +9,301 @@
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
 
         body {
-            background: #FFF9F2;
-            background-image: radial-gradient(#FFE4CC 1px, transparent 1px), radial-gradient(#FFE4CC 1px, transparent 1px);
-            background-size: 40px 40px;
-            background-position: 0 0, 20px 20px;
+            background: #FFFBF7;
             color: #4A3E37;
             font-family: 'Noto Sans TC', sans-serif;
             scroll-behavior: smooth;
         }
 
-        .rounded-super { border-radius: 2.5rem; }
+        .rounded-super { border-radius: 2rem; }
         
-        .photo-frame {
-            border: 10px solid white;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            background: #eee;
+        /* 模擬地圖樣式 */
+        .map-container {
+            position: relative;
+            background: #f0ede9;
+            background-image: 
+                linear-gradient(#e5e1dc 1px, transparent 1px),
+                linear-gradient(90deg, #e5e1dc 1px, transparent 1px);
+            background-size: 30px 30px;
+            height: 400px;
+            border-radius: 1.5rem;
             overflow: hidden;
-        }
-        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
-
-        .tab-active {
-            background-color: #FF7E3D !important;
-            color: white !important;
-            box-shadow: 0 4px 15px rgba(255, 126, 61, 0.4);
+            border: 4px solid #fff;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
         }
 
-        .resource-card {
-            border: 2px solid #FFE4CC;
-            transition: all 0.2s ease;
+        .map-road {
+            position: absolute;
+            background: #d1ccc7;
+            border-radius: 20px;
+        }
+
+        .bus-marker {
+            position: absolute;
+            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 50;
+        }
+
+        .station-node {
+            position: absolute;
+            width: 16px;
+            height: 16px;
             background: white;
-        }
-        .resource-card:hover {
-            border-color: #FF7E3D;
-            transform: translateY(-2px);
+            border: 3px solid #FF7E3D;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
         }
 
-        .custom-scroll::-webkit-scrollbar { width: 6px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #FF9D66; border-radius: 10px; }
+        .station-label {
+            position: absolute;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+            background: rgba(255,255,255,0.8);
+            padding: 2px 6px;
+            border-radius: 4px;
+            transform: translate(-50%, 15px);
+        }
 
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .active-pulse {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #FF7E3D;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-ring 2s infinite;
+            z-index: 10;
+        }
+
+        .photo-frame {
+            border: 8px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background: #eee;
+        }
+
+        .animate-marquee { 
+            display: inline-block;
+            animation: marquee 30s linear infinite; 
+        }
         @keyframes marquee {
             0% { transform: translateX(100%); }
             100% { transform: translateX(-100%); }
-        }
-        .animate-marquee { 
-            display: inline-block;
-            animation: marquee 40s linear infinite; 
-        }
-        
-        .story-gradient {
-            background: linear-gradient(135deg, #fffcf9 0%, #fff0e0 100%);
-        }
-
-        .bus-line {
-            position: relative;
-        }
-        .bus-line::before {
-            content: '';
-            position: absolute;
-            left: 20px;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: #FED7AA;
-            z-index: 0;
-        }
-        .bus-dot {
-            position: relative;
-            z-index: 10;
         }
     </style>
 </head>
 <body class="pb-10">
 
-    <!-- 頂部跑馬燈 -->
-    <div class="bg-orange-600 text-white py-3 overflow-hidden whitespace-nowrap sticky top-0 z-50 shadow-md">
-        <div class="animate-marquee px-4 font-bold text-lg">
-            📅 <span id="current-datetime">載入時間中...</span> ｜ 
-            🌤️ 萬華在地安老：守護長輩的每一天 ｜ 
-            📍 1966 長照專線隨時為您服務 ｜ 
-            💡 萬華長輩生活寶庫，理解是對長輩最好的陪伴 ｜ 
-            🏥 萬華健康中心關心您的健康
+    <!-- 跑馬燈 -->
+    <div class="bg-stone-800 text-white py-2 overflow-hidden whitespace-nowrap sticky top-0 z-50">
+        <div class="animate-marquee px-4 font-bold">
+            💡 萬華長輩生活寶庫：理解是對長輩最好的陪伴 ｜ 🚌 公車動態即時模擬中 ｜ 📍 1966 長照專線隨時為您服務 ｜ 🏥 萬華健康中心關心您
         </div>
     </div>
 
-    <!-- 主視覺區 -->
-    <header class="max-w-6xl mx-auto px-4 py-12 flex flex-col md:flex-row items-center gap-12">
-        <div class="md:w-1/2 text-center md:text-left">
-            <h1 class="text-5xl md:text-6xl font-black text-stone-800 leading-tight mb-6">
-                萬華<span class="text-orange-500">老寶庫</span><br>長輩生活地圖
-            </h1>
-            <p class="text-xl text-stone-600 mb-8">
-                為萬華長輩整理的在地資源，以及家屬最需要的照顧秘笈。讓在宅安老變得更簡單、更溫暖。
-            </p>
-            <div class="flex flex-wrap gap-4 justify-center md:justify-start">
-                <a href="#resources" class="bg-orange-500 text-white px-8 py-4 rounded-full font-black text-lg shadow-lg hover:scale-105 transition">尋找寶庫資源</a>
-                <a href="#bus-schedule" class="bg-blue-500 text-white px-8 py-4 rounded-full font-black text-lg shadow-lg hover:scale-105 transition">查看今日公車</a>
-            </div>
+    <!-- 主標題 -->
+    <header class="max-w-6xl mx-auto px-6 pt-12 pb-8 flex flex-col md:flex-row items-center gap-8">
+        <div class="flex-1 text-center md:text-left">
+            <h1 class="text-5xl font-black text-stone-800 mb-4">萬華長輩<span class="text-orange-500">生活地圖</span></h1>
+            <p class="text-lg text-stone-600 font-medium">記錄環河南路張先生的日常，為家屬提供最在地的照顧資源。</p>
         </div>
-        <div class="md:w-1/2 relative">
-            <div class="relative w-full aspect-square">
-                <div class="absolute top-0 right-0 w-3/4 aspect-[4/3] photo-frame rotate-3 z-20">
-                    <img src="LINE_ALBUM_51%E7%AC%AC%E4%B8%89%E6%AC%A1%E5%AE%B6%E8%A8%AA_260501_12.jpg" alt="家訪照1">
-                </div>
-                <div class="absolute bottom-4 left-0 w-2/3 aspect-square photo-frame -rotate-6 z-30">
-                    <img src="LINE_ALBUM_51%E7%AC%AC%E4%B8%89%E6%AC%A1%E5%AE%B6%E8%A8%AA_260501_8.jpg" alt="家訪照2">
-                </div>
-                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-orange-200/30 rounded-full -z-10"></div>
-            </div>
-        </div>
+        <div class="w-32 h-32 bg-orange-100 rounded-full flex items-center justify-center text-5xl shadow-inner">👴</div>
     </header>
 
-    <!-- 1日生活圈公車動態 -->
-    <section id="bus-schedule" class="max-w-6xl mx-auto px-4 py-12">
-        <div class="bg-white rounded-super p-8 md:p-12 shadow-xl border-4 border-blue-100">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                <div>
-                    <h2 class="text-3xl font-black text-stone-800 flex items-center gap-2">
-                        <span class="text-blue-500">🚌</span> 萬華長輩 1 日生活圈公車動態
-                    </h2>
-                    <p class="text-stone-500 mt-2 font-bold">即時模擬：從環河南路張先生出發的日常行程</p>
-                </div>
-                <div class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-4 text-center min-w-[150px]">
-                    <span class="text-sm font-bold text-blue-600 block">目前公車狀態</span>
-                    <span id="bus-live-status" class="text-2xl font-black text-blue-800">偵測中...</span>
-                </div>
+    <!-- 公車動態與地圖 -->
+    <section class="max-w-6xl mx-auto px-4 mb-12">
+        <div class="bg-white rounded-super p-6 md:p-10 shadow-xl border border-stone-100">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="bg-blue-500 text-white p-2 rounded-lg">🚌</div>
+                <h2 class="text-2xl font-black text-stone-800">1 日生活圈公車動態模擬</h2>
             </div>
 
-            <div id="bus-timeline" class="bus-line space-y-12 ml-4">
-                <!-- 站點由 JS 動態生成，以確保功能正常檢查 -->
-            </div>
-        </div>
-    </section>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- 左側：模擬地圖 -->
+                <div class="lg:col-span-2">
+                    <div id="wanhua-map" class="map-container">
+                        <!-- 道路模擬 -->
+                        <div class="map-road" style="width: 80%; height: 12px; left: 10%; top: 40%;"></div>
+                        <div class="map-road" style="width: 12px; height: 50%; left: 30%; top: 10%;"></div>
+                        <div class="map-road" style="width: 12px; height: 50%; left: 70%; top: 20%;"></div>
+                        
+                        <!-- 站點 -->
+                        <div id="stations-layer"></div>
+                        
+                        <!-- 脈動效果 -->
+                        <div id="pulse-layer"></div>
 
-    <!-- 長輩生活特色介紹 -->
-    <section id="story" class="max-w-6xl mx-auto px-4 py-12">
-        <div class="story-gradient rounded-super p-8 md:p-12 shadow-inner border-2 border-orange-100 flex flex-col md:flex-row items-center gap-10">
-            <div class="md:w-1/3">
-                <div class="photo-frame aspect-[3/4] w-full">
-                    <img src="LINE_NOTE_260501_5.jpg" alt="長輩生活特色">
-                </div>
-                <p class="text-center mt-4 text-orange-800 font-bold italic">「親手蒸的糙米飯，是自立的堅持」</p>
-            </div>
-            <div class="md:w-2/3">
-                <h2 class="text-3xl font-black text-stone-800 mb-6 flex items-center gap-2">
-                    <span class="text-orange-500">◆</span> 長者生活特色介紹
-                </h2>
-                <div class="space-y-4 text-lg leading-relaxed text-stone-700">
-                    <p>
-                        以居住在萬華區環河南路三段一帶的<strong>張先生</strong>為例，長輩們的生活往往充滿著對自立生活的堅持。
-                    </p>
-                    <p>
-                        他們習慣每日清晨步行至<strong>國光市場</strong>挑選新鮮食材，雖然腳步漸慢，但內心渴望與社會連結。無論是去診所拿藥，還是到服務中心聊天，都是生活活力的來源。
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 資源區 -->
-    <section id="resources" class="max-w-7xl mx-auto px-4 py-16">
-        <div class="bg-white rounded-super shadow-xl border-8 border-orange-100 overflow-hidden">
-            <div class="grid grid-cols-1 lg:grid-cols-4">
-                <div class="p-8 bg-orange-50/50 border-r border-orange-100">
-                    <h2 class="text-2xl font-black mb-6 text-stone-800">類別篩選</h2>
-                    <div id="category-btns" class="space-y-3"></div>
-                </div>
-                <div class="lg:col-span-3 p-8">
-                    <div class="flex justify-between items-end mb-8 border-b-4 border-orange-100 pb-4">
-                        <div>
-                            <h3 id="current-cat-name" class="text-3xl font-black text-orange-600">載入中...</h3>
-                            <p id="current-cat-desc" class="text-stone-500 mt-1"></p>
+                        <!-- 公車圖標 -->
+                        <div id="bus-sprite" class="bus-marker text-3xl">🚌</div>
+                        
+                        <div class="absolute bottom-4 right-4 bg-white/90 p-3 rounded-xl shadow-sm text-xs font-bold border border-stone-200">
+                            📍 萬華區環河南路生活路網
                         </div>
-                        <span id="res-count" class="bg-orange-100 text-orange-700 px-4 py-1 rounded-full font-bold"></span>
                     </div>
-                    <div id="res-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[700px] overflow-y-auto pr-4 custom-scroll"></div>
+                </div>
+
+                <!-- 右側：行程詳細說明 -->
+                <div class="bg-stone-50 rounded-2xl p-6 border border-stone-200 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-black text-stone-800 text-xl mb-4 flex justify-between items-center">
+                            目前位置 
+                            <span id="current-time-tag" class="text-sm bg-orange-500 text-white px-3 py-1 rounded-full">08:30</span>
+                        </h3>
+                        <div id="step-details" class="space-y-4">
+                            <!-- 由 JS 動態填入 -->
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-6 border-t border-stone-200">
+                        <div class="flex items-center gap-2 text-blue-600 font-bold mb-2">
+                            <span class="relative flex h-3 w-3">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                            </span>
+                            即時模擬狀態
+                        </div>
+                        <p id="bus-status-text" class="text-sm text-stone-500 font-medium italic">正在尋找公車位置...</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- QA 區 -->
-    <section id="qa" class="max-w-5xl mx-auto px-4 py-20">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl font-black text-stone-800 mb-4">家屬小撇步 Q&A 6 招</h2>
-            <p class="text-xl text-stone-500 italic">理解長輩的堅持，讓照顧事半功倍</p>
+    <!-- 資源卡片與QA -->
+    <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+        
+        <!-- 家屬小撇步 6 招 -->
+        <div class="bg-orange-50 rounded-super p-8 border-2 border-orange-100">
+            <h2 class="text-2xl font-black text-orange-800 mb-6 flex items-center gap-2">
+                <span>💡</span> 家屬照顧 6 招撇步
+            </h2>
+            <div class="grid grid-cols-1 gap-4" id="qa-list">
+                <!-- JS 填入 -->
+            </div>
         </div>
-        <div id="qa-container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-    </section>
+
+        <!-- 資源清單快速看 -->
+        <div class="bg-white rounded-super p-8 shadow-lg border border-stone-100">
+            <h2 class="text-2xl font-black text-stone-800 mb-6 flex items-center gap-2">
+                <span>📍</span> 關鍵資源與環境
+            </h2>
+            <div class="space-y-4">
+                <div class="flex gap-4 p-4 bg-blue-50 rounded-2xl">
+                    <div class="w-20 h-20 rounded-xl photo-frame flex-shrink-0 overflow-hidden">
+                        <img src="LINE_NOTE_260501_5.jpg" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-blue-900">居家生活環境</h4>
+                        <p class="text-sm text-blue-700 leading-snug">注意無電梯公寓的樓梯安全，適時增加扶手與防滑措施。</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 p-4 bg-green-50 rounded-2xl">
+                    <div class="w-20 h-20 rounded-xl photo-frame flex-shrink-0 overflow-hidden">
+                        <img src="LINE_ALBUM_51%E7%AC%AC%E4%B8%89%E6%AC%A1%E5%AE%B6%E8%A8%AA_260501_8.jpg" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-green-900">健康巡迴諮詢</h4>
+                        <p class="text-sm text-green-700 leading-snug">善用診所與長照中心的測量服務，隨時掌握長輩血壓狀況。</p>
+                    </div>
+                </div>
+            </div>
+            <a href="#" class="block text-center mt-8 text-stone-400 font-bold hover:text-orange-500 underline">查看更多長照資源清單 →</a>
+        </div>
+    </div>
 
     <script>
-        // 即時時間更新
-        function updateTime() {
-            const now = new Date();
-            const timeStr = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日 ${now.toLocaleTimeString('zh-TW', { hour12: false })}`;
-            document.getElementById('current-datetime').innerText = timeStr;
-        }
-        setInterval(updateTime, 1000);
-
-        // 公車動態功能邏輯 (檢查功能正常)
-        const busStops = [
-            { name: '華中河濱公園站', time: '08:30', task: '準備出發去採買', line: '307, 202', color: 'orange' },
-            { name: '國光市場', time: '09:30', task: '採買新鮮肉品與蔬菜', line: '步行抵達', color: 'blue' },
-            { name: '東京診所', time: '10:45', task: '慢性病領藥與血壓檢查', line: '601, 202', color: 'green' },
-            { name: '萬華老人服務中心', time: '12:00', task: '聚會、吃飯、健康諮詢', line: '307', color: 'purple' },
-            { name: '返家途中', time: '15:00', task: '充實的一天，回家休息', line: '202, 601', color: 'stone' }
+        const stops = [
+            { id: 1, name: '華中河濱公園', x: 15, y: 40, time: '08:30', desc: '早起散步的好地方，也是公車起點。', line: '202, 307' },
+            { id: 2, name: '國光市場', x: 30, y: 15, time: '09:45', desc: '採買新鮮食材，絞肉與糙米飯的來源。', line: '步行抵達' },
+            { id: 3, name: '東京診所', x: 50, y: 40, time: '11:00', desc: '例行性拿藥與健康檢查。', line: '202, 601' },
+            { id: 4, name: '萬華老人服務中心', x: 70, y: 25, time: '12:30', desc: '共餐與老鄰居聊天的社交熱點。', line: '307' },
+            { id: 5, name: '返家(環河南路)', x: 85, y: 40, time: '15:30', desc: '結束充實的一天，回家休息。', line: '隨時返家' }
         ];
-
-        function renderBusTimeline() {
-            const container = document.getElementById('bus-timeline');
-            const statusEl = document.getElementById('bus-live-status');
-            container.innerHTML = '';
-            
-            // 隨機模擬一個狀態
-            const randomStop = Math.floor(Math.random() * busStops.length);
-            const statuses = ["進站中", "將抵達", "3 分鐘", "5 分鐘", "準點"];
-            const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
-            
-            statusEl.innerText = randomStatus;
-
-            busStops.forEach((stop, index) => {
-                const isCurrent = index === randomStop;
-                const statusText = isCurrent ? `<span class="animate-pulse text-red-600 font-black">● ${randomStatus}</span>` : '等待中';
-                
-                const stopHtml = `
-                    <div class="flex flex-col md:flex-row gap-6 bus-dot">
-                        <div class="w-10 h-10 rounded-full bg-${stop.color}-500 border-4 border-white shadow-md flex-shrink-0"></div>
-                        <div class="flex-grow bg-${stop.color}-50 p-6 rounded-3xl border-2 border-${stop.color}-200 ${isCurrent ? 'ring-4 ring-orange-400' : ''}">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="bg-${stop.color}-500 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase">${stop.time} 行程</span>
-                                <span class="text-${stop.color}-600 font-black">${statusText}</span>
-                            </div>
-                            <h4 class="text-xl font-black text-stone-800 mb-1">${stop.name}</h4>
-                            <p class="text-stone-600 text-sm">交通：<strong class="text-blue-600">${stop.line}</strong></p>
-                            <p class="text-stone-500 mt-2 italic text-sm">「${stop.task}」</p>
-                        </div>
-                    </div>
-                `;
-                container.innerHTML += stopHtml;
-            });
-        }
-
-        const categories = {
-            'med': { label: '看病拿藥', icon: '🩺', desc: '萬華區優質醫療與復健資源' },
-            'shop': { label: '逛街採買', icon: '🥬', desc: '好買又好逛的市場與超市' },
-            'care': { label: '長照諮詢', icon: '🫂', desc: '政府與民間的照顧幫手' },
-            'fun': { label: '休閒社交', icon: '🍵', desc: '長輩結交新朋友的好去處' }
-        };
-
-        const resData = {
-            'med': [{ n: '東京診所', a: '西園路二段' }, { n: '西園醫院', a: '西園路二段132號' }],
-            'shop': [{ n: '國光市場', a: '萬大路巷弄' }, { n: '雙和市場', a: '雙和街' }],
-            'care': [{ n: '萬華老人服務中心', a: '西源路' }, { n: '聖若瑟居家長照', a: '德昌街' }],
-            'fun': [{ n: '東園圖書館', a: '東園街199號' }, { n: '龍山寺', a: '廣州街211號' }]
-        };
 
         const qaData = [
-            { q: "長輩拒絕居服員進門？", a: "從『陪同散步』開始。讓長輩覺得是多了個隨扈或朋友，而不是被照顧。" },
-            { q: "如何說服長輩坐輪椅？", a: "不要說『你走不動』，要說『這能讓你走得更遠、看更多地方』。" },
-            { q: "長輩不愛喝水怎麼辦？", a: "利用萬華在地特色，準備淡茶或稀釋果汁，增加水分攝取的意願。" },
-            { q: "如何知道長輩有吃飽？", a: "檢查冰箱食材減少狀況、體重變化，或是餐盒是否有剩餘。" },
-            { q: "照顧者快崩潰了怎麼辦？", a: "利用長照喘息服務，給自己幾天假。找人傾訴，別獨自承受。" },
-            { q: "萬華哪裡可以借輪椅？", a: "萬華老人服務中心通常有提供短期借用服務，可打電話詢問。" }
+            { q: "拒絕居服員進門？", a: "從『陪同散步』開始。讓長輩覺得是多了個隨扈，而非被照顧。" },
+            { q: "不願意坐輪椅？", a: "改說：『這能讓你走得更遠、看更多漂亮風景』。" },
+            { q: "不愛喝水怎麼辦？", a: "準備在地特色淡茶或果汁，分裝在小瓶子內增加意願。" },
+            { q: "冰箱食物總是不減？", a: "檢查保存期限，改以少量多樣的餐盒取代大鍋菜。" },
+            { q: "照顧者感到疲累？", a: "撥打1966申請喘息服務，給自己幾天假，別獨自承受。" },
+            { q: "長輩總是不肯吃藥？", a: "使用精美的藥盒分類，並給予口頭稱讚作為正面回饋。" }
         ];
 
-        function renderResources(key) {
-            const grid = document.getElementById('res-grid');
-            grid.innerHTML = '';
-            resData[key].forEach(item => {
-                grid.innerHTML += `
-                    <div class="resource-card p-5 rounded-2xl flex flex-col justify-between">
-                        <div><h4 class="text-lg font-black text-stone-800 mb-1">${item.n}</h4><p class="text-sm text-stone-400 mb-4">📍 ${item.a}</p></div>
-                        <button class="bg-blue-50 text-blue-600 py-2 rounded-xl text-sm font-bold">查看地圖</button>
-                    </div>
+        let currentIndex = 0;
+
+        function initMap() {
+            const stationsLayer = document.getElementById('stations-layer');
+            stationsLayer.innerHTML = '';
+            stops.forEach(stop => {
+                stationsLayer.innerHTML += `
+                    <div class="station-node" style="left: ${stop.x}%; top: ${stop.y}%;"></div>
+                    <div class="station-label" style="left: ${stop.x}%; top: ${stop.y}%;">${stop.name}</div>
                 `;
             });
-            document.getElementById('current-cat-name').innerText = categories[key].label;
-            document.getElementById('current-cat-desc').innerText = categories[key].desc;
-            document.getElementById('res-count').innerText = `共 ${resData[key].length} 項`;
+            updateBusPosition();
         }
 
-        function init() {
-            renderBusTimeline();
-            setInterval(renderBusTimeline, 30000); // 每30秒更新一次模擬動態
+        function updateBusPosition() {
+            const bus = document.getElementById('bus-sprite');
+            const pulseLayer = document.getElementById('pulse-layer');
+            const details = document.getElementById('step-details');
+            const timeTag = document.getElementById('current-time-tag');
+            const statusText = document.getElementById('bus-status-text');
+            
+            const stop = stops[currentIndex];
 
-            const catContainer = document.getElementById('category-btns');
-            Object.keys(categories).forEach(key => {
-                const btn = document.createElement('button');
-                btn.className = 'w-full flex items-center gap-3 p-4 rounded-2xl border-2 border-orange-100 font-bold';
-                btn.innerHTML = `<span>${categories[key].icon}</span> ${categories[key].label}`;
-                btn.onclick = () => {
-                    document.querySelectorAll('#category-btns button').forEach(b => b.classList.remove('tab-active'));
-                    btn.classList.add('tab-active');
-                    renderResources(key);
-                };
-                catContainer.appendChild(btn);
-            });
-            catContainer.firstChild.click();
+            // 移動公車
+            bus.style.left = `calc(${stop.x}% - 15px)`;
+            bus.style.top = `calc(${stop.y}% - 25px)`;
 
-            const qaContainer = document.getElementById('qa-container');
+            // 更新脈動
+            pulseLayer.innerHTML = `<div class="active-pulse" style="left: ${stop.x}%; top: ${stop.y}%;"></div>`;
+
+            // 更新說明文字
+            timeTag.innerText = stop.time;
+            details.innerHTML = `
+                <div class="animate-fadeIn">
+                    <h4 class="text-orange-600 font-black text-lg mb-1">${stop.name}</h4>
+                    <p class="text-stone-700 leading-relaxed font-medium">${stop.desc}</p>
+                    <div class="mt-3 inline-block bg-white px-3 py-1 rounded-lg border border-stone-200 text-xs font-bold text-stone-500">
+                        主要交通：${stop.line}
+                    </div>
+                </div>
+            `;
+            statusText.innerText = `目前公車已抵達 ${stop.name}，一切正常。`;
+
+            // 輪播
+            currentIndex = (currentIndex + 1) % stops.length;
+        }
+
+        function renderQA() {
+            const container = document.getElementById('qa-list');
             qaData.forEach((item, i) => {
-                qaContainer.innerHTML += `
-                    <div class="bg-white p-6 rounded-3xl border-2 border-orange-100 shadow-sm">
+                container.innerHTML += `
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-orange-100">
                         <div class="flex gap-3">
-                            <span class="flex-shrink-0 w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-black">${i+1}</span>
-                            <div><h4 class="font-black text-stone-800 mb-2">${item.q}</h4><p class="text-stone-500 text-sm">${item.a}</p></div>
+                            <span class="text-orange-500 font-black">0${i+1}</span>
+                            <div>
+                                <h4 class="font-black text-stone-800 text-sm mb-1">${item.q}</h4>
+                                <p class="text-xs text-stone-500">${item.a}</p>
+                            </div>
                         </div>
                     </div>
                 `;
             });
         }
 
-        document.addEventListener('DOMContentLoaded', init);
+        // 啟動
+        window.onload = () => {
+            initMap();
+            renderQA();
+            setInterval(updateBusPosition, 4000);
+        };
     </script>
 </body>
 </html>
