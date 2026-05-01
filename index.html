@@ -60,6 +60,24 @@
         .story-gradient {
             background: linear-gradient(135deg, #fffcf9 0%, #fff0e0 100%);
         }
+
+        .bus-line {
+            position: relative;
+        }
+        .bus-line::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #FED7AA;
+            z-index: 0;
+        }
+        .bus-dot {
+            position: relative;
+            z-index: 10;
+        }
     </style>
 </head>
 <body class="pb-10">
@@ -68,7 +86,7 @@
     <div class="bg-orange-600 text-white py-3 overflow-hidden whitespace-nowrap sticky top-0 z-50 shadow-md">
         <div class="animate-marquee px-4 font-bold text-lg">
             📅 <span id="current-datetime">載入時間中...</span> ｜ 
-            🌤️ 萬華在地安老：守護張伯伯的每一天 ｜ 
+            🌤️ 萬華在地安老：守護長輩的每一天 ｜ 
             📍 1966 長照專線隨時為您服務 ｜ 
             💡 萬華長輩生活寶庫，理解是對長輩最好的陪伴 ｜ 
             🏥 萬華健康中心關心您的健康
@@ -86,7 +104,7 @@
             </p>
             <div class="flex flex-wrap gap-4 justify-center md:justify-start">
                 <a href="#resources" class="bg-orange-500 text-white px-8 py-4 rounded-full font-black text-lg shadow-lg hover:scale-105 transition">尋找寶庫資源</a>
-                <a href="#story" class="bg-white text-orange-500 border-2 border-orange-500 px-8 py-4 rounded-full font-black text-lg hover:bg-orange-50 transition">長輩特色介紹</a>
+                <a href="#bus-schedule" class="bg-blue-500 text-white px-8 py-4 rounded-full font-black text-lg shadow-lg hover:scale-105 transition">查看今日公車</a>
             </div>
         </div>
         <div class="md:w-1/2 relative">
@@ -101,6 +119,96 @@
             </div>
         </div>
     </header>
+
+    <!-- 1日生活圈公車動態 (新功能) -->
+    <section id="bus-schedule" class="max-w-6xl mx-auto px-4 py-12">
+        <div class="bg-white rounded-super p-8 md:p-12 shadow-xl border-4 border-blue-100">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                <div>
+                    <h2 class="text-3xl font-black text-stone-800 flex items-center gap-2">
+                        <span class="text-blue-500">🚌</span> 萬華長輩 1 日生活圈公車動態
+                    </h2>
+                    <p class="text-stone-500 mt-2 font-bold">以環河南路張先生為例的日常動線</p>
+                </div>
+                <div class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-4 text-center">
+                    <span class="text-sm font-bold text-blue-600 block">目前公車狀態</span>
+                    <span class="text-2xl font-black text-blue-800 animate-pulse">即時更新中</span>
+                </div>
+            </div>
+
+            <div class="bus-line space-y-12 ml-4">
+                <!-- 站點 1 -->
+                <div class="flex flex-col md:flex-row gap-6 bus-dot">
+                    <div class="w-10 h-10 rounded-full bg-orange-500 border-4 border-white shadow-md flex-shrink-0"></div>
+                    <div class="flex-grow bg-orange-50 p-6 rounded-3xl border-2 border-orange-200">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="bg-orange-500 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase">早上 08:30 出發</span>
+                            <span class="text-orange-600 font-black">預估：3 分鐘後抵達</span>
+                        </div>
+                        <h4 class="text-xl font-black text-stone-800 mb-1">起點：華中河濱公園站</h4>
+                        <p class="text-stone-600 text-sm">搭乘公車：<strong class="text-blue-600">307, 202</strong></p>
+                        <p class="text-stone-500 mt-2 italic text-sm">「準備去市場挑新鮮食材，早點去肉才新鮮。」</p>
+                    </div>
+                </div>
+
+                <!-- 站點 2 -->
+                <div class="flex flex-col md:flex-row gap-6 bus-dot">
+                    <div class="w-10 h-10 rounded-full bg-blue-500 border-4 border-white shadow-md flex-shrink-0"></div>
+                    <div class="flex-grow bg-blue-50 p-6 rounded-3xl border-2 border-blue-200">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="bg-blue-500 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase">早上 09:30 採買</span>
+                            <span class="text-blue-600 font-black">進站中...</span>
+                        </div>
+                        <h4 class="text-xl font-black text-stone-800 mb-1">第一站：國光市場</h4>
+                        <p class="text-stone-600 text-sm">採買重點：挑選絞肉、新鮮糙米</p>
+                        <p class="text-stone-500 mt-2 italic text-sm">「買完菜，接著去診所拿老伴跟自己的常備藥。」</p>
+                    </div>
+                </div>
+
+                <!-- 站點 3 -->
+                <div class="flex flex-col md:flex-row gap-6 bus-dot">
+                    <div class="w-10 h-10 rounded-full bg-green-500 border-4 border-white shadow-md flex-shrink-0"></div>
+                    <div class="flex-grow bg-green-50 p-6 rounded-3xl border-2 border-green-200">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="bg-green-500 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase">上午 10:45 拿藥</span>
+                            <span class="text-green-600 font-black">預估：8 分鐘後抵達</span>
+                        </div>
+                        <h4 class="text-xl font-black text-stone-800 mb-1">第二站：東京診所</h4>
+                        <p class="text-stone-600 text-sm">任務：慢性病連續處方箋領藥</p>
+                        <p class="text-stone-500 mt-2 italic text-sm">「拿完藥剛好去老人服務中心找老朋友聚聚。」</p>
+                    </div>
+                </div>
+
+                <!-- 站點 4 -->
+                <div class="flex flex-col md:flex-row gap-6 bus-dot">
+                    <div class="w-10 h-10 rounded-full bg-purple-500 border-4 border-white shadow-md flex-shrink-0"></div>
+                    <div class="flex-grow bg-purple-50 p-6 rounded-3xl border-2 border-purple-200">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="bg-purple-500 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase">中午 12:00 社交</span>
+                            <span class="text-purple-600 font-black">即將抵達</span>
+                        </div>
+                        <h4 class="text-xl font-black text-stone-800 mb-1">第三站：萬華老人服務中心</h4>
+                        <p class="text-stone-600 text-sm">行程：聊天、吃健康午餐、下棋</p>
+                        <p class="text-stone-500 mt-2 italic text-sm">「在這裡最開心，有人聊天，下午再搭車回家休息。」</p>
+                    </div>
+                </div>
+
+                <!-- 站點 5 -->
+                <div class="flex flex-col md:flex-row gap-6 bus-dot">
+                    <div class="w-10 h-10 rounded-full bg-stone-500 border-4 border-white shadow-md flex-shrink-0"></div>
+                    <div class="flex-grow bg-stone-100 p-6 rounded-3xl border-2 border-stone-200">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="bg-stone-500 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase">下午 15:00 返家</span>
+                            <span class="text-stone-600 font-black">準備啟程</span>
+                        </div>
+                        <h4 class="text-xl font-black text-stone-800 mb-1">終點：溫暖的家</h4>
+                        <p class="text-stone-600 text-sm">搭乘公車：<strong class="text-blue-600">202, 601</strong></p>
+                        <p class="text-stone-500 mt-2 italic text-sm">「充實的一天，萬華的公車真的很方便。」</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- 長輩生活特色介紹 -->
     <section id="story" class="max-w-6xl mx-auto px-4 py-12">
@@ -181,7 +289,9 @@
             const day = dayNames[now.getDay()];
             const time = now.toLocaleTimeString('zh-TW', { hour12: false });
             
-            document.getElementById('current-datetime').innerText = `${year}年${month}月${date}日 (${day}) ${time}`;
+            const timeStr = `${year}年${month}月${date}日 (${day}) ${time}`;
+            const timeEl = document.getElementById('current-datetime');
+            if(timeEl) timeEl.innerText = timeStr;
         }
         setInterval(updateTime, 1000);
         updateTime();
@@ -196,122 +306,44 @@
 
         const resData = {
             'med': [
+                { n: '東京診所', a: '西園路二段', l: 'https://maps.google.com/?q=萬華東京診所' },
                 { n: '台北市立聯合醫院(和平院區)', a: '中華路二段33號', l: 'https://maps.google.com/?q=台北市立聯合醫院和平院區' },
                 { n: '西園醫院', a: '西園路二段132號', l: 'https://maps.google.com/?q=西園醫院' },
                 { n: '萬華區健康中心', a: '東園街152號', l: 'https://maps.google.com/?q=萬華區健康中心' },
-                { n: '東園藥局', a: '東園街', l: 'https://maps.google.com/?q=萬華區東園藥局' },
-                { n: '躍獅萬大藥局', a: '萬大路', l: 'https://maps.google.com/?q=萬大路藥局' },
-                { n: '仁濟醫院', a: '廣州街243號', l: 'https://maps.google.com/?q=仁濟醫院' },
-                { n: '莒光中醫診所', a: '莒光路', l: 'https://maps.google.com/?q=萬華區中醫診所' },
-                { n: '萬華牙醫診所', a: '萬大路附近', l: 'https://maps.google.com/?q=萬華區牙醫' },
-                { n: '長庚骨科診所(復健)', a: '西藏路', l: 'https://maps.google.com/?q=萬華區復健科' },
-                { n: '康健藥局', a: '寶興街', l: 'https://maps.google.com/?q=萬華區寶興街藥局' },
-                { n: '台大醫院(總院)', a: '常德街1號(捷運可達)', l: 'https://maps.google.com/?q=台大醫院' },
-                { n: '德全診所', a: '德昌街', l: 'https://maps.google.com/?q=萬華區德昌街診所' },
-                { n: '萬華家醫科診所', a: '雙和街', l: 'https://maps.google.com/?q=萬華區雙和街診所' },
-                { n: '惠民耳鼻喉科', a: '萬大路', l: 'https://maps.google.com/?q=萬華區耳鼻喉科' },
-                { n: '瑞安藥局', a: '西園路', l: 'https://maps.google.com/?q=萬華區西園路藥局' },
-                { n: '丁丁藥局(萬大店)', a: '萬大路', l: 'https://maps.google.com/?q=萬華丁丁藥局' },
-                { n: '佑全保健藥妝', a: '東園街', l: 'https://maps.google.com/?q=萬華佑全藥局' }
+                { n: '仁濟醫院', a: '廣州街243號', l: 'https://maps.google.com/?q=仁濟醫院' }
             ],
             'shop': [
                 { n: '國光市場', a: '萬大路巷弄', l: 'https://maps.google.com/?q=國光市場' },
                 { n: '雙和市場', a: '雙和街', l: 'https://maps.google.com/?q=雙和市場' },
                 { n: '直興市場', a: '康定路172巷', l: 'https://maps.google.com/?q=直興市場' },
                 { n: '環南市場', a: '環河南路二段', l: 'https://maps.google.com/?q=環南市場' },
-                { n: '全聯-萬華德昌店', a: '德昌街', l: 'https://maps.google.com/?q=全聯萬華德昌店' },
-                { n: '全聯-萬大店', a: '萬大路', l: 'https://maps.google.com/?q=全聯萬大店' },
-                { n: '美廉社-萬華寶興店', a: '寶興街', l: 'https://maps.google.com/?q=美廉社萬華寶興店' },
-                { n: '美廉社-萬大二店', a: '萬大路', l: 'https://maps.google.com/?q=美廉社萬大店' },
-                { n: '家樂福-桂林店', a: '桂林路1號', l: 'https://maps.google.com/?q=家樂福桂林店' },
-                { n: '東園菜市場', a: '東園街', l: 'https://maps.google.com/?q=東園菜市場' },
-                { n: '萬大水果攤', a: '萬大路口', l: 'https://maps.google.com/?q=萬華萬大路水果攤' },
-                { n: '光復市場', a: '環河路周邊', l: 'https://maps.google.com/?q=光復市場' },
-                { n: '康是美-萬大門市', a: '萬大路', l: 'https://maps.google.com/?q=康是美萬大路' },
-                { n: '屈臣氏-東園門市', a: '東園街', l: 'https://maps.google.com/?q=屈臣氏東園街' },
-                { n: '西源五金行', a: '西園路', l: 'https://maps.google.com/?q=萬華西園路五金' },
-                { n: '大創百貨(桂林)', a: '桂林路家樂福內', l: 'https://maps.google.com/?q=桂林路大創' }
+                { n: '全聯-萬華德昌店', a: '德昌街', l: 'https://maps.google.com/?q=全聯萬華德昌店' }
             ],
             'care': [
                 { n: '萬華老人服務中心', a: '西源路', l: 'https://maps.google.com/?q=萬華老人服務中心' },
                 { n: '萬華龍山老人服務中心', a: '梧州街', l: 'https://maps.google.com/?q=萬華龍山老人服務中心' },
                 { n: '聖若瑟居家長照機構', a: '德昌街', l: 'https://maps.google.com/?q=聖若瑟居家長照機構' },
-                { n: '失智老人基金會', a: '德昌街', l: 'https://maps.google.com/?q=失智老人基金會' },
-                { n: '萬華社會福利中心', a: '梧州街', l: 'https://maps.google.com/?q=萬華社會福利中心' },
-                { n: '立心慈善基金會', a: '康定路', l: 'https://maps.google.com/?q=立心慈善基金會' },
-                { n: '紅心字會(萬華)', a: '萬華區', l: 'https://maps.google.com/?q=紅心字會萬華' },
-                { n: '伊甸基金會(萬華)', a: '萬華區', l: 'https://maps.google.com/?q=伊甸基金會萬華' },
-                { n: '中正國宅服務中心', a: '萬大路附近', l: 'https://maps.google.com/?q=中正國宅' },
-                { n: '萬大社區發展協會', a: '萬大路', l: 'https://maps.google.com/?q=萬大社區發展協會' },
-                { n: '忠德里辦公處', a: '忠德里', l: 'https://maps.google.com/?q=萬華區忠德里辦公處' },
-                { n: '日善里辦公處', a: '日善里', l: 'https://maps.google.com/?q=萬華區日善里辦公處' },
-                { n: '全德里辦公處', a: '全德里', l: 'https://maps.google.com/?q=萬華區全德里辦公處' },
-                { n: '和德里辦公處', a: '和德里', l: 'https://maps.google.com/?q=萬華區和德里辦公處' },
-                { n: '青年社區發展協會', a: '青年路', l: 'https://maps.google.com/?q=青年社區發展協會' },
-                { n: '新安社區據點', a: '新安里', l: 'https://maps.google.com/?q=萬華新安社區據點' }
+                { n: '失智老人基金會', a: '德昌街', l: 'https://maps.google.com/?q=失智老人基金會' }
             ],
             'fun': [
                 { n: '東園圖書館', a: '東園街199號', l: 'https://maps.google.com/?q=東園圖書館' },
-                { n: '西園圖書館', a: '西園路', l: 'https://maps.google.com/?q=西園圖書館' },
+                { n: '萬華老人服務中心(據點活動)', a: '西源路', l: 'https://maps.google.com/?q=萬華老人服務中心' },
                 { n: '廣照宮', a: '長泰街54號', l: 'https://maps.google.com/?q=萬華廣照宮' },
-                { n: '龍山寺', a: '廣州街211號', l: 'https://maps.google.com/?q=龍山寺' },
-                { n: '萬華故事館', a: '青年公園內', l: 'https://maps.google.com/?q=萬華故事館' },
-                { n: '剝皮寮歷史街區', a: '康定路', l: 'https://maps.google.com/?q=剝皮寮' },
-                { n: '樂齡學習中心(萬華)', a: '東園圖書館內', l: 'https://maps.google.com/?q=萬華樂齡學習中心' },
-                { n: '青山宮', a: '貴陽街二段', l: 'https://maps.google.com/?q=艋舺青山宮' },
-                { n: '祖師廟', a: '康定路', l: 'https://maps.google.com/?q=艋舺祖師廟' },
-                { n: '萬華運動中心', a: '西寧南路', l: 'https://maps.google.com/?q=萬華運動中心' },
-                { n: '日善里共餐據點', a: '日善里', l: 'https://maps.google.com/?q=日善里共餐' },
-                { n: '糖廍文化園區', a: '大理街', l: 'https://maps.google.com/?q=糖廍文化園區' },
-                { n: '萬華茶室文化區', a: '三水街', l: 'https://maps.google.com/?q=萬華三水街' },
-                { n: '新安里長青教室', a: '新安里辦', l: 'https://maps.google.com/?q=新安里教室' },
-                { n: '青年公園樂活家', a: '青年公園', l: 'https://maps.google.com/?q=青年公園樂活家' }
+                { n: '龍山寺', a: '廣州街211號', l: 'https://maps.google.com/?q=龍山寺' }
             ],
             'move': [
                 { n: '青年公園', a: '水源路199號', l: 'https://maps.google.com/?q=青年公園' },
                 { n: '馬場町紀念公園', a: '青年公園外側河濱', l: 'https://maps.google.com/?q=馬場町公園' },
-                { n: '華中河濱公園', a: '萬大路底', l: 'https://maps.google.com/?q=華中公園' },
-                { n: '雙園河濱公園', a: '長泰街附近河濱', l: 'https://maps.google.com/?q=雙園河濱公園' },
-                { n: '德昌公園', a: '德昌街', l: 'https://maps.google.com/?q=德昌公園' },
-                { n: '保德公園', a: '萬大路附近', l: 'https://maps.google.com/?q=保德公園' },
-                { n: '永聖公園', a: '寶興街巷弄', l: 'https://maps.google.com/?q=萬華永聖公園' },
-                { n: '騰雲公園', a: '青年公園對面', l: 'https://maps.google.com/?q=騰雲公園' },
-                { n: '和平青草園', a: '西藏路', l: 'https://maps.google.com/?q=和平青草園' },
-                { n: '糖廍綠地', a: '大理街', l: 'https://maps.google.com/?q=糖廍綠地' },
-                { n: '萬華402號公園', a: '西園路', l: 'https://maps.google.com/?q=萬華402號公園' },
-                { n: '日善公園', a: '環河南路周邊', l: 'https://maps.google.com/?q=日善公園' },
-                { n: '桂林公園', a: '桂林路', l: 'https://maps.google.com/?q=桂林公園' },
-                { n: '艋舺公園', a: '龍山寺對面', l: 'https://maps.google.com/?q=艋舺公園' },
-                { n: '華西公園', a: '華西街', l: 'https://maps.google.com/?q=華西公園' }
+                { n: '華中河濱公園', a: '萬大路底', l: 'https://maps.google.com/?q=華中公園' }
             ]
         };
 
         const qaData = [
             { q: "長輩拒絕讓居服員進門怎麼辦？", a: "從『陪同散步』開始。讓長輩覺得是多了個隨扈或朋友，而不是被照顧。" },
             { q: "如何說服長輩拿拐杖或坐輪椅？", a: "不要說『你走不動』，要說『這能讓你走得更遠、看更多地方』。" },
-            { q: "長輩突然脾氣暴躁，可能是什麼原因？", a: "先檢查是否身體不適、便秘、脫水或失智症早期徵兆，必要時請教醫師。" },
-            { q: "萬華公寓沒電梯，爬不動怎麼辦？", a: "可向輔具中心申請『爬梯機服務』，或申請長照補助進行居家無障礙改造。" },
-            { q: "1966 長照申請要等很久嗎？", a: "通常撥打後 7 天內會派專員評估，2 週內核定額度。建議及早申請！" },
-            { q: "長輩容易跌倒，家裡要怎麼改？", a: "浴室加裝防滑墊與扶手，移除地板電線與門檻，照明要充足。" },
-            { q: "外籍看護逃跑了，怎麼辦？", a: "第一時間報案並聯繫勞動部，同時可申請長照 2.0 的『喘息服務』銜接。" },
-            { q: "長輩一直重複問同樣的問題？", a: "保持耐心，這是認知功能退化的現象。試著轉移注意力到他喜歡的話題。" },
             { q: "如何知道長輩有沒有吃飽？", a: "檢查冰箱食材減少狀況、體重變化，或是餐盒是否有剩餘。" },
-            { q: "長輩不愛洗澡怎麼辦？", a: "把浴室預熱，選擇長輩心情好的時候，或以『洗完澡帶你去逛市場』作為誘因。" },
-            { q: "長輩聽力不好，溝通很累？", a: "說話要慢，面對面直視長輩，口型清晰，不要對著耳朵大吼。" },
-            { q: "政府有提供輔具補助嗎？", a: "有的！低收入戶全額補助，一般戶也有 70% 補助。一定要先申請評估再買。" },
-            { q: "長輩不想吃藥，偷偷吐掉？", a: "確認藥丸是否太大難吞，請醫師改開藥粉或水劑，並伴隨喜愛的食物服用。" },
             { q: "照顧者覺得快崩潰了，怎麼辦？", a: "利用長照喘息服務，給自己幾天假。加入照顧者支持團體，找人傾訴。" },
-            { q: "萬華哪裡可以借輪椅？", a: "萬華老人服務中心或各里的里辦公室通常有提供短期借用服務。" },
-            { q: "長輩整天坐著看電視，好嗎？", a: "儘量帶他去鄰近據點共餐或參加樂齡課程，維持腦部活動減緩退化。" },
-            { q: "如何觀察長輩是否有憂鬱傾向？", a: "注意睡眠、食慾不振或不再對以前喜歡的事物感興趣，及早求醫。" },
-            { q: "長輩說想回老家看看？", a: "如果體力允許，陪他回去。這對長輩的心理安定有極大的幫助。" },
-            { q: "家中財產如何規劃避免爭議？", a: "長輩意識清楚時，儘早討論遺囑或信託規劃，甚至法律見證。" },
-            { q: "如何判斷長輩是否失智或健忘？", a: "如果記不起剛發生的事，且性格大變、失去判斷力，應至神經內科檢查。" },
-            { q: "長輩晚上不睡覺，到處走動？", a: "日間多增加活動量，減少午睡，睡前避免咖啡因。檢查是否有日落症候群。" },
-            { q: "居服員可以幫長輩洗衣服嗎？", a: "長照服務包含長輩本人的衣物清潔、居家環境維護，但不包含其他家屬。" },
-            { q: "長輩說身體痛卻查不出病因？", a: "可能是心理因素或神經痛，陪伴與傾聽有時比吃藥更有效。" },
-            { q: "萬華哪些巷弄適合推輪椅？", a: "盡量選擇大馬路人行道，避開傳統市場擁擠時段，青年公園內部步道最推薦。" },
-            { q: "有緊急狀況要打給誰？", a: "救護車撥 119，長照諮詢撥 1966，張伯伯專屬居服單位則存入手機快捷鍵。" }
+            { q: "萬華哪裡可以借輪椅？", a: "萬華老人服務中心或各里的里辦公室通常有提供短期借用服務。" }
         ];
 
         function init() {
@@ -322,6 +354,7 @@
 
         function renderFilterBtns() {
             const container = document.getElementById('category-btns');
+            if(!container) return;
             Object.keys(categories).forEach(key => {
                 const btn = document.createElement('button');
                 btn.className = 'w-full flex items-center gap-3 p-4 rounded-2xl border-2 border-orange-100 font-bold transition-all hover:bg-orange-50';
@@ -334,7 +367,8 @@
                 };
                 container.appendChild(btn);
             });
-            document.getElementById('btn-med').classList.add('tab-active');
+            const firstBtn = document.getElementById('btn-med');
+            if(firstBtn) firstBtn.classList.add('tab-active');
         }
 
         function renderResources(key) {
@@ -342,7 +376,8 @@
             const catName = document.getElementById('current-cat-name');
             const catDesc = document.getElementById('current-cat-desc');
             const count = document.getElementById('res-count');
-            
+            if(!grid) return;
+
             const data = resData[key];
             catName.innerText = categories[key].label;
             catDesc.innerText = categories[key].desc;
@@ -368,6 +403,7 @@
 
         function renderQA() {
             const container = document.getElementById('qa-container');
+            if(!container) return;
             qaData.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = 'bg-white p-6 rounded-3xl border-2 border-orange-100 shadow-sm';
