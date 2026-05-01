@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>萬華在地安老數位誌 - 資源完整版</title>
+    <title>萬華在地安老數位誌 - 資源完整與軌跡版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
@@ -17,32 +17,39 @@
 
         .rounded-super { border-radius: 2rem; }
         
+        /* 地圖與軌跡樣式 */
         .map-container {
             position: relative;
-            background: #f0ede9;
-            background-image: 
-                linear-gradient(#e5e1dc 1px, transparent 1px),
-                linear-gradient(90deg, #e5e1dc 1px, transparent 1px);
-            background-size: 30px 30px;
-            height: 450px;
+            background: #fdfaf6;
+            height: 480px;
             border-radius: 1.5rem;
             overflow: hidden;
-            border: 4px solid #fff;
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #e5e7eb;
+            box-shadow: inset 0 2px 20px rgba(0,0,0,0.03);
         }
 
-        .bus-marker {
+        .route-path {
+            fill: none;
+            stroke: #3b82f6;
+            stroke-width: 4;
+            stroke-dasharray: 8, 8;
+            stroke-linecap: round;
+            opacity: 0.3;
+        }
+
+        #bus-marker {
             position: absolute;
-            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 50;
+            transition: all 1s linear; /* 平滑移動 */
+            z-index: 100;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
         }
 
         .station-node {
             position: absolute;
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             background: white;
-            border: 3px solid #FF7E3D;
+            border: 3px solid #f97316;
             border-radius: 50%;
             transform: translate(-50%, -50%);
             z-index: 20;
@@ -50,319 +57,290 @@
 
         .station-label {
             position: absolute;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: bold;
-            color: #7c5e4d;
-            background: rgba(255,255,255,0.9);
-            padding: 2px 6px;
-            border-radius: 4px;
-            transform: translate(-50%, 12px);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            color: #431407;
+            background: rgba(255,255,255,0.85);
+            padding: 2px 8px;
+            border-radius: 99px;
+            transform: translate(-50%, 14px);
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        .active-pulse {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background: #FF7E3D;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            animation: pulse-ring 2s infinite;
-            z-index: 10;
-        }
-
-        @keyframes pulse-ring {
-            0% { transform: scale(0.8) translate(-65%, -65%); opacity: 0.5; }
-            100% { transform: scale(1.8) translate(-28%, -28%); opacity: 0; }
-        }
-
+        /* 資源捲軸 */
         .resource-scroll {
             scrollbar-width: thin;
-            scrollbar-color: #d6d3d1 transparent;
+            scrollbar-color: #f97316 transparent;
         }
-        
-        .resource-scroll::-webkit-scrollbar { width: 6px; }
-        .resource-scroll::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 10px; }
+        .resource-scroll::-webkit-scrollbar { width: 5px; }
+        .resource-scroll::-webkit-scrollbar-thumb { background: #f97316; border-radius: 10px; }
 
         .animate-marquee { 
             display: inline-block;
-            animation: marquee 40s linear infinite; 
+            animation: marquee 50s linear infinite; 
         }
         @keyframes marquee {
             0% { transform: translateX(100%); }
             100% { transform: translateX(-100%); }
         }
+
+        .map-link {
+            transition: all 0.2s;
+        }
+        .map-link:hover {
+            color: #1d4ed8;
+            text-decoration: underline;
+        }
     </style>
 </head>
-<body class="pb-10">
+<body class="pb-20">
 
     <!-- 頂部跑馬燈 -->
-    <div class="bg-stone-800 text-white py-2 overflow-hidden whitespace-nowrap sticky top-0 z-50">
-        <div class="animate-marquee px-4 font-bold">
-            📢 長照 2.0 服務專線：1966 ｜ 🏥 萬華老人服務中心：(02)2361-0666 ｜ 📍 每週一至五 08:30-17:30 提供專業諮詢 ｜ 💖 關心長輩，從理解日常開始
+    <div class="bg-orange-600 text-white py-2 overflow-hidden whitespace-nowrap sticky top-0 z-50 shadow-md">
+        <div class="animate-marquee px-4 font-medium">
+            📢 長照 2.0 專線：1966 ｜ 🏥 萬華老人服務中心：(02)2361-0666 ｜ 📍 資源手冊 V2 專業版 ｜ 💖 守護張吉雄先生與每一位在地長輩的幸福晚年 ｜ 🚌 公車動態持續監測中
         </div>
     </div>
 
     <!-- 頁首 -->
-    <header class="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center gap-8">
-        <div class="flex-1">
-            <div class="inline-block bg-orange-100 text-orange-700 px-4 py-1 rounded-full text-sm font-bold mb-4">萬華區在地安老手冊 V2</div>
-            <h1 class="text-5xl font-black text-stone-800 mb-4 leading-tight">張先生的<span class="text-orange-500">生活圈動態</span></h1>
-            <p class="text-xl text-stone-600 font-medium max-w-2xl">紀錄萬華環河南路三段的日常，將資源轉化為守護長輩的力量。</p>
-        </div>
-        <div class="hidden lg:flex gap-4">
-            <div class="w-24 h-24 bg-white rounded-2xl shadow-lg flex flex-col items-center justify-center border border-stone-100">
-                <span class="text-3xl">🍲</span><span class="text-xs font-bold mt-2">共餐據點</span>
+    <header class="max-w-7xl mx-auto px-6 py-10">
+        <div class="flex flex-col md:flex-row justify-between items-end gap-6 border-b-2 border-orange-100 pb-8">
+            <div>
+                <h1 class="text-4xl font-black text-stone-800 mb-2">張先生的<span class="text-orange-500">生活圈動態地圖</span></h1>
+                <p class="text-stone-500 font-medium">以環河南路三段為核心，串聯在地 30 個關鍵資源點</p>
             </div>
-            <div class="w-24 h-24 bg-white rounded-2xl shadow-lg flex flex-col items-center justify-center border border-stone-100">
-                <span class="text-3xl">💊</span><span class="text-xs font-bold mt-2">醫療諮詢</span>
-            </div>
-            <div class="w-24 h-24 bg-white rounded-2xl shadow-lg flex flex-col items-center justify-center border border-stone-100">
-                <span class="text-3xl">🚌</span><span class="text-xs font-bold mt-2">公車轉乘</span>
+            <div class="flex gap-3">
+                <div class="bg-white px-4 py-2 rounded-xl shadow-sm border border-stone-200 text-center">
+                    <p class="text-xs text-stone-400">目前位置</p>
+                    <p id="current-pos-name" class="font-bold text-orange-600">讀取中...</p>
+                </div>
+                <div class="bg-stone-800 text-white px-4 py-2 rounded-xl shadow-sm text-center">
+                    <p class="text-xs opacity-70">模擬時間</p>
+                    <p id="sim-time" class="font-mono font-bold">08:00</p>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- 公車動態地圖區 -->
-    <section class="max-w-7xl mx-auto px-4 mb-12">
-        <div class="bg-white rounded-super p-6 md:p-8 shadow-xl border border-stone-100 overflow-hidden">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-2xl font-black text-stone-800 flex items-center gap-2">
-                    <span class="bg-blue-100 text-blue-600 p-2 rounded-xl">📍</span> 生活動線模擬地圖
-                </h2>
-                <div id="time-display" class="bg-stone-800 text-white px-6 py-2 rounded-full font-mono text-lg shadow-md">08:00</div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                <!-- 地圖主體 -->
-                <div class="lg:col-span-3">
-                    <div id="wanhua-map" class="map-container">
-                        <!-- 道路模擬線條 -->
-                        <div class="absolute bg-stone-300 rounded-full" style="width: 85%; height: 16px; left: 7%; top: 45%; transform: rotate(-2deg);"></div> <!-- 環河南路 -->
-                        <div class="absolute bg-stone-300 rounded-full" style="width: 16px; height: 60%; left: 35%; top: 10%;"></div> <!-- 萬大路 -->
-                        <div class="absolute bg-stone-300 rounded-full" style="width: 16px; height: 60%; left: 75%; top: 25%;"></div> <!-- 西園路 -->
-                        
-                        <!-- 站點渲染層 -->
-                        <div id="stations-layer"></div>
-                        <div id="pulse-layer"></div>
-
-                        <!-- 公車圖標 -->
-                        <div id="bus-sprite" class="bus-marker text-4xl drop-shadow-lg">🚌</div>
-                        
-                        <div class="absolute top-4 left-4 bg-white/90 p-4 rounded-2xl shadow-sm text-sm border border-stone-200 backdrop-blur-sm">
-                            <p class="font-bold text-stone-800">當前狀態：<span id="map-status" class="text-blue-600">行駛中</span></p>
-                        </div>
+    <!-- 地圖區 -->
+    <section class="max-w-7xl mx-auto px-6 mb-12">
+        <div class="bg-white rounded-super p-2 shadow-2xl border border-stone-100">
+            <div class="grid grid-cols-1 lg:grid-cols-4">
+                
+                <!-- 行程與觀察 (左側) -->
+                <div class="p-8 lg:border-r border-stone-50">
+                    <h3 class="text-xl font-black text-stone-800 mb-6 flex items-center gap-2">
+                        <span class="w-2 h-6 bg-orange-500 rounded-full"></span> 實時狀態
+                    </h3>
+                    <div id="step-detail" class="space-y-6">
+                        <!-- 動態內容 -->
+                    </div>
+                    
+                    <div class="mt-10 p-4 bg-blue-50 rounded-2xl border border-blue-100">
+                        <p class="text-xs text-blue-800 font-bold mb-1">🔍 環境觀察備註</p>
+                        <p id="env-note" class="text-xs text-stone-600 leading-relaxed italic"></p>
                     </div>
                 </div>
 
-                <!-- 行程說明 -->
-                <div class="bg-orange-50 rounded-2xl p-6 border border-orange-100 flex flex-col">
-                    <h3 class="font-black text-orange-900 text-lg mb-4">📍 目前停留點</h3>
-                    <div id="current-stop-info" class="flex-1">
-                        <!-- 動態更新 -->
-                    </div>
-                    <div class="mt-6 p-4 bg-white rounded-xl border border-orange-200">
-                        <p class="text-xs text-orange-800 font-bold mb-1">💡 照顧小叮嚀</p>
-                        <p id="care-tip" class="text-xs text-stone-600 leading-relaxed"></p>
+                <!-- 地圖主體 (中間) -->
+                <div class="lg:col-span-3 p-4">
+                    <div class="map-container" id="map-parent">
+                        <!-- SVG 軌跡背景 -->
+                        <svg class="absolute inset-0 w-full h-full" id="svg-layer">
+                            <path id="bus-track" class="route-path" d="" />
+                        </svg>
+
+                        <!-- 站點 -->
+                        <div id="stations-layer"></div>
+                        
+                        <!-- 公車 -->
+                        <div id="bus-marker" class="text-4xl">🚌</div>
+
+                        <!-- 圖例 -->
+                        <div class="absolute bottom-4 left-4 bg-white/90 p-3 rounded-xl shadow-sm text-[11px] border border-stone-200">
+                            <div class="flex items-center gap-2 mb-1"><span class="w-3 h-3 bg-blue-500/30 border border-blue-500 rounded-full"></span> 模擬公車動向 (慢速)</div>
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 bg-white border-2 border-orange-500 rounded-full"></span> 手冊關鍵站點</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 核心資源與環境檢查 -->
-    <section class="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
-        
-        <!-- 關鍵資源清單 (對接手冊資料) -->
-        <div class="lg:col-span-2 bg-white rounded-super p-8 shadow-lg border border-stone-100">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-black text-stone-800">📍 在地資源資料庫</h2>
-                <div class="flex gap-2">
-                    <button onclick="switchTab('local')" id="btn-local" class="px-4 py-1 rounded-full text-xs font-bold bg-orange-500 text-white">在地生活</button>
-                    <button onclick="switchTab('official')" id="btn-official" class="px-4 py-1 rounded-full text-xs font-bold bg-stone-100 text-stone-600">官方長照</button>
+    <!-- 在地資源資料庫 (30筆資料 + Google Map 連結) -->
+    <section class="max-w-7xl mx-auto px-6 mb-12">
+        <div class="bg-white rounded-super p-8 shadow-xl border border-stone-100">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+                <div>
+                    <h2 class="text-2xl font-black text-stone-800">📍 在地資源資料庫 (30項精選)</h2>
+                    <p class="text-stone-500 text-sm">點擊名稱可直接開啟 Google 地圖導航</p>
+                </div>
+                <div class="flex bg-stone-100 p-1 rounded-xl">
+                    <button onclick="filterRes('all')" id="btn-all" class="px-4 py-2 rounded-lg text-xs font-bold bg-white shadow-sm text-orange-600">全部</button>
+                    <button onclick="filterRes('採買')" id="btn-buy" class="px-4 py-2 rounded-lg text-xs font-bold text-stone-500">生活採買</button>
+                    <button onclick="filterRes('醫療')" id="btn-med" class="px-4 py-2 rounded-lg text-xs font-bold text-stone-500">醫療藥局</button>
+                    <button onclick="filterRes('據點')" id="btn-hub" class="px-4 py-2 rounded-lg text-xs font-bold text-stone-500">社區據點</button>
                 </div>
             </div>
 
-            <div class="resource-scroll overflow-y-auto max-h-[600px] pr-2">
-                <div id="resource-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- JS 動態填入 30+ 筆資料 -->
-                </div>
-            </div>
-        </div>
-
-        <!-- 環境觀察與 Q&A -->
-        <div class="space-y-8">
-            <!-- 環境觀察 -->
-            <div class="bg-blue-900 text-white rounded-super p-8 shadow-xl">
-                <h2 class="text-xl font-black mb-6 flex items-center gap-2">
-                    🔍 環境安全檢查
-                </h2>
-                <div class="space-y-6">
-                    <div class="flex gap-4">
-                        <div class="w-12 h-12 bg-blue-800 rounded-xl flex items-center justify-center text-xl">🏢</div>
-                        <div>
-                            <h4 class="font-bold text-blue-200">公寓動線</h4>
-                            <p class="text-sm opacity-90">環河南路三段無電梯公寓，樓梯陡峭，需定期檢查防滑條與燈光。</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-4">
-                        <div class="w-12 h-12 bg-blue-800 rounded-xl flex items-center justify-center text-xl">🛒</div>
-                        <div>
-                            <h4 class="font-bold text-blue-200">採買環境</h4>
-                            <p class="text-sm opacity-90">國光市場地板易濕滑，建議長輩穿著止滑鞋，家屬可陪同購買重物。</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-4">
-                        <div class="w-12 h-12 bg-blue-800 rounded-xl flex items-center justify-center text-xl">🏥</div>
-                        <div>
-                            <h4 class="font-bold text-blue-200">就醫交通</h4>
-                            <p class="text-sm opacity-90">東京診所距離住家約 800公尺，步行需注意紅綠燈秒數，必要時建議轉乘 202 公車。</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 快速 QA -->
-            <div class="bg-stone-100 rounded-super p-8">
-                <h2 class="text-xl font-black text-stone-800 mb-4">🙋 常見照顧 QA</h2>
-                <div class="space-y-4" id="qa-mini">
-                    <!-- JS 填入 -->
-                </div>
+            <div class="resource-scroll grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[700px] overflow-y-auto pr-2" id="resource-grid">
+                <!-- 由 JS 生成 30 筆資料 -->
             </div>
         </div>
     </section>
 
     <script>
-        // 資料定義
-        const mapSteps = [
-            { id: 1, name: '華中河濱公園', x: 15, y: 45, time: '08:00', desc: '每日清晨散步，維持腳部肌力，呼吸新鮮空氣。', tip: '早上 8 點前紫外線較弱，是運動最佳時機。' },
-            { id: 2, name: '國光市場', x: 35, y: 15, time: '09:30', desc: '挑選絞肉、嫩葉青菜與糙米，購買易消化食材。', tip: '市場人多擁擠，建議長輩避開巔峰時段或攜帶購物小車。' },
-            { id: 3, name: '東京診所', x: 55, y: 45, time: '11:00', desc: '定期慢性處方箋拿藥，監測血壓與心跳狀況。', tip: '家屬可下載雲端健康 APP 遠端確認就診紀錄。' },
-            { id: 4, name: '老人服務中心', x: 75, y: 30, time: '12:30', desc: '據點共餐與健康促进活動，維持長輩社交圈。', tip: '社交活動能有效延緩失智，鼓勵多參加據點課程。' },
-            { id: 5, name: '環河南路住家', x: 88, y: 45, time: '15:30', desc: '結束一天行程返家，注意三樓階梯行走安全。', tip: '梯間燈光應保持常亮，避免下樓時踩空。' }
+        // --- 資料定義 ---
+        const resources = [
+            { name: "雙和市場", type: "採買", info: "在地老市場，張先生常去買肉類與蔬菜", addr: "台北市萬華區雙和街" },
+            { name: "國光市場", type: "採買", info: "鄰近環河南路，食材新鮮適合少量購買", addr: "台北市萬華區國興路" },
+            { name: "青年公園", type: "運動", info: "大型綠地，清晨復健步行的絕佳地點", addr: "台北市萬華區青年路199號" },
+            { name: "全聯(萬大店)", type: "採買", info: "無障礙空間良好，適合買重物", addr: "台北市萬華區萬大路425號" },
+            { name: "東京診所", type: "醫療", info: "慢性病拿藥，醫護熟悉張先生狀況", addr: "台北市萬華區萬大路" },
+            { name: "屈臣氏(萬大三店)", type: "醫療", info: "購買衛材、尿布與日常保養品", addr: "台北市萬華區萬大路455號" },
+            { name: "萬大路郵局", type: "生活", info: "領取退休金與掛號信件處理", addr: "台北市萬華區萬大路428號" },
+            { name: "華中河濱公園", type: "運動", info: "河岸散步，腳力訓練區", addr: "台北市萬華區華中橋下" },
+            { name: "加蚋福德正神", type: "信仰", info: "在地信仰中心，長輩心理寄託", addr: "台北市萬華區萬大路" },
+            { name: "廣照宮", type: "信仰", info: "中和街附近，祭祀與老鄰居聚會點", addr: "台北市萬華區中和街" },
+            { name: "康是美(萬大店)", type: "醫療", info: "專業藥師諮詢，常備藥補充", addr: "台北市萬華區萬大路485號" },
+            { name: "7-11 萬成門市", type: "生活", info: "代繳水電費與24小時急需", addr: "台北市萬華區萬大路" },
+            { name: "萬大國小", type: "運動", info: "夜間校園開放，適合簡單步行", addr: "台北市萬華區萬大路299號" },
+            { name: "東園街市場", type: "採買", info: "傳統美食集散地，多熟食可買", addr: "台北市萬華區東園街" },
+            { name: "台北市立圖書館萬華分館", type: "生活", info: "安靜閱報區，夏日避暑好去處", addr: "台北市萬華區東園街" },
+            { name: "萬華老人服務中心", type: "據點", info: "個案管理、共餐與健康促進活動", addr: "台北市萬華區西源路二段5號" },
+            { name: "萬華龍山中心", type: "據點", info: "日間照顧與長青課程", addr: "台北市萬華區梧州街" },
+            { name: "失智老人基金會", type: "據點", info: "失智症專業支持與家庭照護訓練", addr: "台北市萬華區德昌街125號" },
+            { name: "台北市立心基金會", type: "據點", info: "居家服務與長照評估窗口", addr: "台北市萬華區環河南路二段" },
+            { name: "萬大社區發展協會", type: "據點", info: "里民關懷站，定期有血壓測量", addr: "台北市萬華區萬大路" },
+            { name: "忠德里辦公處", type: "生活", info: "福利諮詢，鄰里巡守回報點", addr: "台北市萬華區德昌街" },
+            { name: "青年社區發展協會", type: "據點", info: "銀髮共餐與節慶活動", addr: "台北市萬華區青年路" },
+            { name: "中正國宅服務中心", type: "生活", info: "輔具申請諮詢與租借", addr: "台北市萬華區國興路" },
+            { name: "聖若瑟居家長照", type: "醫療", info: "到府洗澡與物理治療諮詢", addr: "台北市萬華區萬大路" },
+            { name: "福恩社區發展協會", type: "據點", info: "在地長輩卡拉OK與交流會", addr: "台北市萬華區中和街" },
+            { name: "新安社區發展協會", type: "據點", info: "手寫書法與工藝課程", addr: "台北市萬華區萬大路" },
+            { name: "全德里辦公處", type: "生活", info: "急難紓困與老屋修繕補助諮詢", addr: "台北市萬華區東園街" },
+            { name: "和德里辦公處", type: "生活", info: "鄰里互助小組聯繫中心", addr: "台北市萬華區環河南路三段" },
+            { name: "台北萬華郵局", type: "生活", info: "資產安全與防詐騙諮詢", addr: "台北市萬華區東園街" },
+            { name: "萬華健康中心", type: "醫療", info: "年度健檢與長輩疫苗接種", addr: "台北市萬華區東園街152號" }
         ];
 
-        const localResources = [
-            { name: "雙和市場", type: "採買", info: "食材豐富，鄰里交流核心", loc: "地圖" },
-            { name: "國光市場", type: "採買", info: "張先生每日必去地點", loc: "地圖" },
-            { name: "青年公園", type: "休閒", info: "大型運動綠地，適合復健", loc: "地圖" },
-            { name: "全聯(萬大店)", type: "採買", info: "無障礙購物環境", loc: "地圖" },
-            { name: "東京診所", type: "醫療", info: "在地健康監測點", loc: "地圖" },
-            { name: "屈臣氏", type: "藥品", info: "購買衛材、尿布據點", loc: "地圖" },
-            { name: "萬大路郵局", type: "生活", info: "領取退休金與儲匯", loc: "地圖" },
-            { name: "華中河濱公園", type: "休閒", info: "散步好去處", loc: "地圖" },
-            { name: "加蚋福德正神", type: "信仰", info: "精神寄託與鄰里會面點", loc: "地圖" },
-            { name: "廣照宮", type: "信仰", info: "在地老字號寺廟", loc: "地圖" },
-            { name: "7-11 萬成門市", type: "生活", info: "代繳費與急需物資", loc: "地圖" },
-            { name: "康是美", type: "藥品", info: "保健食品補充", loc: "地圖" }
+        const pathSteps = [
+            { name: "環河南路住家", x: 10, y: 50, time: "08:00", status: "準備出發", desc: "張先生步出公寓，注意樓梯間燈光與腳步。", note: "樓梯無電梯，建議扶手加裝防滑墊。" },
+            { name: "華中河濱公園", x: 25, y: 70, time: "08:30", status: "晨間散步", desc: "在平坦的步道走 15 分鐘，維持關節靈活。", note: "河濱風大，長輩需注意頭部保暖。" },
+            { name: "國光市場", x: 50, y: 30, time: "10:00", status: "食材採買", desc: "購買今日所需的糙米與柔軟蔬菜。", note: "市場地板潮濕，務必穿著專業止滑鞋。" },
+            { name: "東京診所", x: 75, y: 60, time: "11:30", status: "定期監測", desc: "量測血壓 135/85，數據平穩，領取慢箋。", note: "等候區有沙發，建議在此稍作休息再步行。" },
+            { name: "老人中心", x: 90, y: 40, time: "12:30", status: "共餐活動", desc: "與鄰里長輩共享低油鹽便當。", note: "社交能活化腦部，預防失智症狀惡化。" }
         ];
 
-        const officialResources = [
-            { name: "萬華老人服務中心", phone: "02-23610666", role: "個案管理與共餐" },
-            { name: "萬華龍山中心", phone: "02-23361881", role: "據點課程與關懷" },
-            { name: "失智老人基金會", phone: "02-23098728", role: "失智症專業支持" },
-            { name: "台北市立心基金會", phone: "02-23361555", role: "居家照顧與喘息" },
-            { name: "萬華健康中心", phone: "02-23033092", role: "預防注射與巡迴" },
-            { name: "萬華社會福利中心", phone: "02-23361555", role: "弱勢與經濟扶助" }
-        ];
+        // --- 功能實現 ---
 
-        let currentStepIdx = 0;
-
-        // 地圖初始化
-        function initMap() {
-            const container = document.getElementById('stations-layer');
-            mapSteps.forEach(s => {
-                container.innerHTML += `
-                    <div class="station-node" style="left: ${s.x}%; top: ${s.y}%;"></div>
-                    <div class="station-label" style="left: ${s.x}%; top: ${s.y}%;">${s.name}</div>
-                `;
-            });
-            updateBus();
+        function init() {
+            renderResources('all');
+            initMap();
+            animateBus();
         }
 
-        function updateBus() {
-            const step = mapSteps[currentStepIdx];
-            const bus = document.getElementById('bus-sprite');
-            const pulse = document.getElementById('pulse-layer');
-            const info = document.getElementById('current-stop-info');
-            const timeDisp = document.getElementById('time-display');
-            const tip = document.getElementById('care-tip');
-
-            bus.style.left = `calc(${step.x}% - 20px)`;
-            bus.style.top = `calc(${step.y}% - 30px)`;
-            pulse.innerHTML = `<div class="active-pulse" style="left: ${step.x}%; top: ${step.y}%;"></div>`;
-            timeDisp.innerText = step.time;
-            tip.innerText = step.tip;
-
-            info.innerHTML = `
-                <div class="animate-pulse-once">
-                    <h4 class="text-orange-600 font-black text-2xl mb-2">${step.name}</h4>
-                    <p class="text-stone-700 leading-relaxed font-medium">${step.desc}</p>
-                </div>
-            `;
-
-            currentStepIdx = (currentStepIdx + 1) % mapSteps.length;
-        }
-
-        // 資源分頁切換
-        function switchTab(type) {
-            const container = document.getElementById('resource-container');
-            const btnL = document.getElementById('btn-local');
-            const btnO = document.getElementById('btn-official');
+        // 渲染資源清單
+        function renderResources(filterType) {
+            const grid = document.getElementById('resource-grid');
+            grid.innerHTML = '';
             
-            container.innerHTML = '';
-            if (type === 'local') {
-                btnL.className = "px-4 py-1 rounded-full text-xs font-bold bg-orange-500 text-white";
-                btnO.className = "px-4 py-1 rounded-full text-xs font-bold bg-stone-100 text-stone-600";
-                localResources.forEach(res => {
-                    container.innerHTML += `
-                        <div class="p-4 bg-stone-50 rounded-xl border border-stone-100 hover:border-orange-200 transition-all group">
-                            <div class="flex justify-between items-start mb-1">
-                                <h4 class="font-bold text-stone-800 group-hover:text-orange-600">${res.name}</h4>
-                                <span class="text-[10px] bg-stone-200 text-stone-500 px-2 py-0.5 rounded">${res.type}</span>
-                            </div>
-                            <p class="text-xs text-stone-500">${res.info}</p>
+            const filtered = filterType === 'all' ? resources : resources.filter(r => r.type === filterType);
+            
+            filtered.forEach(res => {
+                const mapUrl = `https://www.google.com/maps/search/${encodeURIComponent(res.name + " " + res.addr)}`;
+                grid.innerHTML += `
+                    <div class="bg-stone-50 p-5 rounded-2xl border border-stone-100 hover:border-orange-300 transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <a href="${mapUrl}" target="_blank" class="text-lg font-bold text-stone-800 group-hover:text-blue-600 map-link flex items-center gap-1">
+                                ${res.name} <span class="text-xs">↗</span>
+                            </a>
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-orange-100 text-orange-600 font-bold">${res.type}</span>
                         </div>
-                    `;
-                });
-            } else {
-                btnO.className = "px-4 py-1 rounded-full text-xs font-bold bg-orange-500 text-white";
-                btnL.className = "px-4 py-1 rounded-full text-xs font-bold bg-stone-100 text-stone-600";
-                officialResources.forEach(res => {
-                    container.innerHTML += `
-                        <div class="p-4 bg-blue-50 rounded-xl border border-blue-100">
-                            <h4 class="font-bold text-blue-900 mb-1">${res.name}</h4>
-                            <p class="text-xs text-blue-700 font-bold mb-2">📞 ${res.phone}</p>
-                            <p class="text-[11px] text-blue-600 bg-white/50 px-2 py-1 rounded">${res.role}</p>
-                        </div>
-                    `;
-                });
-            }
-        }
-
-        function initQA() {
-            const qas = [
-                { q: "長輩不愛出門？", a: "試著從市場採買任務切入，讓長輩覺得是被需要而非被服務。" },
-                { q: "如何申請輪椅？", a: "可撥打 1966 預約評估，或諮詢老人中心借用資訊。" }
-            ];
-            const container = document.getElementById('qa-mini');
-            qas.forEach(qa => {
-                container.innerHTML += `
-                    <div class="bg-white p-4 rounded-xl border-l-4 border-orange-400 shadow-sm">
-                        <p class="font-bold text-stone-800 text-sm mb-1">${qa.q}</p>
-                        <p class="text-xs text-stone-500">${qa.a}</p>
+                        <p class="text-sm text-stone-500 leading-snug mb-3">${res.info}</p>
+                        <p class="text-[10px] text-stone-400 flex items-center gap-1">📍 ${res.addr}</p>
                     </div>
                 `;
             });
         }
 
-        // 啟動
-        window.onload = () => {
-            initMap();
-            switchTab('local');
-            initQA();
-            setInterval(updateBus, 4500);
-        };
+        function filterRes(type) {
+            const btns = ['all', 'buy', 'med', 'hub'];
+            const typeMap = { 'all': 'all', 'buy': '採買', 'med': '醫療', 'hub': '據點' };
+            
+            btns.forEach(b => {
+                const el = document.getElementById('btn-' + b);
+                if (b === type) {
+                    el.className = "px-4 py-2 rounded-lg text-xs font-bold bg-white shadow-sm text-orange-600";
+                } else {
+                    el.className = "px-4 py-2 rounded-lg text-xs font-bold text-stone-500 hover:bg-white/50";
+                }
+            });
+            renderResources(typeMap[type]);
+        }
+
+        // 地圖初始化與軌跡生成
+        function initMap() {
+            const layer = document.getElementById('stations-layer');
+            const svgPath = document.getElementById('bus-track');
+            const mapW = document.getElementById('map-parent').offsetWidth;
+            const mapH = document.getElementById('map-parent').offsetHeight;
+            
+            let pathData = "";
+
+            pathSteps.forEach((s, idx) => {
+                // 站點 HTML
+                layer.innerHTML += `
+                    <div class="station-node" style="left: ${s.x}%; top: ${s.y}%;"></div>
+                    <div class="station-label" style="left: ${s.x}%; top: ${s.y}%;">${s.name}</div>
+                `;
+
+                // 軌跡 Path
+                const px = (s.x / 100) * mapW;
+                const py = (s.y / 100) * mapH;
+                if(idx === 0) pathData += `M ${px} ${py} `;
+                else pathData += `L ${px} ${py} `;
+            });
+
+            svgPath.setAttribute('d', pathData);
+        }
+
+        // 公車動畫 (緩慢慢速版)
+        let currentIdx = 0;
+        function animateBus() {
+            const bus = document.getElementById('bus-marker');
+            const step = pathSteps[currentIdx];
+            const detail = document.getElementById('step-detail');
+            const timeDisp = document.getElementById('sim-time');
+            const posName = document.getElementById('current-pos-name');
+            const envNote = document.getElementById('env-note');
+
+            // 更新 UI
+            bus.style.left = `calc(${step.x}% - 20px)`;
+            bus.style.top = `calc(${step.y}% - 20px)`;
+            timeDisp.innerText = step.time;
+            posName.innerText = step.name;
+            envNote.innerText = step.note;
+
+            detail.innerHTML = `
+                <div class="space-y-1 transform transition-all duration-700 translate-y-0 opacity-100">
+                    <p class="text-orange-500 font-bold text-sm tracking-widest">STEP ${currentIdx + 1}</p>
+                    <h4 class="text-2xl font-black text-stone-800">${step.name}</h4>
+                    <p class="bg-stone-800 text-white inline-block px-3 py-1 rounded text-xs font-bold mt-2">${step.status}</p>
+                    <p class="text-stone-600 mt-4 leading-relaxed">${step.desc}</p>
+                </div>
+            `;
+
+            currentIdx = (currentIdx + 1) % pathSteps.length;
+            
+            // 每 6 秒移動一次 (緩慢感)
+            setTimeout(animateBus, 6000);
+        }
+
+        window.addEventListener('resize', initMap);
+        document.addEventListener('DOMContentLoaded', init);
+
     </script>
 </body>
 </html>
