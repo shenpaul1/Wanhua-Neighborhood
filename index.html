@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>張吉雄伯伯：萬華在地安老生活誌</title>
+    <title>萬華在地安老數位誌</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
 
         body {
-            background: #FFF9F2; /* 溫暖的米橘色背景 */
-            background-image: 
-                radial-gradient(#FFE4CC 1px, transparent 1px),
-                radial-gradient(#FFE4CC 1px, transparent 1px);
+            background: #FFF9F2;
+            background-image: radial-gradient(#FFE4CC 1px, transparent 1px), radial-gradient(#FFE4CC 1px, transparent 1px);
             background-size: 40px 40px;
             background-position: 0 0, 20px 20px;
             color: #4A3E37;
@@ -20,245 +18,306 @@
             scroll-behavior: smooth;
         }
 
-        /* 活潑圓潤風格 */
         .rounded-super { border-radius: 2.5rem; }
         
-        .hero-gradient {
-            background: linear-gradient(135deg, #FF9D66 0%, #FFB347 100%);
-        }
-
-        /* 修正照片比例與邊框 */
         .photo-frame {
-            border: 12px solid white;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow: hidden;
-            background: white;
+            border: 10px solid white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            background: #eee;
         }
-        .photo-frame:hover {
-            transform: scale(1.02) rotate(1deg);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
-        }
-        .photo-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* 標籤切換樣式 */
         .tab-active {
             background-color: #FF7E3D !important;
             color: white !important;
-            box-shadow: 0 4px 12px rgba(255, 126, 61, 0.4);
-            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255, 126, 61, 0.4);
         }
 
         .resource-card {
             border: 2px solid #FFE4CC;
             transition: all 0.2s ease;
+            background: white;
         }
         .resource-card:hover {
             border-color: #FF7E3D;
-            background-color: #FFF;
+            transform: translateY(-2px);
         }
 
-        /* 手寫風格裝飾 */
-        .hand-drawn-border {
-            border: 3px solid #4A3E37;
-            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
-        }
-
-        .custom-scroll::-webkit-scrollbar { width: 8px; }
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #FF9D66; border-radius: 10px; }
+
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-marquee { animation: marquee 30s linear infinite; }
     </style>
 </head>
-<body class="pb-20">
+<body class="pb-10">
 
     <!-- 頂部跑馬燈 -->
-    <div class="bg-orange-500 text-white py-2 overflow-hidden whitespace-nowrap">
-        <div class="inline-block animate-marquee px-4">
-            🌤️ 2026年 5月 1日 萬華天氣晴 ｜ 長輩健康叮嚀：今天氣溫較高，請記得多補充水分喔！ ｜ 📍 萬華區即時長照諮詢：1966
+    <div class="bg-orange-500 text-white py-2 overflow-hidden whitespace-nowrap sticky top-0 z-50 shadow-md">
+        <div class="inline-block animate-marquee px-4 font-bold text-lg">
+            🌤️ 萬華在地安老：守護張伯伯的每一天 ｜ 📍 1966 長照專線隨時為您服務 ｜ 💡 記得多關心家中的老寶貝 ｜ 🏥 萬華健康中心關心您的健康
         </div>
     </div>
 
     <!-- 主視覺區 -->
-    <header class="relative px-4 pt-10 pb-20 overflow-hidden">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
-            <div class="md:w-1/2 z-10 text-center md:text-left">
-                <span class="inline-block px-4 py-1 bg-white text-orange-600 rounded-full text-sm font-bold mb-4 shadow-sm">萬華在地安老數位誌</span>
-                <h1 class="text-5xl md:text-7xl font-black text-stone-800 leading-tight mb-6">
-                    陪伴張伯伯<br><span class="text-orange-500 underline decoration-wavy decoration-orange-300">自在過生活</span>
-                </h1>
-                <p class="text-xl text-stone-600 mb-8 max-w-md">
-                    這裡記錄了萬華區最適宜長輩活動的角落，讓每一位長者都能在熟悉的巷弄裡，感受到最溫暖的守護。
-                </p>
-                <div class="flex flex-wrap gap-4 justify-center md:justify-start">
-                    <a href="#resources" class="bg-orange-500 text-white px-8 py-4 rounded-full font-black text-lg hover:bg-orange-600 transition shadow-lg">看社區資源</a>
-                    <a href="#qa" class="bg-white text-orange-500 border-2 border-orange-500 px-8 py-4 rounded-full font-black text-lg hover:bg-orange-50 transition">常見問答</a>
-                </div>
+    <header class="max-w-6xl mx-auto px-4 py-12 flex flex-col md:flex-row items-center gap-12">
+        <div class="md:w-1/2 text-center md:text-left">
+            <h1 class="text-5xl md:text-6xl font-black text-stone-800 leading-tight mb-6">
+                萬華<span class="text-orange-500">老寶庫</span><br>長輩生活地圖
+            </h1>
+            <p class="text-xl text-stone-600 mb-8">
+                為張伯伯整理的 100+ 個在地資源，以及家屬最需要的照顧秘笈。讓在宅安老變得更簡單、更溫暖。
+            </p>
+            <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+                <a href="#resources" class="bg-orange-500 text-white px-8 py-4 rounded-full font-black text-lg shadow-lg hover:scale-105 transition">尋找寶庫資源</a>
+                <a href="#qa" class="bg-white text-orange-500 border-2 border-orange-500 px-8 py-4 rounded-full font-black text-lg hover:bg-orange-50 transition">照顧小撇步</a>
             </div>
-            <div class="md:w-1/2 relative">
-                <!-- 修正比例的照片牆 -->
-                <div class="relative w-full aspect-square">
-                    <div class="absolute top-0 left-10 w-2/3 aspect-[4/3] photo-frame -rotate-3 z-20">
-                        <img src="LINE_ALBUM_51%E7%AC%AC%E4%B8%89%E6%AC%A1%E5%AE%B6%E8%A8%AA_260501_12.jpg" alt="家訪照1">
-                    </div>
-                    <div class="absolute bottom-10 right-0 w-3/5 aspect-square photo-frame rotate-6 z-30">
-                        <img src="LINE_ALBUM_51%E7%AC%AC%E4%B8%89%E6%AC%A1%E5%AE%B6%E8%A8%AA_260501_8.jpg" alt="家訪照2">
-                    </div>
-                    <div class="absolute bottom-20 left-0 w-1/2 aspect-video photo-frame -rotate-6 z-10 opacity-80">
-                        <img src="LINE_NOTE_260501_5.jpg" alt="家訪照3">
-                    </div>
-                    <!-- 裝飾元素 -->
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full border-4 border-orange-200 rounded-full -z-10 animate-pulse"></div>
+        </div>
+        <div class="md:w-1/2 relative">
+            <div class="relative w-full aspect-square">
+                <!-- 修正比例的照片 -->
+                <div class="absolute top-0 right-0 w-3/4 aspect-[4/3] photo-frame rotate-3 z-20">
+                    <img src="LINE_ALBUM_51%E7%AC%AC%E4%B8%89%E6%AC%A1%E5%AE%B6%E8%A8%AA_260501_12.jpg" alt="家訪照1">
                 </div>
+                <div class="absolute bottom-4 left-0 w-2/3 aspect-square photo-frame -rotate-6 z-30">
+                    <img src="LINE_ALBUM_51%E7%AC%AC%E4%B8%89%E6%AC%A1%E5%AE%B6%E8%A8%AA_260501_8.jpg" alt="家訪照2">
+                </div>
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-orange-200/30 rounded-full -z-10"></div>
             </div>
         </div>
     </header>
 
-    <!-- 資源搜尋區 -->
-    <section id="resources" class="max-w-7xl mx-auto px-4 py-20">
-        <div class="bg-white rounded-super shadow-2xl overflow-hidden border-8 border-orange-100">
-            <div class="p-10 text-center bg-orange-50">
-                <h2 class="text-4xl font-black text-stone-800 mb-4">萬華長輩生活寶庫</h2>
-                <p class="text-stone-500">我們為張伯伯整理了這些充滿人情味的地點</p>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12">
-                <!-- 側邊分類 -->
-                <div class="lg:col-span-3 p-6 bg-white border-r border-orange-50">
-                    <div class="flex flex-col gap-3" id="filter-container">
-                        <!-- 動態生成按鈕 -->
-                    </div>
+    <!-- 資源區 -->
+    <section id="resources" class="max-w-7xl mx-auto px-4 py-16">
+        <div class="bg-white rounded-super shadow-xl border-8 border-orange-100 overflow-hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-4">
+                <!-- 左側分類導覽 -->
+                <div class="p-8 bg-orange-50/50 border-r border-orange-100">
+                    <h2 class="text-2xl font-black mb-6 text-stone-800">類別篩選</h2>
+                    <div id="category-btns" class="space-y-3"></div>
                 </div>
                 
-                <!-- 列表展示 -->
-                <div class="lg:col-span-9 p-8">
-                    <div class="flex justify-between items-center mb-8">
-                        <h3 id="category-title" class="text-2xl font-black text-orange-600">全部寶地</h3>
-                        <span id="result-count" class="px-4 py-1 bg-orange-100 text-orange-700 rounded-full font-bold text-sm"></span>
+                <!-- 右側列表 -->
+                <div class="lg:col-span-3 p-8">
+                    <div class="flex justify-between items-end mb-8 border-b-4 border-orange-100 pb-4">
+                        <div>
+                            <h3 id="current-cat-name" class="text-3xl font-black text-orange-600">載入中...</h3>
+                            <p id="current-cat-desc" class="text-stone-500 mt-1"></p>
+                        </div>
+                        <span id="res-count" class="bg-orange-100 text-orange-700 px-4 py-1 rounded-full font-bold"></span>
                     </div>
-                    <div id="resource-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[600px] overflow-y-auto pr-4 custom-scroll">
-                        <!-- 動態生成卡片 -->
+                    
+                    <div id="res-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[700px] overflow-y-auto pr-4 custom-scroll">
+                        <!-- 資料動態填入 -->
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 問答區 -->
-    <section id="qa" class="max-w-4xl mx-auto px-4 py-20">
-        <div class="text-center mb-12">
-            <h2 class="text-4xl font-black mb-4">家屬小撇步 Q&A</h2>
-            <p class="text-stone-500 italic">您擔心的問題，我們都有答案</p>
+    <!-- QA 區 -->
+    <section id="qa" class="max-w-5xl mx-auto px-4 py-20">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-black text-stone-800 mb-4">家屬小撇步 Q&A 25 招</h2>
+            <p class="text-xl text-stone-500 italic">我們懂您的辛苦，這裡有最實用的照顧智慧</p>
         </div>
-        <div class="space-y-4" id="qa-list"></div>
+        <div id="qa-container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
     </section>
-
-    <!-- 頁尾 -->
-    <footer class="text-center py-10 opacity-60">
-        <p class="text-sm">© 2026 萬華在地安老數位誌｜守護張吉雄伯伯與社區長輩的每一天</p>
-    </footer>
 
     <script>
         const categories = {
-            'all': { label: '通通都有', icon: '🏠', color: '#4A3E37' },
-            'medical': { label: '看病拿藥', icon: '🩺', color: '#4A90E2' },
-            'market': { label: '逛街採買', icon: '🥬', color: '#F5A623' },
-            'care': { label: '居家服務', icon: '🫂', color: '#D0021B' },
-            'social': { label: '找人聊天', icon: '🍵', color: '#7ED321' },
-            'travel': { label: '散步運動', icon: '🏸', color: '#50E3C2' }
+            'med': { label: '看病拿藥', icon: '🩺', desc: '萬華區優質醫療與復健資源', color: '#4A90E2' },
+            'shop': { label: '逛街採買', icon: '🥬', desc: '好買又好逛的市場與超市', color: '#F5A623' },
+            'care': { label: '長照諮詢', icon: '🫂', desc: '政府與民間的照顧幫手', color: '#D0021B' },
+            'fun': { label: '休閒社交', icon: '🍵', desc: '長輩結交新朋友的好去處', color: '#7ED321' },
+            'move': { label: '散步運動', icon: '🏸', desc: '安全平坦的戶外運動空間', color: '#50E3C2' }
         };
 
-        const resourceData = [];
-        const baseNames = {
-            'medical': ['和平醫院', '西園醫院', '萬華健康中心', '藥局專區', '復健診所'],
-            'market': ['國光市場', '雙和市場', '直興市場', '全聯萬大店', '美廉社'],
-            'care': ['老人服務中心', '聖若瑟長照', '立心基金會', '失智基金會', '日間照顧'],
-            'social': ['里辦公室', '社區據點', '長青學苑', '樂齡教室', '里民共餐'],
-            'travel': ['青年公園', '馬場町', '龍山寺', '剝皮寮', '華中步道']
+        const resData = {
+            'med': [
+                { n: '台北市立聯合醫院(和平院區)', a: '中華路二段33號', l: 'https://maps.google.com/?q=台北市立聯合醫院和平院區' },
+                { n: '西園醫院', a: '西園路二段132號', l: 'https://maps.google.com/?q=西園醫院' },
+                { n: '萬華區健康中心', a: '東園街152號', l: 'https://maps.google.com/?q=萬華區健康中心' },
+                { n: '東園藥局', a: '東園街', l: 'https://maps.google.com/?q=萬華區東園藥局' },
+                { n: '躍獅萬大藥局', a: '萬大路', l: 'https://maps.google.com/?q=萬大路藥局' },
+                { n: '仁濟醫院', a: '廣州街243號', l: 'https://maps.google.com/?q=仁濟醫院' },
+                { n: '莒光中醫診所', a: '莒光路', l: 'https://maps.google.com/?q=萬華區中醫診所' },
+                { n: '萬華牙醫診所', a: '萬大路附近', l: 'https://maps.google.com/?q=萬華區牙醫' },
+                { n: '長庚骨科診所(復健)', a: '西藏路', l: 'https://maps.google.com/?q=萬華區復健科' },
+                { n: '康健藥局', a: '寶興街', l: 'https://maps.google.com/?q=萬華區寶興街藥局' },
+                { n: '台大醫院(總院)', a: '常德街1號(捷運可達)', l: 'https://maps.google.com/?q=台大醫院' },
+                { n: '德全診所', a: '德昌街', l: 'https://maps.google.com/?q=萬華區德昌街診所' },
+                { n: '萬華家醫科診所', a: '雙和街', l: 'https://maps.google.com/?q=萬華區雙和街診所' },
+                { n: '惠民耳鼻喉科', a: '萬大路', l: 'https://maps.google.com/?q=萬華區耳鼻喉科' },
+                { n: '瑞安藥局', a: '西園路', l: 'https://maps.google.com/?q=萬華區西園路藥局' }
+            ],
+            'shop': [
+                { n: '國光市場', a: '萬大路巷弄', l: 'https://maps.google.com/?q=國光市場' },
+                { n: '雙和市場', a: '雙和街', l: 'https://maps.google.com/?q=雙和市場' },
+                { n: '直興市場', a: '康定路172巷', l: 'https://maps.google.com/?q=直興市場' },
+                { n: '環南市場', a: '環河南路二段', l: 'https://maps.google.com/?q=環南市場' },
+                { n: '全聯-萬華德昌店', a: '德昌街', l: 'https://maps.google.com/?q=全聯萬華德昌店' },
+                { n: '全聯-萬大店', a: '萬大路', l: 'https://maps.google.com/?q=全聯萬大店' },
+                { n: '美廉社-萬華寶興店', a: '寶興街', l: 'https://maps.google.com/?q=美廉社萬華寶興店' },
+                { n: '美廉社-萬大二店', a: '萬大路', l: 'https://maps.google.com/?q=美廉社萬大店' },
+                { n: '家樂福-桂林店', a: '桂林路1號', l: 'https://maps.google.com/?q=家樂福桂林店' },
+                { n: '大創百貨-萬華店', a: '西門町附近', l: 'https://maps.google.com/?q=萬華大創' },
+                { n: '康是美-萬大門市', a: '萬大路', l: 'https://maps.google.com/?q=康是美萬大路' },
+                { n: '屈臣氏-東園門市', a: '東園街', l: 'https://maps.google.com/?q=屈臣氏東園街' },
+                { n: '東園菜市場', a: '東園街', l: 'https://maps.google.com/?q=東園菜市場' },
+                { n: '萬大水果攤(老字號)', a: '萬大路口', l: 'https://maps.google.com/?q=萬華萬大路水果攤' },
+                { n: '光復市場', a: '環河路周邊', l: 'https://maps.google.com/?q=光復市場' }
+            ],
+            'care': [
+                { n: '萬華老人服務中心', a: '西源路', l: 'https://maps.google.com/?q=萬華老人服務中心' },
+                { n: '萬華龍山老人服務中心', a: '梧州街', l: 'https://maps.google.com/?q=萬華龍山老人服務中心' },
+                { n: '聖若瑟居家長照機構', a: '德昌街', l: 'https://maps.google.com/?q=聖若瑟居家長照機構' },
+                { n: '立心慈善基金會', a: '康定路', l: 'https://maps.google.com/?q=立心慈善基金會' },
+                { n: '失智老人基金會', a: '萬華區德昌街', l: 'https://maps.google.com/?q=失智老人基金會' },
+                { n: '萬華社會福利中心', a: '梧州街', l: 'https://maps.google.com/?q=萬華社會福利中心' },
+                { n: '中正國宅服務中心', a: '萬大路附近', l: 'https://maps.google.com/?q=中正國宅' },
+                { n: '紅心字會(萬華)', a: '萬華區', l: 'https://maps.google.com/?q=紅心字會萬華' },
+                { n: '伊甸基金會(萬華)', a: '萬華區', l: 'https://maps.google.com/?q=伊甸基金會萬華' },
+                { n: '萬大社區發展協會', a: '萬大路', l: 'https://maps.google.com/?q=萬大社區發展協會' },
+                { n: '忠德里里辦公處', a: '忠德里', l: 'https://maps.google.com/?q=萬華區忠德里辦公處' },
+                { n: '日善里里辦公處', a: '日善里', l: 'https://maps.google.com/?q=萬華區日善里辦公處' },
+                { n: '全德里里辦公處', a: '全德里', l: 'https://maps.google.com/?q=萬華區全德里辦公處' },
+                { n: '和德里里辦公處', a: '和德里', l: 'https://maps.google.com/?q=萬華區和德里辦公處' },
+                { n: '青年社區發展協會', a: '青年路', l: 'https://maps.google.com/?q=青年社區發展協會' }
+            ],
+            'fun': [
+                { n: '萬華大人糖餅會(聚會)', a: '社區據點', l: 'https://maps.google.com/?q=萬華區長輩據點' },
+                { n: '廣照宮(信仰中心)', a: '長泰街54號', l: 'https://maps.google.com/?q=萬華廣照宮' },
+                { n: '龍山寺', a: '廣州街211號', l: 'https://maps.google.com/?q=龍山寺' },
+                { n: '剝皮寮歷史街區', a: '康定路', l: 'https://maps.google.com/?q=剝皮寮' },
+                { n: '萬華故事館', a: '青年公園內', l: 'https://maps.google.com/?q=萬華故事館' },
+                { n: '樂齡學習中心(萬華)', a: '東園圖書館內', l: 'https://maps.google.com/?q=萬華樂齡學習中心' },
+                { n: '東園圖書館', a: '東園街199號', l: 'https://maps.google.com/?q=東園圖書館' },
+                { n: '西園圖書館', a: '西園路', l: 'https://maps.google.com/?q=西園圖書館' },
+                { n: '萬華運動中心', a: '西寧南路', l: 'https://maps.google.com/?q=萬華運動中心' },
+                { n: '青山宮', a: '貴陽街二段', l: 'https://maps.google.com/?q=艋舺青山宮' },
+                { n: '祖師廟', a: '康定路', l: 'https://maps.google.com/?q=艋舺祖師廟' },
+                { n: '社區共餐點-日善里', a: '日善路附近', l: 'https://maps.google.com/?q=日善里共餐' },
+                { n: '社區共餐點-新安里', a: '新安里辦', l: 'https://maps.google.com/?q=新安里共餐' },
+                { n: '萬華茶室文化區(老街)', a: '三水街', l: 'https://maps.google.com/?q=萬華三水街' },
+                { n: '糖廍文化園區', a: '大理街', l: 'https://maps.google.com/?q=糖廍文化園區' }
+            ],
+            'move': [
+                { n: '青年公園', a: '水源路199號', l: 'https://maps.google.com/?q=青年公園' },
+                { n: '馬場町紀念公園', a: '青年公園外側河濱', l: 'https://maps.google.com/?q=馬場町公園' },
+                { n: '華中河濱公園', a: '萬大路底', l: 'https://maps.google.com/?q=華中公園' },
+                { n: '雙園河濱公園', a: '長泰街附近河濱', l: 'https://maps.google.com/?q=雙園河濱公園' },
+                { n: '萬華永聖公園', a: '寶興街巷弄', l: 'https://maps.google.com/?q=萬華永聖公園' },
+                { n: '德昌公園', a: '德昌街', l: 'https://maps.google.com/?q=德昌公園' },
+                { n: '保德公園', a: '萬大路附近', l: 'https://maps.google.com/?q=保德公園' },
+                { n: '日善公園', a: '環河南路周邊', l: 'https://maps.google.com/?q=日善公園' },
+                { n: '騰雲公園', a: '青年公園對面', l: 'https://maps.google.com/?q=騰雲公園' },
+                { n: '艋舺公園', a: '西門町周邊', l: 'https://maps.google.com/?q=艋舺公園' },
+                { n: '糖廍綠地', a: '大理街', l: 'https://maps.google.com/?q=糖廍綠地' },
+                { n: '萬華402號公園', a: '西園路', l: 'https://maps.google.com/?q=萬華402號公園' },
+                { n: '和平青草園', a: '西藏路', l: 'https://maps.google.com/?q=和平青草園' },
+                { n: '華西公園', a: '華西街附近', l: 'https://maps.google.com/?q=華西公園' },
+                { n: '桂林公園', a: '桂林路', l: 'https://maps.google.com/?q=桂林公園' }
+            ]
         };
 
         const qaData = [
-            { q: "長輩如果不願意讓陌生人(居服員)進家門怎麼辦？", a: "這很常見！建議先從『送餐』或『陪同外出散步』開始，讓長輩覺得是多了一個朋友，而不是被照顧者。家人初期在場陪同也非常重要。" },
-            { q: "萬華區有哪些適合輪椅族的散步路徑？", a: "青年公園的步道非常寬敞且平坦，馬場町河濱公園也是絕佳選擇，無障礙坡道規劃很完善。" },
-            { q: "如何申請 1966 長照服務？", a: "只要撥打 1966 專線，專員會問一些基本狀況，之後會安排『照管專員』到家裡做評估，完全免費喔！" },
-            { q: "輔具補助可以幾年申請一次？", a: "一般而言是每三年可申請四項，像是拐杖、輪椅或洗澡椅都在補助範圍內，記得先評估再購買才有補助喔。" },
-            { q: "餐食營養不夠，萬華哪裡有共餐？", a: "許多里辦公處（如福恩里、新安里）都有提供長輩共餐，不僅飯菜營養均衡，還能跟鄰居聊天，心情更好！" }
-            // 為簡潔展示，此處列出 5 題代表
+            { q: "長輩拒絕讓居服員進門怎麼辦？", a: "從『陪同散步』開始。讓長輩覺得是多了個隨扈或朋友，而不是被照顧。" },
+            { q: "如何說服長輩拿拐杖或坐輪椅？", a: "不要說『你走不動』，要說『這能讓你走得更遠、看更多地方』。" },
+            { q: "長輩突然脾氣暴躁，可能是什麼原因？", a: "先檢查是否身體不適、便秘、脫水或失智症早期徵兆，必要時請教醫師。" },
+            { q: "萬華公寓沒電梯，爬不動怎麼辦？", a: "可向輔具中心申請『爬梯機服務』，或申請長照補助進行居家無障礙改造。" },
+            { q: "1966 長照申請要等很久嗎？", a: "通常撥打後 7 天內會派專員評估，2 週內核定額度。建議及早申請！" },
+            { q: "長輩容易跌倒，家裡要怎麼改？", a: "浴室加裝防滑墊與扶手，移除地板電線與門檻，照明要充足。" },
+            { q: "外籍看護逃跑了，怎麼辦？", a: "第一時間報案並聯繫勞動部，同時可申請長照 2.0 的『喘息服務』銜接。" },
+            { q: "長輩一直重複問同樣的問題？", a: "保持耐心，這是認知功能退化的現象。試著轉移注意力到他喜歡的話題。" },
+            { q: "如何知道長輩有沒有吃飽？", a: "檢查冰箱食材減少狀況、體重變化，或是餐盒是否有剩餘。" },
+            { q: "長輩不愛洗澡怎麼辦？", a: "把浴室預熱，選擇長輩心情好的時候，或以『洗完澡帶你去逛市場』作為誘因。" },
+            { q: "長輩聽力不好，溝通很累？", a: "說話要慢，面對面直視長輩，口型清晰，不要對著耳朵大吼。" },
+            { q: "政府有提供輔具補助嗎？", a: "有的！低收入戶全額補助，一般戶也有 70% 補助。一定要先申請評估再買。" },
+            { q: "長輩不想吃藥，偷偷吐掉？", a: "確認藥丸是否太大難吞，請醫師改開藥粉或水劑，並伴隨喜愛的食物服用。" },
+            { q: "照顧者覺得快崩潰了，怎麼辦？", a: "利用長照喘息服務，給自己幾天假。加入照顧者支持團體，找人傾訴。" },
+            { q: "萬華哪裡可以借輪椅？", a: "萬華老人服務中心或各里的里辦公室通常有提供短期借用服務。" },
+            { q: "長輩整天坐著看電視，好嗎？", a: "儘量帶他去鄰近據點共餐或參加樂齡課程，維持腦部活動減緩退化。" },
+            { q: "如何觀察長輩是否有憂鬱傾向？", a: "注意睡眠、食慾不振或不再對以前喜歡的事物感興趣，及早求醫。" },
+            { q: "長輩說想回老家看看？", a: "如果體力允許，陪他回去。這對長輩的心理安定有極大的幫助。" },
+            { q: "家中財產如何規劃避免爭議？", a: "長輩意識清楚時，儘早討論遺囑或信託規劃，甚至法律見證。" },
+            { q: "如何判斷長輩是否失智或健忘？", a: "如果記不起剛發生的事，且性格大變、失去判斷力，應至神經內科檢查。" },
+            { q: "長輩晚上不睡覺，到處走動？", a: "日間多增加活動量，減少午睡，睡前避免咖啡因。檢查是否有日落症候群。" },
+            { q: "居服員可以幫長輩洗衣服嗎？", a: "長照服務包含長輩本人的衣物清潔、居家環境維護，但不包含其他家屬。" },
+            { q: "長輩說身體痛卻查不出病因？", a: "可能是心理因素或神經痛，陪伴與傾聽有時比吃藥更有效。" },
+            { q: "萬華哪些巷弄適合推輪椅？", a: "盡量選擇大馬路人行道，避開傳統市場擁擠時段，青年公園內部步道最推薦。" },
+            { q: "有緊急狀況要打給誰？", a: "救護車撥 119，長照諮詢撥 1966，張伯伯專屬居服單位則存入手機快捷鍵。" }
         ];
 
         function init() {
-            // 生成模擬數據
-            Object.keys(baseNames).forEach(type => {
-                baseNames[type].forEach((name, i) => {
-                    resourceData.push({
-                        type: type,
-                        name: name,
-                        address: `萬華區鄰里巷弄內 No.${10 + i}`,
-                        desc: `這是一個讓${categories[type].label}更方便的好地方，非常推薦張伯伯去走走。`
-                    });
-                });
-            });
-
-            renderFilters();
-            renderResources('all');
+            renderFilterBtns();
+            renderResources('med'); // 預設顯示醫療
             renderQA();
         }
 
-        function renderFilters() {
-            const container = document.getElementById('filter-container');
+        function renderFilterBtns() {
+            const container = document.getElementById('category-btns');
             Object.keys(categories).forEach(key => {
                 const btn = document.createElement('button');
-                btn.className = 'filter-btn w-full p-4 rounded-2xl border-2 border-orange-50 text-left font-black transition-all flex items-center gap-3 hover:bg-orange-50';
-                btn.innerHTML = `<span class="text-2xl">${categories[key].icon}</span> ${categories[key].label}`;
+                btn.className = 'w-full flex items-center gap-3 p-4 rounded-2xl border-2 border-orange-100 font-bold transition-all hover:bg-orange-50';
                 btn.id = `btn-${key}`;
+                btn.innerHTML = `<span class="text-2xl">${categories[key].icon}</span> ${categories[key].label}`;
                 btn.onclick = () => {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('tab-active'));
+                    document.querySelectorAll('#category-btns button').forEach(b => b.classList.remove('tab-active'));
                     btn.classList.add('tab-active');
                     renderResources(key);
                 };
                 container.appendChild(btn);
             });
-            document.getElementById('btn-all').classList.add('tab-active');
+            document.getElementById('btn-med').classList.add('tab-active');
         }
 
-        function renderResources(type) {
-            const grid = document.getElementById('resource-grid');
-            const title = document.getElementById('category-title');
-            const count = document.getElementById('result-count');
-            const filtered = type === 'all' ? resourceData : resourceData.filter(d => d.type === type);
-
-            title.innerText = categories[type].label;
-            count.innerText = `發現 ${filtered.length} 個好地方`;
+        function renderResources(key) {
+            const grid = document.getElementById('res-grid');
+            const catName = document.getElementById('current-cat-name');
+            const catDesc = document.getElementById('current-cat-desc');
+            const count = document.getElementById('res-count');
+            
+            const data = resData[key];
+            catName.innerText = categories[key].label;
+            catDesc.innerText = categories[key].desc;
+            count.innerText = `共 ${data.length} 項`;
             grid.innerHTML = '';
 
-            filtered.forEach(item => {
+            data.forEach(item => {
                 const card = document.createElement('div');
-                card.className = 'resource-card p-6 bg-orange-50/30 rounded-3xl';
+                card.className = 'resource-card p-5 rounded-2xl flex flex-col justify-between';
                 card.innerHTML = `
-                    <div class="text-xs font-black text-orange-400 mb-2">${categories[item.type].icon} ${categories[item.type].label}</div>
-                    <h4 class="text-xl font-black mb-2">${item.name}</h4>
-                    <p class="text-stone-500 text-sm mb-4 leading-relaxed">${item.desc}</p>
-                    <div class="flex items-center text-xs text-stone-400 gap-1">
-                        <span>📍</span> ${item.address}
+                    <div>
+                        <h4 class="text-lg font-black text-stone-800 mb-1">${item.n}</h4>
+                        <p class="text-sm text-stone-400 mb-4 flex items-center gap-1">📍 ${item.a}</p>
                     </div>
+                    <a href="${item.l}" target="_blank" class="bg-blue-50 text-blue-600 py-2 px-4 rounded-xl text-sm font-bold text-center hover:bg-blue-600 hover:text-white transition">
+                        開啟 Google 地圖 ➔
+                    </a>
                 `;
                 grid.appendChild(card);
             });
+            grid.scrollTop = 0;
         }
 
         function renderQA() {
-            const container = document.getElementById('qa-list');
-            qaData.forEach(item => {
+            const container = document.getElementById('qa-container');
+            qaData.forEach((item, index) => {
                 const div = document.createElement('div');
-                div.className = 'bg-white p-6 rounded-3xl shadow-sm border-2 border-orange-100';
+                div.className = 'bg-white p-6 rounded-3xl border-2 border-orange-100 shadow-sm';
                 div.innerHTML = `
-                    <h4 class="font-black text-orange-600 mb-3 flex gap-2">
-                        <span class="bg-orange-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">Q</span>
-                        ${item.q}
-                    </h4>
-                    <p class="text-stone-600 pl-8 leading-relaxed">${item.a}</p>
+                    <div class="flex gap-3">
+                        <span class="flex-shrink-0 w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-black">${index + 1}</span>
+                        <div>
+                            <h4 class="font-black text-stone-800 mb-2 leading-tight">${item.q}</h4>
+                            <p class="text-stone-500 text-sm leading-relaxed">${item.a}</p>
+                        </div>
+                    </div>
                 `;
                 container.appendChild(div);
             });
