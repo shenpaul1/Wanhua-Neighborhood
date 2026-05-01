@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>張吉雄伯伯：2026 萬華在地安老平台</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             background-color: #FDFBF7;
@@ -132,39 +131,33 @@
         </div>
     </section>
 
-    <!-- 資源大廳 -->
+    <!-- 資源清單區塊 -->
     <main id="resources" class="max-w-7xl mx-auto py-16 px-4">
         <div class="text-center mb-12">
             <h2 class="text-4xl font-black mb-4">萬華在地資源導覽</h2>
             <div class="h-1 w-20 bg-orange-500 mx-auto rounded-full"></div>
+            <p class="mt-4 text-stone-500">點選分類按鈕篩選適合長輩的資源</p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-            <!-- 左側導覽 -->
-            <aside class="lg:col-span-3 space-y-6">
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-stone-100">
-                    <h3 class="font-bold text-stone-400 mb-4 text-xs uppercase tracking-widest">篩選分類</h3>
-                    <div id="filter-box" class="flex flex-col gap-2">
-                        <!-- 動態生成按鈕 -->
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-stone-100">
-                    <h3 class="font-bold text-stone-400 mb-4 text-xs uppercase tracking-widest">統計分佈</h3>
-                    <div class="h-64">
-                        <canvas id="resourceChart"></canvas>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- 左側導覽按鈕 -->
+            <aside class="lg:col-span-3">
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-stone-100 sticky top-24">
+                    <h3 class="font-bold text-stone-400 mb-6 text-xs uppercase tracking-widest">資源篩選</h3>
+                    <div id="filter-box" class="flex flex-col gap-3">
+                        <!-- 按鈕將由此處動態生成 -->
                     </div>
                 </div>
             </aside>
 
-            <!-- 右側列表 -->
-            <div class="lg:col-span-9 bg-white rounded-3xl shadow-sm border border-stone-100 overflow-hidden flex flex-col">
+            <!-- 右側資源列表 -->
+            <div class="lg:col-span-9 bg-white rounded-3xl shadow-sm border border-stone-100 overflow-hidden flex flex-col min-h-[700px]">
                 <div class="p-6 border-b border-stone-50 flex justify-between items-center bg-stone-50/50">
                     <h3 id="category-title" class="text-2xl font-black">全部資源</h3>
                     <span id="count-tag" class="bg-orange-100 text-orange-700 px-4 py-1 rounded-full text-sm font-bold"></span>
                 </div>
-                <div id="resource-list" class="grid grid-cols-1 md:grid-cols-2 gap-6 p-8 h-[600px] overflow-y-auto custom-scroll">
-                    <!-- 動態生成資源卡片 -->
+                <div id="resource-list" class="grid grid-cols-1 md:grid-cols-2 gap-6 p-8 overflow-y-auto custom-scroll">
+                    <!-- 資源卡片動態載入 -->
                 </div>
             </div>
         </div>
@@ -175,11 +168,11 @@
         <div class="max-w-4xl mx-auto">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-black mb-4">家屬常見 Q&A</h2>
-                <p class="text-stone-500">針對長照申請與日常照護的專業建議</p>
+                <p class="text-stone-500">專業長照諮詢，幫助您在照顧之路上更輕鬆</p>
             </div>
             
             <div class="qa-container space-y-4" id="qa-list">
-                <!-- 動態填充 20 題 -->
+                <!-- 20 題 Q&A -->
             </div>
         </div>
     </section>
@@ -190,15 +183,15 @@
             <div>
                 <h4 class="text-orange-500 font-bold mb-4">緊急聯絡</h4>
                 <p class="text-2xl font-black">長照專線：1966</p>
-                <p class="text-sm text-stone-400 mt-2">手機撥打免付費，專業人員提供諮詢</p>
+                <p class="text-sm text-stone-400 mt-2">提供專業長照評估與諮詢服務</p>
             </div>
             <div>
-                <h4 class="text-orange-500 font-bold mb-4">關於計畫</h4>
-                <p class="text-sm leading-relaxed text-stone-400">本平台旨在優化萬華在地長輩的生活品質，連結政府、NGO與在地商家的關懷網絡。</p>
+                <h4 class="text-orange-500 font-bold mb-4">計畫宗旨</h4>
+                <p class="text-sm leading-relaxed text-stone-400">紀錄萬華長輩的生活，整合社區資源，讓每一位長者都能在熟悉的鄰里環境中尊嚴安老。</p>
             </div>
             <div>
-                <h4 class="text-orange-500 font-bold mb-4">更新時間</h4>
-                <p class="text-sm text-stone-400">數據版本：2026.05.01<br>維護單位：萬華在地安老小組</p>
+                <h4 class="text-orange-500 font-bold mb-4">最新更新</h4>
+                <p class="text-sm text-stone-400">數據版本：2026.05.01<br>本平台資訊僅供在地安老推廣使用</p>
             </div>
         </div>
     </footer>
@@ -252,7 +245,7 @@
                     type: type,
                     name: name,
                     address: `萬華區${['萬大路', '環河南路', '西園路', '和平西路', '東園街'][i%5]}${10 + i * 2}號`,
-                    desc: `為張伯伯提供優質的${categories[type].label}服務，守護在地晚年。`
+                    desc: `針對長輩提供優質的${categories[type].label}服務，連結在地守護網絡。`
                 });
             });
         });
@@ -264,14 +257,13 @@
             updateLiveTime();
             setInterval(updateLiveTime, 1000);
             fetchTemp();
-            initChart();
         }
 
         function renderFilters() {
             const container = document.getElementById('filter-box');
             Object.keys(categories).forEach(key => {
                 const btn = document.createElement('button');
-                btn.className = `filter-btn p-4 rounded-2xl border border-stone-100 text-left transition-all font-bold flex items-center gap-3`;
+                btn.className = `filter-btn p-4 rounded-2xl border border-stone-100 text-left transition-all font-bold flex items-center gap-3 hover:border-orange-200`;
                 btn.id = `btn-${key}`;
                 btn.innerHTML = `<span>${categories[key].icon}</span> ${categories[key].label}`;
                 btn.onclick = () => switchCategory(key);
@@ -284,6 +276,10 @@
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('tab-active'));
             document.getElementById(`btn-${key}`).classList.add('tab-active');
             renderResources(key);
+            // 滑動到列表上方，方便閱讀
+            if(window.innerWidth < 1024) {
+                document.getElementById('resources').scrollIntoView({ behavior: 'smooth' });
+            }
         }
 
         function renderResources(filter) {
@@ -302,7 +298,7 @@
                 card.innerHTML = `
                     <div class="flex justify-between items-start mb-4">
                         <span class="text-xs font-bold px-2 py-1 bg-stone-100 text-stone-500 rounded">${categories[item.type].label}</span>
-                        <a href="https://www.google.com/maps/search/萬華+${item.name}" target="_blank" class="text-blue-500 text-xs font-bold hover:underline">導航 ↗</a>
+                        <a href="https://www.google.com/maps/search/萬華+${item.name}" target="_blank" class="text-blue-500 text-xs font-bold hover:underline">地圖導覽 ↗</a>
                     </div>
                     <h4 class="text-lg font-black mb-2">${item.name}</h4>
                     <p class="text-sm text-stone-500 leading-relaxed mb-4">${item.desc}</p>
@@ -310,7 +306,6 @@
                 `;
                 list.appendChild(card);
             });
-            list.scrollTop = 0;
         }
 
         function renderQA() {
@@ -319,7 +314,7 @@
                 const details = document.createElement('details');
                 details.className = 'bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden group';
                 details.innerHTML = `
-                    <summary class="p-5 font-bold cursor-pointer flex justify-between items-center list-none hover:bg-stone-50">
+                    <summary class="p-5 font-bold cursor-pointer flex justify-between items-center list-none hover:bg-stone-50 transition-colors">
                         <span>Q${index + 1}: ${item.q}</span>
                         <span class="transition-transform group-open:rotate-180">▼</span>
                     </summary>
@@ -344,28 +339,6 @@
             } catch {
                 document.getElementById('temp-val').innerText = '23';
             }
-        }
-
-        function initChart() {
-            const ctx = document.getElementById('resourceChart').getContext('2d');
-            const stats = {};
-            resourceData.forEach(d => stats[d.type] = (stats[d.type] || 0) + 1);
-
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(stats).map(k => categories[k].label),
-                    datasets: [{
-                        data: Object.values(stats),
-                        backgroundColor: ['#3b82f6', '#f97316', '#ef4444', '#22c55e', '#14b8a6'],
-                        hoverOffset: 10
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } }
-                }
-            });
         }
 
         document.addEventListener('DOMContentLoaded', init);
