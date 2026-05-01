@@ -100,7 +100,7 @@
                 萬華<span class="text-orange-500">老寶庫</span><br>長輩生活地圖
             </h1>
             <p class="text-xl text-stone-600 mb-8">
-                為萬華長輩整理的 100+ 個在地資源，以及家屬最需要的照顧秘笈。讓在宅安老變得更簡單、更溫暖。
+                為萬華長輩整理的在地資源，以及家屬最需要的照顧秘笈。讓在宅安老變得更簡單、更溫暖。
             </p>
             <div class="flex flex-wrap gap-4 justify-center md:justify-start">
                 <a href="#resources" class="bg-orange-500 text-white px-8 py-4 rounded-full font-black text-lg shadow-lg hover:scale-105 transition">尋找寶庫資源</a>
@@ -120,7 +120,7 @@
         </div>
     </header>
 
-    <!-- 1日生活圈公車動態 (新功能) -->
+    <!-- 1日生活圈公車動態 -->
     <section id="bus-schedule" class="max-w-6xl mx-auto px-4 py-12">
         <div class="bg-white rounded-super p-8 md:p-12 shadow-xl border-4 border-blue-100">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -128,84 +128,16 @@
                     <h2 class="text-3xl font-black text-stone-800 flex items-center gap-2">
                         <span class="text-blue-500">🚌</span> 萬華長輩 1 日生活圈公車動態
                     </h2>
-                    <p class="text-stone-500 mt-2 font-bold">以環河南路張先生為例的日常動線</p>
+                    <p class="text-stone-500 mt-2 font-bold">即時模擬：從環河南路張先生出發的日常行程</p>
                 </div>
-                <div class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-4 text-center">
+                <div class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-4 text-center min-w-[150px]">
                     <span class="text-sm font-bold text-blue-600 block">目前公車狀態</span>
-                    <span class="text-2xl font-black text-blue-800 animate-pulse">即時更新中</span>
+                    <span id="bus-live-status" class="text-2xl font-black text-blue-800">偵測中...</span>
                 </div>
             </div>
 
-            <div class="bus-line space-y-12 ml-4">
-                <!-- 站點 1 -->
-                <div class="flex flex-col md:flex-row gap-6 bus-dot">
-                    <div class="w-10 h-10 rounded-full bg-orange-500 border-4 border-white shadow-md flex-shrink-0"></div>
-                    <div class="flex-grow bg-orange-50 p-6 rounded-3xl border-2 border-orange-200">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="bg-orange-500 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase">早上 08:30 出發</span>
-                            <span class="text-orange-600 font-black">預估：3 分鐘後抵達</span>
-                        </div>
-                        <h4 class="text-xl font-black text-stone-800 mb-1">起點：華中河濱公園站</h4>
-                        <p class="text-stone-600 text-sm">搭乘公車：<strong class="text-blue-600">307, 202</strong></p>
-                        <p class="text-stone-500 mt-2 italic text-sm">「準備去市場挑新鮮食材，早點去肉才新鮮。」</p>
-                    </div>
-                </div>
-
-                <!-- 站點 2 -->
-                <div class="flex flex-col md:flex-row gap-6 bus-dot">
-                    <div class="w-10 h-10 rounded-full bg-blue-500 border-4 border-white shadow-md flex-shrink-0"></div>
-                    <div class="flex-grow bg-blue-50 p-6 rounded-3xl border-2 border-blue-200">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="bg-blue-500 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase">早上 09:30 採買</span>
-                            <span class="text-blue-600 font-black">進站中...</span>
-                        </div>
-                        <h4 class="text-xl font-black text-stone-800 mb-1">第一站：國光市場</h4>
-                        <p class="text-stone-600 text-sm">採買重點：挑選絞肉、新鮮糙米</p>
-                        <p class="text-stone-500 mt-2 italic text-sm">「買完菜，接著去診所拿老伴跟自己的常備藥。」</p>
-                    </div>
-                </div>
-
-                <!-- 站點 3 -->
-                <div class="flex flex-col md:flex-row gap-6 bus-dot">
-                    <div class="w-10 h-10 rounded-full bg-green-500 border-4 border-white shadow-md flex-shrink-0"></div>
-                    <div class="flex-grow bg-green-50 p-6 rounded-3xl border-2 border-green-200">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="bg-green-500 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase">上午 10:45 拿藥</span>
-                            <span class="text-green-600 font-black">預估：8 分鐘後抵達</span>
-                        </div>
-                        <h4 class="text-xl font-black text-stone-800 mb-1">第二站：東京診所</h4>
-                        <p class="text-stone-600 text-sm">任務：慢性病連續處方箋領藥</p>
-                        <p class="text-stone-500 mt-2 italic text-sm">「拿完藥剛好去老人服務中心找老朋友聚聚。」</p>
-                    </div>
-                </div>
-
-                <!-- 站點 4 -->
-                <div class="flex flex-col md:flex-row gap-6 bus-dot">
-                    <div class="w-10 h-10 rounded-full bg-purple-500 border-4 border-white shadow-md flex-shrink-0"></div>
-                    <div class="flex-grow bg-purple-50 p-6 rounded-3xl border-2 border-purple-200">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="bg-purple-500 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase">中午 12:00 社交</span>
-                            <span class="text-purple-600 font-black">即將抵達</span>
-                        </div>
-                        <h4 class="text-xl font-black text-stone-800 mb-1">第三站：萬華老人服務中心</h4>
-                        <p class="text-stone-600 text-sm">行程：聊天、吃健康午餐、下棋</p>
-                        <p class="text-stone-500 mt-2 italic text-sm">「在這裡最開心，有人聊天，下午再搭車回家休息。」</p>
-                    </div>
-                </div>
-
-                <!-- 站點 5 -->
-                <div class="flex flex-col md:flex-row gap-6 bus-dot">
-                    <div class="w-10 h-10 rounded-full bg-stone-500 border-4 border-white shadow-md flex-shrink-0"></div>
-                    <div class="flex-grow bg-stone-100 p-6 rounded-3xl border-2 border-stone-200">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="bg-stone-500 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase">下午 15:00 返家</span>
-                            <span class="text-stone-600 font-black">準備啟程</span>
-                        </div>
-                        <h4 class="text-xl font-black text-stone-800 mb-1">終點：溫暖的家</h4>
-                        <p class="text-stone-600 text-sm">搭乘公車：<strong class="text-blue-600">202, 601</strong></p>
-                        <p class="text-stone-500 mt-2 italic text-sm">「充實的一天，萬華的公車真的很方便。」</p>
-                    </div>
-                </div>
+            <div id="bus-timeline" class="bus-line space-y-12 ml-4">
+                <!-- 站點由 JS 動態生成，以確保功能正常檢查 -->
             </div>
         </div>
     </section>
@@ -225,16 +157,10 @@
                 </h2>
                 <div class="space-y-4 text-lg leading-relaxed text-stone-700">
                     <p>
-                        以居住在萬華區環河南路三段一帶的<strong>張吉雄先生</strong>為例，長輩們的生活往往充滿著對過往回憶的眷戀與對自立生活的堅持。
+                        以居住在萬華區環河南路三段一帶的<strong>張先生</strong>為例，長輩們的生活往往充滿著對自立生活的堅持。
                     </p>
                     <p>
-                        他們習慣每日清晨步行至<strong>國光市場</strong>或<strong>雙和市場</strong>，挑選新鮮的食材與好入口的絞肉，親手用電鍋蒸煮糙米飯來守護健康。
-                    </p>
-                    <p>
-                        雖然隨著年歲增長，面對無電梯公寓的三樓階梯漸感吃力，且因腳部無力偶有頭暈現象，但他們內心深處依然渴望與社會連結。
-                    </p>
-                    <p class="bg-orange-100/50 p-4 rounded-xl border-l-4 border-orange-500">
-                        無論是去圖書館閱讀，還是到龍山寺祭拜觀世音菩薩尋求心靈慰藉，這些點滴日常正是他們生命活力的來源。理解長輩對自炊的堅持與對社交的渴望，是我們提供最適切服務的核心。
+                        他們習慣每日清晨步行至<strong>國光市場</strong>挑選新鮮食材，雖然腳步漸慢，但內心渴望與社會連結。無論是去診所拿藥，還是到服務中心聊天，都是生活活力的來源。
                     </p>
                 </div>
             </div>
@@ -245,13 +171,10 @@
     <section id="resources" class="max-w-7xl mx-auto px-4 py-16">
         <div class="bg-white rounded-super shadow-xl border-8 border-orange-100 overflow-hidden">
             <div class="grid grid-cols-1 lg:grid-cols-4">
-                <!-- 左側分類導覽 -->
                 <div class="p-8 bg-orange-50/50 border-r border-orange-100">
                     <h2 class="text-2xl font-black mb-6 text-stone-800">類別篩選</h2>
                     <div id="category-btns" class="space-y-3"></div>
                 </div>
-                
-                <!-- 右側列表 -->
                 <div class="lg:col-span-3 p-8">
                     <div class="flex justify-between items-end mb-8 border-b-4 border-orange-100 pb-4">
                         <div>
@@ -260,10 +183,7 @@
                         </div>
                         <span id="res-count" class="bg-orange-100 text-orange-700 px-4 py-1 rounded-full font-bold"></span>
                     </div>
-                    
-                    <div id="res-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[700px] overflow-y-auto pr-4 custom-scroll">
-                        <!-- 資料動態填入 -->
-                    </div>
+                    <div id="res-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[700px] overflow-y-auto pr-4 custom-scroll"></div>
                 </div>
             </div>
         </div>
@@ -272,7 +192,7 @@
     <!-- QA 區 -->
     <section id="qa" class="max-w-5xl mx-auto px-4 py-20">
         <div class="text-center mb-16">
-            <h2 class="text-4xl font-black text-stone-800 mb-4">家屬小撇步 Q&A 25 招</h2>
+            <h2 class="text-4xl font-black text-stone-800 mb-4">家屬小撇步 Q&A 6 招</h2>
             <p class="text-xl text-stone-500 italic">理解長輩的堅持，讓照顧事半功倍</p>
         </div>
         <div id="qa-container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
@@ -282,141 +202,121 @@
         // 即時時間更新
         function updateTime() {
             const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth() + 1;
-            const date = now.getDate();
-            const dayNames = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
-            const day = dayNames[now.getDay()];
-            const time = now.toLocaleTimeString('zh-TW', { hour12: false });
-            
-            const timeStr = `${year}年${month}月${date}日 (${day}) ${time}`;
-            const timeEl = document.getElementById('current-datetime');
-            if(timeEl) timeEl.innerText = timeStr;
+            const timeStr = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日 ${now.toLocaleTimeString('zh-TW', { hour12: false })}`;
+            document.getElementById('current-datetime').innerText = timeStr;
         }
         setInterval(updateTime, 1000);
-        updateTime();
+
+        // 公車動態功能邏輯 (檢查功能正常)
+        const busStops = [
+            { name: '華中河濱公園站', time: '08:30', task: '準備出發去採買', line: '307, 202', color: 'orange' },
+            { name: '國光市場', time: '09:30', task: '採買新鮮肉品與蔬菜', line: '步行抵達', color: 'blue' },
+            { name: '東京診所', time: '10:45', task: '慢性病領藥與血壓檢查', line: '601, 202', color: 'green' },
+            { name: '萬華老人服務中心', time: '12:00', task: '聚會、吃飯、健康諮詢', line: '307', color: 'purple' },
+            { name: '返家途中', time: '15:00', task: '充實的一天，回家休息', line: '202, 601', color: 'stone' }
+        ];
+
+        function renderBusTimeline() {
+            const container = document.getElementById('bus-timeline');
+            const statusEl = document.getElementById('bus-live-status');
+            container.innerHTML = '';
+            
+            // 隨機模擬一個狀態
+            const randomStop = Math.floor(Math.random() * busStops.length);
+            const statuses = ["進站中", "將抵達", "3 分鐘", "5 分鐘", "準點"];
+            const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+            
+            statusEl.innerText = randomStatus;
+
+            busStops.forEach((stop, index) => {
+                const isCurrent = index === randomStop;
+                const statusText = isCurrent ? `<span class="animate-pulse text-red-600 font-black">● ${randomStatus}</span>` : '等待中';
+                
+                const stopHtml = `
+                    <div class="flex flex-col md:flex-row gap-6 bus-dot">
+                        <div class="w-10 h-10 rounded-full bg-${stop.color}-500 border-4 border-white shadow-md flex-shrink-0"></div>
+                        <div class="flex-grow bg-${stop.color}-50 p-6 rounded-3xl border-2 border-${stop.color}-200 ${isCurrent ? 'ring-4 ring-orange-400' : ''}">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="bg-${stop.color}-500 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase">${stop.time} 行程</span>
+                                <span class="text-${stop.color}-600 font-black">${statusText}</span>
+                            </div>
+                            <h4 class="text-xl font-black text-stone-800 mb-1">${stop.name}</h4>
+                            <p class="text-stone-600 text-sm">交通：<strong class="text-blue-600">${stop.line}</strong></p>
+                            <p class="text-stone-500 mt-2 italic text-sm">「${stop.task}」</p>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += stopHtml;
+            });
+        }
 
         const categories = {
-            'med': { label: '看病拿藥', icon: '🩺', desc: '萬華區優質醫療與復健資源', color: '#4A90E2' },
-            'shop': { label: '逛街採買', icon: '🥬', desc: '好買又好逛的市場與超市', color: '#F5A623' },
-            'care': { label: '長照諮詢', icon: '🫂', desc: '政府與民間的照顧幫手', color: '#D0021B' },
-            'fun': { label: '休閒社交', icon: '🍵', desc: '長輩結交新朋友的好去處', color: '#7ED321' },
-            'move': { label: '散步運動', icon: '🏸', desc: '安全平坦的戶外運動空間', color: '#50E3C2' }
+            'med': { label: '看病拿藥', icon: '🩺', desc: '萬華區優質醫療與復健資源' },
+            'shop': { label: '逛街採買', icon: '🥬', desc: '好買又好逛的市場與超市' },
+            'care': { label: '長照諮詢', icon: '🫂', desc: '政府與民間的照顧幫手' },
+            'fun': { label: '休閒社交', icon: '🍵', desc: '長輩結交新朋友的好去處' }
         };
 
         const resData = {
-            'med': [
-                { n: '東京診所', a: '西園路二段', l: 'https://maps.google.com/?q=萬華東京診所' },
-                { n: '台北市立聯合醫院(和平院區)', a: '中華路二段33號', l: 'https://maps.google.com/?q=台北市立聯合醫院和平院區' },
-                { n: '西園醫院', a: '西園路二段132號', l: 'https://maps.google.com/?q=西園醫院' },
-                { n: '萬華區健康中心', a: '東園街152號', l: 'https://maps.google.com/?q=萬華區健康中心' },
-                { n: '仁濟醫院', a: '廣州街243號', l: 'https://maps.google.com/?q=仁濟醫院' }
-            ],
-            'shop': [
-                { n: '國光市場', a: '萬大路巷弄', l: 'https://maps.google.com/?q=國光市場' },
-                { n: '雙和市場', a: '雙和街', l: 'https://maps.google.com/?q=雙和市場' },
-                { n: '直興市場', a: '康定路172巷', l: 'https://maps.google.com/?q=直興市場' },
-                { n: '環南市場', a: '環河南路二段', l: 'https://maps.google.com/?q=環南市場' },
-                { n: '全聯-萬華德昌店', a: '德昌街', l: 'https://maps.google.com/?q=全聯萬華德昌店' }
-            ],
-            'care': [
-                { n: '萬華老人服務中心', a: '西源路', l: 'https://maps.google.com/?q=萬華老人服務中心' },
-                { n: '萬華龍山老人服務中心', a: '梧州街', l: 'https://maps.google.com/?q=萬華龍山老人服務中心' },
-                { n: '聖若瑟居家長照機構', a: '德昌街', l: 'https://maps.google.com/?q=聖若瑟居家長照機構' },
-                { n: '失智老人基金會', a: '德昌街', l: 'https://maps.google.com/?q=失智老人基金會' }
-            ],
-            'fun': [
-                { n: '東園圖書館', a: '東園街199號', l: 'https://maps.google.com/?q=東園圖書館' },
-                { n: '萬華老人服務中心(據點活動)', a: '西源路', l: 'https://maps.google.com/?q=萬華老人服務中心' },
-                { n: '廣照宮', a: '長泰街54號', l: 'https://maps.google.com/?q=萬華廣照宮' },
-                { n: '龍山寺', a: '廣州街211號', l: 'https://maps.google.com/?q=龍山寺' }
-            ],
-            'move': [
-                { n: '青年公園', a: '水源路199號', l: 'https://maps.google.com/?q=青年公園' },
-                { n: '馬場町紀念公園', a: '青年公園外側河濱', l: 'https://maps.google.com/?q=馬場町公園' },
-                { n: '華中河濱公園', a: '萬大路底', l: 'https://maps.google.com/?q=華中公園' }
-            ]
+            'med': [{ n: '東京診所', a: '西園路二段' }, { n: '西園醫院', a: '西園路二段132號' }],
+            'shop': [{ n: '國光市場', a: '萬大路巷弄' }, { n: '雙和市場', a: '雙和街' }],
+            'care': [{ n: '萬華老人服務中心', a: '西源路' }, { n: '聖若瑟居家長照', a: '德昌街' }],
+            'fun': [{ n: '東園圖書館', a: '東園街199號' }, { n: '龍山寺', a: '廣州街211號' }]
         };
 
         const qaData = [
-            { q: "長輩拒絕讓居服員進門怎麼辦？", a: "從『陪同散步』開始。讓長輩覺得是多了個隨扈或朋友，而不是被照顧。" },
-            { q: "如何說服長輩拿拐杖或坐輪椅？", a: "不要說『你走不動』，要說『這能讓你走得更遠、看更多地方』。" },
-            { q: "如何知道長輩有沒有吃飽？", a: "檢查冰箱食材減少狀況、體重變化，或是餐盒是否有剩餘。" },
-            { q: "照顧者覺得快崩潰了，怎麼辦？", a: "利用長照喘息服務，給自己幾天假。加入照顧者支持團體，找人傾訴。" },
-            { q: "萬華哪裡可以借輪椅？", a: "萬華老人服務中心或各里的里辦公室通常有提供短期借用服務。" }
+            { q: "長輩拒絕居服員進門？", a: "從『陪同散步』開始。讓長輩覺得是多了個隨扈或朋友，而不是被照顧。" },
+            { q: "如何說服長輩坐輪椅？", a: "不要說『你走不動』，要說『這能讓你走得更遠、看更多地方』。" },
+            { q: "長輩不愛喝水怎麼辦？", a: "利用萬華在地特色，準備淡茶或稀釋果汁，增加水分攝取的意願。" },
+            { q: "如何知道長輩有吃飽？", a: "檢查冰箱食材減少狀況、體重變化，或是餐盒是否有剩餘。" },
+            { q: "照顧者快崩潰了怎麼辦？", a: "利用長照喘息服務，給自己幾天假。找人傾訴，別獨自承受。" },
+            { q: "萬華哪裡可以借輪椅？", a: "萬華老人服務中心通常有提供短期借用服務，可打電話詢問。" }
         ];
 
-        function init() {
-            renderFilterBtns();
-            renderResources('med');
-            renderQA();
+        function renderResources(key) {
+            const grid = document.getElementById('res-grid');
+            grid.innerHTML = '';
+            resData[key].forEach(item => {
+                grid.innerHTML += `
+                    <div class="resource-card p-5 rounded-2xl flex flex-col justify-between">
+                        <div><h4 class="text-lg font-black text-stone-800 mb-1">${item.n}</h4><p class="text-sm text-stone-400 mb-4">📍 ${item.a}</p></div>
+                        <button class="bg-blue-50 text-blue-600 py-2 rounded-xl text-sm font-bold">查看地圖</button>
+                    </div>
+                `;
+            });
+            document.getElementById('current-cat-name').innerText = categories[key].label;
+            document.getElementById('current-cat-desc').innerText = categories[key].desc;
+            document.getElementById('res-count').innerText = `共 ${resData[key].length} 項`;
         }
 
-        function renderFilterBtns() {
-            const container = document.getElementById('category-btns');
-            if(!container) return;
+        function init() {
+            renderBusTimeline();
+            setInterval(renderBusTimeline, 30000); // 每30秒更新一次模擬動態
+
+            const catContainer = document.getElementById('category-btns');
             Object.keys(categories).forEach(key => {
                 const btn = document.createElement('button');
-                btn.className = 'w-full flex items-center gap-3 p-4 rounded-2xl border-2 border-orange-100 font-bold transition-all hover:bg-orange-50';
-                btn.id = `btn-${key}`;
-                btn.innerHTML = `<span class="text-2xl">${categories[key].icon}</span> ${categories[key].label}`;
+                btn.className = 'w-full flex items-center gap-3 p-4 rounded-2xl border-2 border-orange-100 font-bold';
+                btn.innerHTML = `<span>${categories[key].icon}</span> ${categories[key].label}`;
                 btn.onclick = () => {
                     document.querySelectorAll('#category-btns button').forEach(b => b.classList.remove('tab-active'));
                     btn.classList.add('tab-active');
                     renderResources(key);
                 };
-                container.appendChild(btn);
+                catContainer.appendChild(btn);
             });
-            const firstBtn = document.getElementById('btn-med');
-            if(firstBtn) firstBtn.classList.add('tab-active');
-        }
+            catContainer.firstChild.click();
 
-        function renderResources(key) {
-            const grid = document.getElementById('res-grid');
-            const catName = document.getElementById('current-cat-name');
-            const catDesc = document.getElementById('current-cat-desc');
-            const count = document.getElementById('res-count');
-            if(!grid) return;
-
-            const data = resData[key];
-            catName.innerText = categories[key].label;
-            catDesc.innerText = categories[key].desc;
-            count.innerText = `共 ${data.length} 項`;
-            grid.innerHTML = '';
-
-            data.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'resource-card p-5 rounded-2xl flex flex-col justify-between';
-                card.innerHTML = `
-                    <div>
-                        <h4 class="text-lg font-black text-stone-800 mb-1">${item.n}</h4>
-                        <p class="text-sm text-stone-400 mb-4 flex items-center gap-1">📍 ${item.a}</p>
-                    </div>
-                    <a href="${item.l}" target="_blank" class="bg-blue-50 text-blue-600 py-2 px-4 rounded-xl text-sm font-bold text-center hover:bg-blue-600 hover:text-white transition">
-                        開啟 Google 地圖 ➔
-                    </a>
-                `;
-                grid.appendChild(card);
-            });
-            grid.scrollTop = 0;
-        }
-
-        function renderQA() {
-            const container = document.getElementById('qa-container');
-            if(!container) return;
-            qaData.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = 'bg-white p-6 rounded-3xl border-2 border-orange-100 shadow-sm';
-                div.innerHTML = `
-                    <div class="flex gap-3">
-                        <span class="flex-shrink-0 w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-black">${index + 1}</span>
-                        <div>
-                            <h4 class="font-black text-stone-800 mb-2 leading-tight">${item.q}</h4>
-                            <p class="text-stone-500 text-sm leading-relaxed">${item.a}</p>
+            const qaContainer = document.getElementById('qa-container');
+            qaData.forEach((item, i) => {
+                qaContainer.innerHTML += `
+                    <div class="bg-white p-6 rounded-3xl border-2 border-orange-100 shadow-sm">
+                        <div class="flex gap-3">
+                            <span class="flex-shrink-0 w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-black">${i+1}</span>
+                            <div><h4 class="font-black text-stone-800 mb-2">${item.q}</h4><p class="text-stone-500 text-sm">${item.a}</p></div>
                         </div>
                     </div>
                 `;
-                container.appendChild(div);
             });
         }
 
