@@ -17,11 +17,11 @@
 
         .rounded-super { border-radius: 2rem; }
         
-        /* 地圖與軌跡樣式 */
+        /* 地圖與軌跡樣式 - 版面已縮小 */
         .map-container {
             position: relative;
             background: #fdfaf6;
-            height: 350px; /* 縮小地圖高度 */
+            height: 280px; 
             border-radius: 1.5rem;
             overflow: hidden;
             border: 1px solid #e5e7eb;
@@ -39,7 +39,7 @@
 
         #bus-marker {
             position: absolute;
-            transition: all 1s linear; /* 平滑移動 */
+            transition: all 4s linear; /* 放慢平滑移動速度 */
             z-index: 100;
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
         }
@@ -57,7 +57,7 @@
 
         .station-label {
             position: absolute;
-            font-size: 11px; /* 縮小字體以配合較小的地圖 */
+            font-size: 11px;
             font-weight: bold;
             color: #431407;
             background: rgba(255,255,255,0.85);
@@ -97,6 +97,15 @@
             background: linear-gradient(to right bottom, #fffcf9, #fff5eb);
             border: 2px solid #ffedd5;
         }
+
+        .photo-hover {
+            transition: transform 0.3s ease;
+        }
+        .photo-hover:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
     </style>
 </head>
 <body class="pb-20">
@@ -104,28 +113,16 @@
     <!-- 頂部跑馬燈 -->
     <div class="bg-orange-600 text-white py-2 overflow-hidden whitespace-nowrap sticky top-0 z-50 shadow-md">
         <div class="animate-marquee px-4 font-medium">
-            📢 長照 2.0 專線：1966 ｜ 🏥 萬華老人服務中心：(02)2361-0666 ｜ 📍 資源手冊 V2 專業版 ｜ 💖 守護張吉雄先生與每一位在地長輩的幸福晚年 ｜ 🚌 公車動態持續監測中
+            📢 長照 2.0 專線：1966 ｜ 🏥 萬華老人服務中心：(02)2361-0666 ｜ 📍 資源手冊 V2 專業版 ｜ 💖 守護張吉雄先生與每一位在地長輩的幸福晚年 ｜ 🚌 慢活公車動態持續監測中
         </div>
     </div>
 
     <!-- 頁首與故事 -->
     <header class="max-w-6xl mx-auto px-6 py-10">
         <div class="flex flex-col gap-6 border-b-2 border-orange-100 pb-8">
-            <div class="flex flex-col md:flex-row justify-between items-end gap-6">
-                <div>
-                    <h1 class="text-4xl font-black text-stone-800 mb-2">萬華<span class="text-orange-500">生活圈動態地圖</span></h1>
-                    <p class="text-stone-500 font-medium">串聯在地關鍵資源點，看見長輩的生活軌跡</p>
-                </div>
-                <div class="flex gap-3">
-                    <div class="bg-white px-4 py-2 rounded-xl shadow-sm border border-stone-200 text-center">
-                        <p class="text-xs text-stone-400">目前位置</p>
-                        <p id="current-pos-name" class="font-bold text-orange-600">讀取中...</p>
-                    </div>
-                    <div class="bg-stone-800 text-white px-4 py-2 rounded-xl shadow-sm text-center">
-                        <p class="text-xs opacity-70">模擬時間</p>
-                        <p id="sim-time" class="font-mono font-bold">08:00</p>
-                    </div>
-                </div>
+            <div>
+                <h1 class="text-4xl font-black text-stone-800 mb-2">萬華<span class="text-orange-500">生活圈動態地圖</span></h1>
+                <p class="text-stone-500 font-medium">串聯在地關鍵資源點，看見長輩的慢活生活軌跡</p>
             </div>
             
             <!-- 長者生活特色介紹 -->
@@ -151,28 +148,28 @@
         </div>
     </header>
 
-    <!-- 地圖區 -->
-    <section class="max-w-5xl mx-auto px-6 mb-12">
-        <div class="bg-white rounded-super p-2 shadow-xl border border-stone-100">
-            <div class="grid grid-cols-1 md:grid-cols-5">
+    <!-- 地圖與照片區 -->
+    <section class="max-w-6xl mx-auto px-6 mb-12">
+        <div class="bg-white rounded-super p-6 md:p-8 shadow-xl border border-stone-100">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 
-                <!-- 行程與觀察 (左側) -->
-                <div class="p-6 md:border-r border-stone-50 md:col-span-2">
-                    <h3 class="text-lg font-black text-stone-800 mb-4 flex items-center gap-2">
-                        <span class="w-2 h-5 bg-orange-500 rounded-full"></span> 實時狀態
+                <!-- 照片牆 (3張照片) -->
+                <div>
+                    <h3 class="text-xl font-black text-stone-800 mb-4 flex items-center gap-2">
+                        <span>📸</span> 張吉雄伯伯家訪紀實
                     </h3>
-                    <div id="step-detail" class="space-y-4">
-                        <!-- 動態內容 -->
-                    </div>
-                    
-                    <div class="mt-6 p-4 bg-blue-50 rounded-2xl border border-blue-100">
-                        <p class="text-[11px] text-blue-800 font-bold mb-1">🔍 環境觀察備註</p>
-                        <p id="env-note" class="text-xs text-stone-600 leading-relaxed italic"></p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <img src="LINE_NOTE_260501_5.jpg" alt="家訪照1" class="photo-hover w-full h-48 object-cover rounded-2xl shadow-sm col-span-2">
+                        <img src="LINE_ALBUM_51第三次家訪_260501_12.jpg" alt="家訪照2" class="photo-hover w-full h-40 object-cover rounded-2xl shadow-sm border border-stone-100">
+                        <img src="LINE_ALBUM_51第三次家訪_260501_8.jpg" alt="家訪照3" class="photo-hover w-full h-40 object-cover rounded-2xl shadow-sm border border-stone-100">
                     </div>
                 </div>
 
-                <!-- 地圖主體 (中間) -->
-                <div class="md:col-span-3 p-4">
+                <!-- 縮小的迴圈動態地圖 -->
+                <div>
+                    <h3 class="text-xl font-black text-stone-800 mb-4 flex items-center gap-2">
+                        <span>🚌</span> 生活動線模擬地圖 (慢速迴圈)
+                    </h3>
                     <div class="map-container" id="map-parent">
                         <!-- SVG 軌跡背景 -->
                         <svg class="absolute inset-0 w-full h-full" id="svg-layer">
@@ -184,14 +181,14 @@
                         
                         <!-- 公車 -->
                         <div id="bus-marker" class="text-3xl">🚌</div>
-
-                        <!-- 圖例 -->
-                        <div class="absolute bottom-3 left-3 bg-white/90 p-2 rounded-lg shadow-sm text-[10px] border border-stone-200">
-                            <div class="flex items-center gap-2 mb-1"><span class="w-2 h-2 bg-blue-500/30 border border-blue-500 rounded-full"></span> 模擬公車動向</div>
-                            <div class="flex items-center gap-2"><span class="w-2 h-2 bg-white border-2 border-orange-500 rounded-full"></span> 關鍵站點</div>
-                        </div>
+                    </div>
+                    
+                    <!-- 實時狀態文字 -->
+                    <div class="mt-6 p-4 bg-orange-50 rounded-2xl border border-orange-100 min-h-[100px]" id="step-detail">
+                        <!-- 動態內容 -->
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
@@ -237,20 +234,16 @@
     </footer>
 
     <script>
-        // --- 資料定義 ---
-        
-        // 生成大量測試資料的輔助函數，確保每個分類有 30 個內容
+        // --- 資源資料定義 (維持30筆) ---
         function generateResources(type, baseNames) {
             let res = [];
             const streets = ['萬大路', '環河南路', '西園路', '東園街', '康定路', '桂林路', '和平西路', '西藏路', '德昌街', '雙和街'];
             
             for(let i=0; i<30; i++) {
                 let name = baseNames[i % baseNames.length];
-                // 為了名稱不完全重複，加上編號或變化
                 if(i >= baseNames.length) {
                     name = `${name} (分處 ${i - baseNames.length + 1})`;
                 }
-                
                 let addr = `台北市萬華區${streets[i % streets.length]}${Math.floor(Math.random()*200)+1}號`;
                 res.push({
                     name: name,
@@ -263,41 +256,20 @@
         }
 
         const resources = [
-            // 生活採買 (30筆)
-            ...generateResources("採買", [
-                "雙和市場", "國光市場", "全聯(萬大店)", "全聯(德昌店)", "東園街市場", 
-                "直興市場", "環南市場", "家樂福(桂林店)", "美廉社(國興店)", "美廉社(寶興店)",
-                "大理街黃昏市場", "光復市場", "萬大水果行", "青年蔬菜攤", "東園肉舖"
-            ]),
-            
-            // 醫療藥局 (30筆)
-            ...generateResources("醫療", [
-                "東京診所", "西園醫院", "萬華區健康中心", "屈臣氏(萬大店)", "康是美(東園店)",
-                "萬大路郵局", "仁濟醫院", "台北市立聯合醫院(和平院區)", "莒光中醫診所", "長庚骨科診所",
-                "康健藥局", "德全診所", "惠民耳鼻喉科", "東園藥局", "躍獅藥局"
-            ]),
-
-            // 社區據點 (30筆)
-            ...generateResources("據點", [
-                "萬華老人服務中心", "萬華龍山中心", "失智老人基金會", "台北市立心基金會", "萬大社區發展協會",
-                "忠德里辦公處", "青年社區發展協會", "中正國宅服務中心", "聖若瑟居家長照", "福恩社區發展協會",
-                "新安社區發展協會", "全德里辦公處", "和德里辦公處", "日善里辦公處", "紅心字會(萬華)"
-            ]),
-
-            // 休閒運動 (30筆)
-            ...generateResources("休閒", [
-                "青年公園", "華中河濱公園", "加蚋福德正神", "廣照宮", "萬大國小(操場)",
-                "台北市立圖書館萬華分館", "東園圖書館", "龍山寺", "馬場町紀念公園", "雙園河濱公園",
-                "德昌公園", "保德公園", "艋舺公園", "糖廍文化園區", "和平青草園"
-            ])
+            ...generateResources("採買", ["雙和市場", "國光市場", "全聯(萬大店)", "全聯(德昌店)", "東園街市場", "直興市場", "環南市場", "家樂福(桂林店)", "美廉社(國興店)", "美廉社(寶興店)", "大理街黃昏市場", "光復市場", "萬大水果行", "青年蔬菜攤", "東園肉舖"]),
+            ...generateResources("醫療", ["東京診所", "西園醫院", "萬華區健康中心", "屈臣氏(萬大店)", "康是美(東園店)", "萬大路郵局", "仁濟醫院", "台北市立聯合醫院(和平院區)", "莒光中醫診所", "長庚骨科診所", "康健藥局", "德全診所", "惠民耳鼻喉科", "東園藥局", "躍獅藥局"]),
+            ...generateResources("據點", ["萬華老人服務中心", "萬華龍山中心", "失智老人基金會", "台北市立心基金會", "萬大社區發展協會", "忠德里辦公處", "青年社區發展協會", "中正國宅服務中心", "聖若瑟居家長照", "福恩社區發展協會", "新安社區發展協會", "全德里辦公處", "和德里辦公處", "日善里辦公處", "紅心字會(萬華)"]),
+            ...generateResources("休閒", ["青年公園", "華中河濱公園", "加蚋福德正神", "廣照宮", "萬大國小(操場)", "台北市立圖書館萬華分館", "東園圖書館", "龍山寺", "馬場町紀念公園", "雙園河濱公園", "德昌公園", "保德公園", "艋舺公園", "糖廍文化園區", "和平青草園"])
         ];
 
+        // 路線座標點 - 調整為閉合的迴圈
         const pathSteps = [
-            { name: "環河南路住家", x: 10, y: 50, time: "08:00", status: "準備出發", desc: "張先生步出公寓，注意樓梯間燈光與腳步。", note: "樓梯無電梯，建議扶手加裝防滑墊。" },
-            { name: "華中河濱公園", x: 25, y: 70, time: "08:30", status: "晨間散步", desc: "在平坦的步道走 15 分鐘，維持關節靈活。", note: "河濱風大，長輩需注意頭部保暖。" },
-            { name: "國光市場", x: 50, y: 30, time: "10:00", status: "食材採買", desc: "購買今日所需的糙米與柔軟蔬菜。", note: "市場地板潮濕，務必穿著專業止滑鞋。" },
-            { name: "東京診所", x: 75, y: 60, time: "11:30", status: "定期監測", desc: "量測血壓 135/85，數據平穩，領取慢箋。", note: "等候區有沙發，建議在此稍作休息再步行。" },
-            { name: "老人中心", x: 90, y: 40, time: "12:30", status: "共餐活動", desc: "與鄰里長輩共享低油鹽便當。", note: "社交能活化腦部，預防失智症狀惡化。" }
+            { name: "環河南路住家", x: 20, y: 50, status: "準備出發", desc: "張先生步出公寓，注意樓梯間燈光與腳步。" },
+            { name: "華中河濱公園", x: 40, y: 20, status: "晨間散步", desc: "在平坦的步道緩慢行走，維持關節靈活。" },
+            { name: "國光市場", x: 70, y: 25, status: "食材採買", desc: "購買今日所需的糙米與柔軟蔬菜。" },
+            { name: "東京診所", x: 85, y: 65, status: "定期監測", desc: "量測血壓，數據平穩，領取慢性病處方藥。" },
+            { name: "老人中心", x: 50, y: 80, status: "共餐活動", desc: "與鄰里長輩共享便當與聊天，準備搭車返家。" }
+            // 動畫會自動從最後一點回到第一點完成迴圈
         ];
 
         const qaData = [
@@ -316,17 +288,15 @@
         // --- 功能實現 ---
 
         function init() {
-            filterRes('採買'); // 預設顯示採買
+            filterRes('採買'); 
             initMap();
             animateBus();
             renderQA();
         }
 
-        // 渲染資源清單
         function renderResources(filterType) {
             const grid = document.getElementById('resource-grid');
             grid.innerHTML = '';
-            
             const filtered = resources.filter(r => r.type === filterType);
             
             filtered.forEach(res => {
@@ -361,7 +331,7 @@
             renderResources(type);
         }
 
-        // 地圖初始化與軌跡生成
+        // 地圖初始化與迴圈軌跡生成
         function initMap() {
             const layer = document.getElementById('stations-layer');
             const svgPath = document.getElementById('bus-track');
@@ -371,52 +341,48 @@
             let pathData = "";
 
             pathSteps.forEach((s, idx) => {
-                // 站點 HTML
                 layer.innerHTML += `
                     <div class="station-node" style="left: ${s.x}%; top: ${s.y}%;"></div>
                     <div class="station-label" style="left: ${s.x}%; top: ${s.y}%;">${s.name}</div>
                 `;
 
-                // 軌跡 Path
                 const px = (s.x / 100) * mapW;
                 const py = (s.y / 100) * mapH;
                 if(idx === 0) pathData += `M ${px} ${py} `;
                 else pathData += `L ${px} ${py} `;
             });
 
+            pathData += "Z"; // 閉合路線成為迴圈
             svgPath.setAttribute('d', pathData);
         }
 
-        // 公車動畫 (緩慢慢速版)
+        // 公車動畫 (放慢速度，停等更久)
         let currentIdx = 0;
         function animateBus() {
             const bus = document.getElementById('bus-marker');
             const step = pathSteps[currentIdx];
             const detail = document.getElementById('step-detail');
-            const timeDisp = document.getElementById('sim-time');
-            const posName = document.getElementById('current-pos-name');
-            const envNote = document.getElementById('env-note');
 
-            // 更新 UI
+            // 平滑移動到目標點
             bus.style.left = `calc(${step.x}% - 15px)`;
             bus.style.top = `calc(${step.y}% - 15px)`;
-            timeDisp.innerText = step.time;
-            posName.innerText = step.name;
-            envNote.innerText = step.note;
 
+            // 更新說明文字
             detail.innerHTML = `
-                <div class="space-y-1 transform transition-all duration-700 translate-y-0 opacity-100">
-                    <p class="text-orange-500 font-bold text-[10px] tracking-widest">行程 ${currentIdx + 1} / ${pathSteps.length}</p>
-                    <h4 class="text-xl font-black text-stone-800">${step.name}</h4>
-                    <p class="bg-stone-800 text-white inline-block px-2 py-1 rounded text-[10px] font-bold mt-1">${step.status}</p>
+                <div class="transform transition-all duration-700 translate-y-0 opacity-100">
+                    <p class="text-orange-500 font-bold text-[10px] tracking-widest mb-1">📍 當前進度</p>
+                    <h4 class="text-xl font-black text-stone-800 flex items-center gap-2">
+                        ${step.name} 
+                        <span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-[10px] font-bold">${step.status}</span>
+                    </h4>
                     <p class="text-stone-600 mt-2 text-sm leading-relaxed">${step.desc}</p>
                 </div>
             `;
 
             currentIdx = (currentIdx + 1) % pathSteps.length;
             
-            // 每 6 秒移動一次 (緩慢感)
-            setTimeout(animateBus, 6000);
+            // 延長每站停留與移動間隔至 8 秒 (符合行進慢一點的需求)
+            setTimeout(animateBus, 8000);
         }
 
         function renderQA() {
