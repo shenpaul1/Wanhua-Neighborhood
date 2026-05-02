@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>萬華在地安老數位誌 - 即時時間與影像優化版</title>
+    <title>萬華在地安老數位誌 - 地圖連結與影像更新版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
@@ -32,7 +32,7 @@
         .photo-frame img {
             width: 100%;
             height: 200px;
-            object-fit: contain; /* 確保照片不被裁切 */
+            object-fit: contain; 
             background: #f9f9f9;
         }
 
@@ -58,7 +58,7 @@
     <div class="bg-orange-700 text-white py-2 overflow-hidden whitespace-nowrap sticky top-0 z-50 shadow-md">
         <div class="animate-marquee px-4 font-bold flex items-center gap-8">
             <span id="live-clock" class="bg-orange-900 px-3 py-1 rounded text-orange-200">正在獲取時間...</span>
-            <span>📢 長照 2.0 專線：1966 ｜ 🏥 萬華老人服務中心：(02)2361-0666 ｜ 📍 資源手冊 V2 專業版 ｜ 💖 守護張吉雄先生與每一位在地長輩的幸福晚年 ｜ 🚌 了解長輩日常，提供適切陪伴</span>
+            <span>📢 長照 2.0 專線：1966 ｜ 🏥 萬華老人服務中心：(02)2361-0666 ｜ 📍 資源地圖 V2.1 ｜ 💖 守護每一位在地長輩的幸福日常 ｜ 🚌 點擊資源卡片即可開啟地圖導航</span>
         </div>
     </div>
 
@@ -66,27 +66,17 @@
     <header class="max-w-6xl mx-auto px-6 py-10">
         <div class="flex flex-col gap-6 border-b-2 border-orange-100 pb-8">
             <div>
-                <h1 class="text-4xl font-black text-stone-800 mb-2">萬華<span class="text-orange-500">生活圈動態地圖</span></h1>
-                <p class="text-stone-500 font-medium italic">「即時、溫暖、在地」— 陪伴長輩走過每一條熟悉的巷弄</p>
+                <h1 class="text-4xl font-black text-stone-800 mb-2">萬華<span class="text-orange-500">在地安老數位誌</span></h1>
+                <p class="text-stone-500 font-medium italic">「即時、溫暖、在地」— 讓科技成為長輩最貼心的拐杖</p>
             </div>
             
-            <!-- 長者生活特色介紹 -->
             <div class="bg-orange-50/50 rounded-3xl p-6 md:p-8 mt-4 shadow-sm border border-orange-100">
                 <h2 class="text-2xl font-black text-orange-800 mb-4 flex items-center gap-2">
-                    <span class="text-3xl">👴</span> 長者生活特色介紹
+                    <span class="text-3xl">👴</span> 長者生活背景
                 </h2>
                 <div class="text-stone-700 leading-relaxed space-y-4 font-medium text-lg">
                     <p>
-                        以居住在萬華區環河南路三段一帶的張吉雄先生為例，長輩們的生活往往充滿著對過往回憶的眷戀與對自立生活的堅持。
-                    </p>
-                    <p>
-                        他們習慣每日清晨步行至國光市場或雙和市場，挑選新鮮的食材與好入口的絞肉，親手用電鍋蒸煮糙米飯來守護健康。
-                    </p>
-                    <p>
-                        雖然隨著年歲增長，面對無電梯公寓的三樓階梯漸感吃力，且因腳部無力偶有頭暈現象，但他們內心深處依然渴望與社會連結。
-                    </p>
-                    <p>
-                        無論是去圖書館閱讀，還是到龍山寺祭拜觀世音菩薩尋求心靈慰藉，這些點滴日常正是他們生命活力的來源。理解長輩對自炊的堅持與對社交的渴望，是我們提供最適切服務的核心。
+                        以萬華區環河南路三段的張吉雄先生為核心，展現長輩對自立生活的堅持。儘管面對無電梯公寓的挑戰與體力下滑，他們仍每日親自採買、烹飪，維持與社區的互動。這份數位誌旨在結合資源導航與長照知識，支持長輩在熟悉的土地上安心老去。
                     </p>
                 </div>
             </div>
@@ -98,38 +88,35 @@
         <div class="bg-white rounded-super p-6 md:p-10 shadow-xl border border-stone-100">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
                 
-                <!-- 照片牆 (優化顯示) -->
+                <!-- 照片牆 -->
                 <div class="lg:col-span-5">
                     <h3 class="text-xl font-black text-stone-800 mb-6 flex items-center gap-2">
-                        <span>📸</span> 張吉雄伯伯家訪紀實
+                        <span>📸</span> 家訪現場紀實
                     </h3>
                     <div class="relative grid grid-cols-1 gap-6">
-                        <!-- 第一張 (大) -->
                         <div class="photo-frame -rotate-1">
                             <img src="LINE_NOTE_260501_5.jpg" alt="家訪紀錄-主視角">
-                            <p class="text-center text-xs mt-2 text-stone-400 font-medium">家訪訪談紀錄</p>
+                            <p class="text-center text-xs mt-2 text-stone-400 font-medium">個案生活面談</p>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
-                            <!-- 第二張 -->
                             <div class="photo-frame rotate-2">
                                 <img src="LINE_ALBUM_51第三次家訪_260501_12.jpg" alt="家訪紀錄-環境">
                                 <p class="text-center text-[10px] mt-2 text-stone-400">生活環境觀察</p>
                             </div>
-                            <!-- 第三張 -->
                             <div class="photo-frame -rotate-2">
                                 <img src="LINE_ALBUM_51第三次家訪_260501_8.jpg" alt="家訪紀錄-細節">
-                                <p class="text-center text-[10px] mt-2 text-stone-400">輔具使用情形</p>
+                                <p class="text-center text-[10px] mt-2 text-stone-400">輔具位置評估</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 靜態動線圖 (替換為 ChatGPT 圖片) -->
+                <!-- 靜態動線圖 (更新為 ChatGPT.png) -->
                 <div class="lg:col-span-7">
                     <h3 class="text-xl font-black text-stone-800 mb-6 flex items-center gap-2">
-                        <span>🚌</span> 生活動線模擬圖
+                        <span>🚌</span> 生活動線模擬地圖 (ChatGPT 生成)
                     </h3>
-                    <div class="bg-stone-50 p-2 rounded-2xl border border-stone-200 shadow-sm flex justify-center items-center h-full max-h-[600px]">
+                    <div class="bg-stone-50 p-2 rounded-2xl border border-stone-200 shadow-sm flex justify-center items-center h-full max-h-[600px] overflow-hidden">
                         <img src="ChatGPT.png" alt="萬華生活動線模擬" class="w-full h-full object-contain rounded-xl">
                     </div>
                 </div>
@@ -144,7 +131,7 @@
             <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
                 <div>
                     <h2 class="text-2xl font-black text-stone-800">📍 在地資源資料庫</h2>
-                    <p class="text-stone-500 text-sm">點擊資源名稱可直接規劃 Google 地圖路線</p>
+                    <p class="text-stone-500 text-sm">卡片內建導航按鈕，點擊可直接開啟 Google 地圖</p>
                 </div>
                 <div class="flex flex-wrap justify-center gap-2 bg-stone-100 p-1 rounded-xl" id="filter-btns">
                     <button onclick="filterRes('採買')" class="px-4 py-2 rounded-lg text-xs font-bold bg-white shadow-sm text-orange-600">生活採買</button>
@@ -153,7 +140,7 @@
                     <button onclick="filterRes('休閒')" class="px-4 py-2 rounded-lg text-xs font-bold text-stone-500">休閒運動</button>
                 </div>
             </div>
-            <div class="resource-scroll grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[500px] overflow-y-auto pr-2" id="resource-grid"></div>
+            <div class="resource-scroll grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[600px] overflow-y-auto pr-2" id="resource-grid"></div>
         </div>
     </section>
 
@@ -161,18 +148,16 @@
     <section class="max-w-4xl mx-auto px-6 mb-20">
         <div class="bg-orange-50 rounded-super p-8 md:p-10 shadow-md border-2 border-orange-100">
             <div class="text-center mb-8">
-                <h2 class="text-3xl font-black text-orange-900 mb-2">💬 長照常見 Q&A (10題)</h2>
-                <p class="text-orange-700">為家屬整理的 10 大照顧解方，已全數校閱正確</p>
+                <h2 class="text-3xl font-black text-orange-900 mb-2">💬 長照常見 Q&A</h2>
+                <p class="text-orange-700">為家屬整理的 10 大照顧難題與正確解答</p>
             </div>
             
-            <div class="space-y-4" id="qa-container">
-                <!-- JS 填入 10 題 Q&A -->
-            </div>
+            <div class="space-y-4" id="qa-container"></div>
         </div>
     </section>
 
     <footer class="bg-stone-800 text-stone-400 py-10 text-center text-sm">
-        <p class="mb-2">© 2026 萬華在地安老數位誌 | 致力於提升銀髮族生活品質</p>
+        <p class="mb-2">© 2026 萬華在地安老數位誌 | 連結資源，守護長者</p>
     </footer>
 
     <script>
@@ -187,42 +172,42 @@
             const seconds = String(now.getSeconds()).padStart(2, '0');
             
             const timeString = `🕒 即時時間：${year}年${month}月${day}日 ${hours}:${minutes}:${seconds}`;
-            document.getElementById('live-clock').innerText = timeString;
+            const clockEl = document.getElementById('live-clock');
+            if (clockEl) clockEl.innerText = timeString;
         }
         setInterval(updateClock, 1000);
         updateClock();
 
-        // 資源生成
-        function generateResources(type, baseNames) {
-            let res = [];
-            for(let i=0; i<30; i++) {
-                res.push({
-                    name: `${baseNames[i % baseNames.length]}${i > 14 ? '(分處)' : ''}`,
-                    type: type,
-                    addr: `台北市萬華區鄰里巷弄第 ${Math.floor(Math.random()*100)+1} 號`
-                });
-            }
-            return res;
-        }
-
-        const allRes = [
-            ...generateResources("採買", ["雙和市場", "國光市場", "全聯萬大店", "東園街市場"]),
-            ...generateResources("醫療", ["西園醫院", "東京診所", "康是美藥局", "萬大健康中心"]),
-            ...generateResources("據點", ["老人中心", "龍山據點", "忠德里辦", "立心基金會"]),
-            ...generateResources("休閒", ["青年公園", "圖書館", "廣照宮", "龍山寺"])
-        ];
+        // 資源資料
+        const resourceData = {
+            '採買': ["雙和市場", "國光市場", "全聯萬華萬大店", "家樂福超市萬華東園店", "東園街市場", "美廉社萬華環河店", "7-11 萬大門市", "全家萬華雙和店"],
+            '醫療': ["西園醫院", "萬華區健康服務中心", "東京診所", "康是美萬大店", "屈臣氏萬華門市", "大樹連鎖藥局萬華店", "和諧中醫診所"],
+            '據點': ["萬華老人服務中心", "龍山社區照顧據點", "忠德里辦公處", "立心社會福利基金會", "萬華區多元照顧中心"],
+            '休閒': ["青年公園", "台北市立圖書館萬華分館", "廣照宮", "龍山寺", "馬場町紀念公園", "萬華體育中心"]
+        };
 
         function filterRes(type) {
             const grid = document.getElementById('resource-grid');
             grid.innerHTML = '';
-            allRes.filter(r => r.type === type).forEach(r => {
+            
+            const names = resourceData[type] || [];
+            names.forEach(name => {
+                // 生成 Google 地圖網址
+                const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + " 萬華區")}`;
+                
                 grid.innerHTML += `
-                    <div class="bg-white p-4 rounded-xl border border-stone-200 shadow-sm hover:border-orange-300">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="font-bold text-stone-800">${r.name}</span>
-                            <span class="text-[10px] text-orange-500">${r.type}</span>
+                    <div class="bg-white p-5 rounded-2xl border border-stone-100 shadow-sm hover:shadow-md hover:border-orange-300 transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-bold text-stone-800 text-lg">${name}</h4>
+                                <span class="bg-orange-100 text-orange-600 text-[10px] px-2 py-1 rounded-full font-bold">${type}</span>
+                            </div>
+                            <p class="text-xs text-stone-400 mb-4 italic">📍 萬華區在地資源</p>
                         </div>
-                        <p class="text-[10px] text-stone-400">📍 ${r.addr}</p>
+                        <a href="${mapUrl}" target="_blank" class="w-full bg-stone-100 hover:bg-orange-500 hover:text-white text-stone-600 py-2 rounded-xl text-center text-xs font-black transition-colors flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>
+                            Google 地圖導航
+                        </a>
                     </div>
                 `;
             });
@@ -238,18 +223,18 @@
             });
         }
 
-        // Q&A 內容 (10題 經過校對)
+        // Q&A 內容
         const qaData = [
-            { q: "長輩拒絕居服員進門怎麼辦？", a: "建議從「陪同散步」或「代買物品」開始，讓長輩覺得是多了個幫手或朋友，而非被當成病人照顧，初期家屬在場陪伴建立信任感也很重要。" },
-            { q: "如何說服長輩拿拐杖或坐輪椅？", a: "避免說「你走不動了」，可以改說「這能讓你走得更省力、可以走更遠去看更多漂亮風景」，把焦點放在「增加活動範圍與安全性」。" },
-            { q: "長輩不愛喝水，容易尿道發炎怎麼辦？", a: "可準備長輩喜歡的淡茶或果汁，分裝在小瓶子內，放在長輩常坐的位置旁，增加喝水便利性；也可用湯品、含水水果補充水分。" },
-            { q: "冰箱食物總是不減少，長輩是不是沒吃？", a: "建議家屬定期檢查冰箱。若長輩備餐有困難，可申請長照的「送餐服務」或「代購/備餐」，確保長輩每日營養攝取。" },
-            { q: "照顧者覺得壓力很大、快崩潰了怎麼辦？", a: "請立刻撥打 1966 申請「喘息服務」！可選擇居家喘息、機構喘息或巷弄長照站臨托，讓專業人員接手，給自己喘息的空間。" },
-            { q: "長輩總是不肯吃藥，偷偷吐掉怎麼辦？", a: "先確認是否藥丸太大顆難以吞嚥。可請醫師評估改開藥粉或水劑，並搭配長輩喜歡的一小口食物服用；也可諮詢社區藥局進行藥事照護。" },
-            { q: "萬華無電梯舊公寓，長輩爬樓梯很吃力怎麼辦？", a: "可向台北市輔具中心申請「爬梯機」上下樓服務。若符合資格，也可申請長照「居家無障礙環境改善補助」加裝樓梯或浴室扶手。" },
-            { q: "長輩晚上不睡覺，白天一直打瞌睡？", a: "這可能是日夜顛倒。白天應盡量安排長輩去老人服務中心或據點活動，增加日照與體力消耗；下午避免含咖啡因飲料，幫助夜間睡眠。" },
-            { q: "如何預防長輩走失？", a: "可向區公所或社會局申請「預防走失愛心手鍊」，或讓長輩配戴 GPS 定位裝置。平時多幫長輩拍照，並可帶長輩至警察局進行自願指紋建檔。" },
-            { q: "1966 長照服務申請流程會很久嗎？", a: "撥打 1966 後，照管中心通常會在一週內派照管專員到家中評估，核定結果最快約兩週內。建議有潛在需求就及早諮詢，不要等到病倒才求援。" }
+            { q: "長輩拒絕居服員進門怎麼辦？", a: "建議從「陪同散步」或「代買物品」開始，讓長輩覺得是多了個幫手或朋友，而非被當成病人照顧。初期家屬在場陪伴可加速建立信任感。" },
+            { q: "如何說服長輩拿拐杖或坐輪椅？", a: "避免強調「失能」，改強調「自主」。例如說「這能讓你出門更省力、可以自己去市場逛更久」，將輔具包裝成提升生活品質的工具。" },
+            { q: "長輩不愛喝水，容易尿道發炎？", a: "分次且少量提供，或將水盛裝在漂亮的容器中。也可提供含水分高的食物（如冬瓜湯、西瓜）或淡茶，確保每日排尿量正常。" },
+            { q: "長輩備餐有困難，營養不均？", a: "可申請長照 2.0 的「送餐服務」或「居家服務-代購及備餐」。萬華在地亦有許多友善銀髮的共餐據點，增加社交同時確保營養。" },
+            { q: "照顧者感到心力交瘁怎麼辦？", a: "請務必申請「喘息服務」。讓長輩短期入住機構或由居服員到府代打，給自己 1-3 天的完整休息。撥打 1966 即可專人評估。" },
+            { q: "長輩藥物種類多，常吃錯藥？", a: "可善用分藥盒，並諮詢社區藥師進行「藥事照護」。部分長照服務包含專業藥師到府檢視藥品存放與服用情形。" },
+            { q: "居住老舊公寓爬樓梯困難？", a: "台北市有「爬梯機租借服務」補助，或可申請「居家無障礙修繕補助」安裝扶手。若長輩完全無法下樓，建議諮詢長照專員尋求遷居資源評估。" },
+            { q: "長輩日夜顛倒、晚上不睡覺？", a: "白天盡量安排活動（如去巷弄長照站），增加日照並限制午睡時間。晚間維持固定作息與安靜環境，必要時諮詢醫師調整生理時鐘。" },
+            { q: "如何有效預防失智長輩走失？", a: "申請「愛心手鍊」或「指紋建檔」。此外，在長輩常用包包放入 GPS 定位器，或在衣領內側縫上聯繫電話標籤。" },
+            { q: "申請長照 2.0 的首要步驟？", a: "撥打「1966 專線」。只要長輩有失能或衰弱傾向即可申請。評估員會到府核定「長照等級」，等級越高獲得的補助額度越多。" }
         ];
 
         function renderQA() {
