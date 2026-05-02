@@ -16,56 +16,6 @@
         }
 
         .rounded-super { border-radius: 2rem; }
-        
-        /* 地圖樣式 */
-        .map-container {
-            position: relative;
-            background: #fdfaf6;
-            height: 300px; 
-            border-radius: 1.5rem;
-            overflow: hidden;
-            border: 1px solid #e5e7eb;
-            box-shadow: inset 0 2px 20px rgba(0,0,0,0.03);
-        }
-
-        .route-path {
-            fill: none;
-            stroke: #3b82f6;
-            stroke-width: 4;
-            stroke-dasharray: 8, 8;
-            stroke-linecap: round;
-            opacity: 0.3;
-        }
-
-        #bus-marker {
-            position: absolute;
-            transition: all 4s linear;
-            z-index: 100;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-        }
-
-        .station-node {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: white;
-            border: 3px solid #f97316;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 20;
-        }
-
-        .station-label {
-            position: absolute;
-            font-size: 11px;
-            font-weight: bold;
-            color: #431407;
-            background: rgba(255,255,255,0.85);
-            padding: 2px 6px;
-            border-radius: 99px;
-            transform: translate(-50%, 14px);
-            white-space: nowrap;
-        }
 
         /* 照片顯示優化：拍立得風格 */
         .photo-frame {
@@ -108,7 +58,7 @@
     <div class="bg-orange-700 text-white py-2 overflow-hidden whitespace-nowrap sticky top-0 z-50 shadow-md">
         <div class="animate-marquee px-4 font-bold flex items-center gap-8">
             <span id="live-clock" class="bg-orange-900 px-3 py-1 rounded text-orange-200">正在獲取時間...</span>
-            <span>📢 長照 2.0 專線：1966 ｜ 🏥 萬華老人服務中心：(02)2361-0666 ｜ 📍 資源手冊 V2 專業版 ｜ 💖 守護張吉雄先生與每一位在地長輩的幸福晚年 ｜ 🚌 慢活公車動態持續監測中</span>
+            <span>📢 長照 2.0 專線：1966 ｜ 🏥 萬華老人服務中心：(02)2361-0666 ｜ 📍 資源手冊 V2 專業版 ｜ 💖 守護張吉雄先生與每一位在地長輩的幸福晚年 ｜ 🚌 了解長輩日常，提供適切陪伴</span>
         </div>
     </div>
 
@@ -149,17 +99,16 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
                 
                 <!-- 照片牆 (優化顯示) -->
-    <!-- Q&A 區 -->
-    <section class="max-w-4xl mx-auto px-6 mb-20">
-        <div class="bg-orange-50 rounded-super p-8 md:p-10 shadow-md border-2 border-orange-100">
-            <div class="text-center mb-8">
-                <h2 class="text-3xl font-black text-orange-900 mb-2">💬 長照常見 Q&A (10題)</h2>
-                <p class="text-orange-700">為家屬整理的 10 大照顧解方</p>
-            </div>
-            
-            <div class="space-y-4" id="qa-container">
-                <!-- JS 填入 10 題 Q&A -->
-            </div>
+                <div class="lg:col-span-5">
+                    <h3 class="text-xl font-black text-stone-800 mb-6 flex items-center gap-2">
+                        <span>📸</span> 張吉雄伯伯家訪紀實
+                    </h3>
+                    <div class="relative grid grid-cols-1 gap-6">
+                        <!-- 第一張 (大) -->
+                        <div class="photo-frame -rotate-1">
+                            <img src="LINE_NOTE_260501_5.jpg" alt="家訪紀錄-主視角">
+                            <p class="text-center text-xs mt-2 text-stone-400 font-medium">家訪訪談紀錄</p>
+                        </div>
                         <div class="grid grid-cols-2 gap-4">
                             <!-- 第二張 -->
                             <div class="photo-frame rotate-2">
@@ -175,21 +124,13 @@
                     </div>
                 </div>
 
-                <!-- 迴圈動態地圖 -->
+                <!-- 靜態動線圖 (替換為 ChatGPT 圖片) -->
                 <div class="lg:col-span-7">
                     <h3 class="text-xl font-black text-stone-800 mb-6 flex items-center gap-2">
-                        <span>🚌</span> 生活動線模擬 (慢速迴圈)
+                        <span>🚌</span> 生活動線模擬圖
                     </h3>
-                    <div class="map-container" id="map-parent">
-                        <svg class="absolute inset-0 w-full h-full" id="svg-layer">
-                            <path id="bus-track" class="route-path" d="" />
-                        </svg>
-                        <div id="stations-layer"></div>
-                        <div id="bus-marker" class="text-3xl">🚌</div>
-                    </div>
-                    
-                    <!-- 實時狀態文字 -->
-                    <div class="mt-6 p-6 bg-orange-50 rounded-2xl border border-orange-100 min-h-[120px]" id="step-detail">
+                    <div class="bg-stone-50 p-2 rounded-2xl border border-stone-200 shadow-sm flex justify-center items-center h-full max-h-[600px]">
+                        <img src="ChatGPT.jpg" alt="萬華生活動線模擬" class="w-full h-full object-contain rounded-xl">
                     </div>
                 </div>
 
@@ -216,9 +157,22 @@
         </div>
     </section>
 
+    <!-- Q&A 區 -->
+    <section class="max-w-4xl mx-auto px-6 mb-20">
+        <div class="bg-orange-50 rounded-super p-8 md:p-10 shadow-md border-2 border-orange-100">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-black text-orange-900 mb-2">💬 長照常見 Q&A (10題)</h2>
+                <p class="text-orange-700">為家屬整理的 10 大照顧解方，已全數校閱正確</p>
+            </div>
+            
+            <div class="space-y-4" id="qa-container">
+                <!-- JS 填入 10 題 Q&A -->
+            </div>
+        </div>
+    </section>
+
     <footer class="bg-stone-800 text-stone-400 py-10 text-center text-sm">
         <p class="mb-2">© 2026 萬華在地安老數位誌 | 致力於提升銀髮族生活品質</p>
-        <p class="text-stone-600">系統狀態：正常運行中 (慢速模式)</p>
     </footer>
 
     <script>
@@ -237,58 +191,6 @@
         }
         setInterval(updateClock, 1000);
         updateClock();
-
-        // --- 資源與地圖邏輯 (延續前版) ---
-        const pathSteps = [
-            { name: "環河南路住家", x: 15, y: 55, status: "在家休息", desc: "張先生正在準備出門，檢查窗戶與水電安全。" },
-            { name: "華中河濱公園", x: 40, y: 25, status: "晨間運動", desc: "在河岸邊呼吸新鮮空氣，與老鄰居打招呼。" },
-            { name: "國光市場", x: 75, y: 30, status: "採買物資", desc: "挑選今日煮粥用的軟質蔬菜與新鮮肉品。" },
-            { name: "西園醫院", x: 85, y: 70, status: "復健門診", desc: "進行腳部肌力訓練，改善頭暈與無力狀況。" },
-            { name: "老人中心", x: 45, y: 85, status: "共餐時光", desc: "享受熱騰騰的午餐，是今天最開心的社交時刻。" }
-        ];
-
-        function initMap() {
-            const layer = document.getElementById('stations-layer');
-            const svgPath = document.getElementById('bus-track');
-            const mapW = document.getElementById('map-parent').offsetWidth;
-            const mapH = document.getElementById('map-parent').offsetHeight;
-            
-            let pathData = "";
-            layer.innerHTML = ""; 
-
-            pathSteps.forEach((s, idx) => {
-                layer.innerHTML += `
-                    <div class="station-node" style="left: ${s.x}%; top: ${s.y}%;"></div>
-                    <div class="station-label" style="left: ${s.x}%; top: ${s.y}%;">${s.name}</div>
-                `;
-                const px = (s.x / 100) * mapW;
-                const py = (s.y / 100) * mapH;
-                if(idx === 0) pathData += `M ${px} ${py} `;
-                else pathData += `L ${px} ${py} `;
-            });
-            pathData += "Z"; 
-            svgPath.setAttribute('d', pathData);
-        }
-
-        let currentIdx = 0;
-        function animateBus() {
-            const bus = document.getElementById('bus-marker');
-            const step = pathSteps[currentIdx];
-            const detail = document.getElementById('step-detail');
-
-            bus.style.left = `calc(${step.x}% - 15px)`;
-            bus.style.top = `calc(${step.y}% - 15px)`;
-
-            detail.innerHTML = `
-                <div class="animate-pulse">
-                    <p class="text-orange-600 font-bold text-xs mb-1">【當前動態】</p>
-                    <h4 class="text-2xl font-black text-stone-800 mb-2">${step.name}</h4>
-                    <p class="text-stone-600 text-base leading-relaxed">${step.desc}</p>
-                </div>
-            `;
-            currentIdx = (currentIdx + 1) % pathSteps.length;
-            setTimeout(animateBus, 8000); // 慢速步調
-        }
 
         // 資源生成
         function generateResources(type, baseNames) {
@@ -324,14 +226,54 @@
                     </div>
                 `;
             });
+            
+            // 更新按鈕樣式
+            const btns = document.querySelectorAll('#filter-btns button');
+            btns.forEach(btn => {
+                if (btn.innerText.includes(type)) {
+                    btn.className = "px-4 py-2 rounded-lg text-xs font-bold bg-white shadow-sm text-orange-600";
+                } else {
+                    btn.className = "px-4 py-2 rounded-lg text-xs font-bold text-stone-500 hover:bg-white/50";
+                }
+            });
+        }
+
+        // Q&A 內容 (10題 經過校對)
+        const qaData = [
+            { q: "長輩拒絕居服員進門怎麼辦？", a: "建議從「陪同散步」或「代買物品」開始，讓長輩覺得是多了個幫手或朋友，而非被當成病人照顧，初期家屬在場陪伴建立信任感也很重要。" },
+            { q: "如何說服長輩拿拐杖或坐輪椅？", a: "避免說「你走不動了」，可以改說「這能讓你走得更省力、可以走更遠去看更多漂亮風景」，把焦點放在「增加活動範圍與安全性」。" },
+            { q: "長輩不愛喝水，容易尿道發炎怎麼辦？", a: "可準備長輩喜歡的淡茶或果汁，分裝在小瓶子內，放在長輩常坐的位置旁，增加喝水便利性；也可用湯品、含水水果補充水分。" },
+            { q: "冰箱食物總是不減少，長輩是不是沒吃？", a: "建議家屬定期檢查冰箱。若長輩備餐有困難，可申請長照的「送餐服務」或「代購/備餐」，確保長輩每日營養攝取。" },
+            { q: "照顧者覺得壓力很大、快崩潰了怎麼辦？", a: "請立刻撥打 1966 申請「喘息服務」！可選擇居家喘息、機構喘息或巷弄長照站臨托，讓專業人員接手，給自己喘息的空間。" },
+            { q: "長輩總是不肯吃藥，偷偷吐掉怎麼辦？", a: "先確認是否藥丸太大顆難以吞嚥。可請醫師評估改開藥粉或水劑，並搭配長輩喜歡的一小口食物服用；也可諮詢社區藥局進行藥事照護。" },
+            { q: "萬華無電梯舊公寓，長輩爬樓梯很吃力怎麼辦？", a: "可向台北市輔具中心申請「爬梯機」上下樓服務。若符合資格，也可申請長照「居家無障礙環境改善補助」加裝樓梯或浴室扶手。" },
+            { q: "長輩晚上不睡覺，白天一直打瞌睡？", a: "這可能是日夜顛倒。白天應盡量安排長輩去老人服務中心或據點活動，增加日照與體力消耗；下午避免含咖啡因飲料，幫助夜間睡眠。" },
+            { q: "如何預防長輩走失？", a: "可向區公所或社會局申請「預防走失愛心手鍊」，或讓長輩配戴 GPS 定位裝置。平時多幫長輩拍照，並可帶長輩至警察局進行自願指紋建檔。" },
+            { q: "1966 長照服務申請流程會很久嗎？", a: "撥打 1966 後，照管中心通常會在一週內派照管專員到家中評估，核定結果最快約兩週內。建議有潛在需求就及早諮詢，不要等到病倒才求援。" }
+        ];
+
+        function renderQA() {
+            const container = document.getElementById('qa-container');
+            container.innerHTML = '';
+            qaData.forEach((item, index) => {
+                container.innerHTML += `
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-orange-100">
+                        <div class="flex gap-3">
+                            <span class="flex-shrink-0 w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-black text-sm">Q${index+1}</span>
+                            <div>
+                                <h4 class="font-bold text-stone-800 mb-2">${item.q}</h4>
+                                <p class="text-sm text-stone-600 leading-relaxed">${item.a}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
         window.onload = () => {
-            initMap();
-            animateBus();
             filterRes('採買');
+            renderQA();
         };
-        window.onresize = initMap;
 
     </script>
 </body>
